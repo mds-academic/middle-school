@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UOB My Digital Space — Middle School Sesi 2</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue:#0056b3; --light-blue:#4a9eff; --uob-red:#e60012; --uob-red-soft:#ff5a6b;
+      --uob-blue-deep:#0056b3; --uob-blue-soft:#5aa7ff; --teal:#11a9b7; --bg:#f5f6f8;
+      --panel:#ffffff; --text:#2c3e50; --muted:#6c757d; --line:#e3e8ef; --green:#2e9d57;
+      --orange:#f39c12; --red:#e74c3c; --purple:#8e44ad; --yellow-soft:#fff8dc; --blue-soft:#eef7ff; --green-soft:#effaf2;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text); }
+    button, input, select { font: inherit; }
+    a { color: var(--blue); font-weight: 800; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { width: 100%; height: 6px; background: linear-gradient(90deg,#f5d7da,#d9e9ff); position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: inset 0 1px 2px rgba(0,0,0,.08); }
+    .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg,var(--uob-red) 0%,var(--uob-red-soft) 28%,var(--uob-blue-deep) 72%,var(--uob-blue-soft) 100%); transition: width .3s ease; box-shadow:0 0 8px rgba(0,86,179,.18); }
+    .main-container { display:flex; height:100vh; }
+    .slides-panel { width:50%; background:#f8f9fa; border-right:2px solid var(--line); display:flex; flex-direction:column; position:relative; }
+    .explanation-panel { width:50%; background:#fff; overflow-y:auto; padding:32px; }
+    .slide-header { background:#fff; padding:17px 20px 15px; border-bottom:2px solid var(--line); box-shadow:0 2px 4px rgba(0,0,0,.04); position:relative; }
+    .slide-header::before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(var(--uob-red),var(--light-blue)); }
+    .slide-header h1 { font-size:1.28rem; color:var(--text); margin-bottom:3px; }
+    .slide-header p { font-size:.9rem; color:var(--muted); }
+    .header-badge { position:absolute; right:18px; top:17px; background:var(--blue-soft); color:var(--blue); border:1px solid #cce7ff; border-radius:999px; padding:5px 10px; font-weight:700; font-size:.76rem; }
+    .slide-content { flex:1; padding:24px 28px 94px; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; min-height:0; }
+    .slide, .explanation { display:none; opacity:0; transition:opacity .25s ease; }
+    .slide.active, .explanation.active { display:block; opacity:1; }
+    .slide { width:100%; max-width:820px; }
+    .explanation { max-width:760px; margin:0 auto; }
+    .slide h2 { font-size:2.25rem; color:var(--blue); margin-bottom:10px; line-height:1.15; }
+    .slide h3 { font-size:1.78rem; color:var(--blue); margin-bottom:16px; line-height:1.2; }
+    .slide h4, .explanation h4 { font-size:1.05rem; margin-bottom:9px; color:var(--text); }
+    .slide p, .explanation p { font-size:1rem; line-height:1.58; color:#495057; margin-bottom:14px; }
+    .explanation h3 { font-size:1.65rem; margin-bottom:16px; color:var(--text); line-height:1.25; }
+    .slide ul, .slide ol, .explanation ul, .explanation ol { margin-left:22px; margin-bottom:10px; }
+    .slide li, .explanation li { margin-bottom:7px; line-height:1.5; }
+    .eyebrow { display:inline-block; color:var(--uob-red); font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+    .lead { font-size:1.08rem !important; }
+    .mini-note { font-size:.9rem !important; color:var(--muted) !important; margin-top:10px; }
+    .visual-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:13px; margin:16px 0; }
+    .visual-card,.metric-box,.info-box,.example-box,.warning-box,.placeholder-box,.interactive-box,.code-placeholder,.quiz-card { background:#fff; border:2px solid var(--line); border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .visual-card { padding:15px; }
+    .visual-card h4 { margin-bottom:5px; }
+    .visual-card p { margin-bottom:0; font-size:.92rem; line-height:1.42; }
+    .visual-icon { font-size:1.9rem; margin-bottom:8px; }
+    .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:16px; }
+    .metric-box { padding:16px 12px; text-align:center; }
+    .metric-box strong { display:block; font-size:1.55rem; color:var(--blue); margin-bottom:7px; }
+    .metric-box span { font-size:.9rem; line-height:1.35; color:#495057; display:block; }
+    .info-box,.example-box,.warning-box,.interactive-box { padding:17px; margin:16px 0; }
+    .info-box { border-left:5px solid var(--light-blue); }
+    .example-box { border-left:5px solid var(--green); background:#f8fff8; }
+    .warning-box { border-left:5px solid var(--orange); background:#fffaf0; }
+    .interactive-box { border-left:5px solid var(--purple); background:#fcf8ff; }
+    .placeholder-box { min-height:215px; padding:24px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; background:linear-gradient(135deg,#fbfdff,#f5f9fc); }
+    .placeholder-box .placeholder-icon { font-size:2.3rem; margin-bottom:8px; }
+    .placeholder-box strong { display:block; color:var(--blue); margin-bottom:5px; }
+    .placeholder-box small { color:var(--muted); line-height:1.4; }
+    .code-placeholder { min-height:230px; padding:22px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; border-color:#9ab7d3; background:#f8fbfe; }
+    .code-placeholder strong { color:var(--blue); display:block; margin-bottom:7px; }
+    .code-placeholder code { color:var(--muted); background:#eef3f8; padding:3px 7px; border-radius:5px; }
+    .pseudo-list { list-style:none; margin-left:0 !important; counter-reset:pseudo; }
+    .pseudo-list li { counter-increment:pseudo; background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 12px 10px 44px; position:relative; margin-bottom:8px; }
+    .pseudo-list li::before { content:counter(pseudo); position:absolute; left:11px; top:9px; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--blue); color:#fff; font-weight:800; font-size:.8rem; }
+    .navigation { position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:2px solid var(--line); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 -2px 4px rgba(0,0,0,.04); }
+    .nav-btn { background:var(--light-blue); color:#fff; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; font-size:.94rem; font-weight:700; display:flex; gap:8px; align-items:center; transition:.2s ease; }
+    .nav-btn:hover { transform:translateY(-1px); background:#357abd; }
+    .nav-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    .slide-indicator { font-size:.9rem; color:var(--muted); font-weight:700; }
+    .floating-element { position:absolute; opacity:.07; pointer-events:none; font-size:2rem; animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(0);}33%{transform:translateY(-12px) rotate(4deg);}66%{transform:translateY(7px) rotate(-3deg);} }
+    .access-popup-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999; display:flex; justify-content:center; align-items:center; }
+    .access-popup { background:#fff; border:3px solid var(--light-blue); border-radius:15px; padding:38px; max-width:450px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.3); transform:scale(.8); opacity:0; transition:all .3s ease; }
+    .access-popup.show { transform:scale(1); opacity:1; }
+    .access-popup h2 { color:var(--text); margin-bottom:13px; font-size:1.8rem; }
+    .access-popup p { color:#666; margin-bottom:22px; line-height:1.55; }
+    .access-input { width:100%; padding:14px; font-size:1.15rem; border:2px solid #dee2e6; border-radius:8px; margin-bottom:18px; text-align:center; letter-spacing:2px; font-weight:bold; text-transform:uppercase; }
+    .access-input:focus { outline:none; border-color:var(--light-blue); box-shadow:0 0 0 3px rgba(74,158,255,.12); }
+    .access-submit { background:var(--light-blue); color:#fff; border:none; padding:13px 28px; border-radius:8px; font-size:1.05rem; font-weight:bold; cursor:pointer; }
+    .access-submit:hover { background:#357abd; }
+    .access-error { color:var(--red); margin-top:13px; font-weight:bold; opacity:0; transition:opacity .2s; }
+    .access-error.show { opacity:1; }
+    .access-hint { background:#fff3cd; border:1px solid #ffc107; border-radius:5px; padding:9px; margin-top:18px; font-size:.88rem; color:#856404; }
+    .choice-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .choice-btn { border:2px solid var(--line); background:#fff; color:var(--text); border-radius:10px; padding:11px 12px; cursor:pointer; font-weight:700; transition:.18s; text-align:left; }
+    .choice-btn:hover { border-color:var(--light-blue); transform:translateY(-1px); }
+    .choice-btn.correct { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .choice-btn.wrong { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .choice-btn.selected { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+    .feedback-line { min-height:28px; font-weight:700; margin-top:8px; }
+    .form-grid { display:grid; gap:10px; margin:12px 0; }
+    .form-grid label { font-weight:700; font-size:.9rem; color:var(--text); }
+    .form-grid input { width:100%; padding:10px 12px; border:2px solid var(--line); border-radius:8px; margin-top:5px; }
+    .form-grid input:focus { outline:none; border-color:var(--light-blue); }
+    .primary-btn,.secondary-btn { border:none; border-radius:8px; padding:10px 14px; font-weight:800; cursor:pointer; }
+    .primary-btn { background:var(--blue); color:#fff; }
+    .secondary-btn { background:#e9ecef; color:var(--text); }
+    .scratch-map-wrap { position:relative; width:100%; margin:12px auto; border:2px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    .scratch-map-wrap img { width:100%; display:block; }
+    .hotspot { position:absolute; width:30px; height:30px; border-radius:50%; border:3px solid #fff; background:var(--uob-red); color:#fff; font-weight:900; cursor:pointer; box-shadow:0 3px 9px rgba(0,0,0,.35); display:grid; place-items:center; transform:translate(-50%,-50%); transition:transform .16s,background .16s; }
+    .hotspot:hover,.hotspot.active { transform:translate(-50%,-50%) scale(1.16); background:var(--blue); }
+    .scratch-caption { text-align:center; font-size:.85rem; color:var(--muted); margin-top:8px; }
+    .area-live-card { min-height:120px; border:2px solid #cfe7fb; background:var(--blue-soft); border-radius:12px; padding:16px; margin-top:14px; }
+    .area-live-card .area-number { display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--uob-red); color:#fff; font-weight:900; margin-right:7px; }
+    .lms-map-wrap { position:relative; }
+    .session-card-hotspot { position:absolute; left:19.1%; top:43%; width:25.5%; height:51%; padding:0; border:3px dashed transparent; border-radius:12px; background:transparent; cursor:pointer; transition:.2s ease; }
+    .session-card-hotspot span { position:absolute; top:8px; right:8px; width:32px; height:32px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; background:var(--uob-red); color:#fff; font-size:.9rem; font-weight:900; box-shadow:0 3px 9px rgba(0,0,0,.35); }
+    .session-card-hotspot:hover,.session-card-hotspot.active { border-color:var(--uob-red); background:rgba(230,0,18,.08); }
+    .session-card-hotspot:hover span,.session-card-hotspot.active span { background:var(--blue); transform:scale(1.1); }
+    .sequence-source,.sequence-target { display:grid; gap:8px; margin-top:10px; }
+    .sequence-card { padding:10px 12px; border:2px solid var(--line); background:#fff; border-radius:9px; cursor:grab; user-select:none; font-weight:700; }
+    .sequence-card.dragging { opacity:.45; }
+    .sequence-target { min-height:170px; border:2px dashed #a9bfd2; background:#f8fbfe; border-radius:10px; padding:10px; }
+    .checklist { list-style:none; margin-left:0 !important; display:grid; gap:8px; }
+    .check-item { display:flex; gap:9px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; cursor:pointer; }
+    .check-item input { margin-top:3px; transform:scale(1.2); }
+    .check-item.done { background:var(--green-soft); border-color:#9cd9af; text-decoration:line-through; color:#3e6b4c; }
+    .debug-scenario { display:none; }
+    .debug-scenario.active { display:block; }
+    .debug-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .debug-tab { border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 11px; cursor:pointer; font-weight:700; }
+    .debug-tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .pill { display:inline-block; padding:4px 9px; border-radius:999px; font-size:.78rem; font-weight:800; color:#fff; margin:2px; }
+    .pill.blue{background:var(--blue);} .pill.green{background:var(--green);} .pill.orange{background:var(--orange);} .pill.purple{background:var(--purple);} .pill.red{background:var(--uob-red);}
+    .phone-preview { margin:16px auto; width:220px; min-height:355px; border:9px solid #1f2937; border-radius:28px; background:#fff; box-shadow:0 12px 22px rgba(0,0,0,.13); overflow:hidden; }
+    .phone-bar { height:34px; background:#294bd8; color:#fff; display:flex; align-items:center; padding-left:12px; font-size:.8rem; font-weight:800; }
+    .phone-body { padding:18px 14px; text-align:center; display:grid; gap:12px; }
+    .app-title { font-weight:900; color:var(--text); font-size:.95rem; }
+    .app-input { padding:9px; border:1px solid var(--line); border-radius:8px; text-align:center; background:#fff; }
+    .app-label { min-height:50px; padding:10px; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+    .app-button { background:var(--uob-red); color:#fff; border:none; border-radius:8px; padding:10px; font-weight:900; cursor:pointer; }
+    .app-button.blue { background:var(--blue); } .app-button.gray { background:#667085; }
+    .ui-sample-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+    .ui-card { border:2px solid var(--line); border-radius:14px; background:#fff; padding:12px; cursor:pointer; transition:.18s; }
+    .ui-card:hover,.ui-card.active { border-color:var(--blue); background:var(--blue-soft); transform:translateY(-1px); }
+    .messy-phone .phone-body { gap:4px; text-align:left; }
+    .messy-phone .app-button { width:70px; padding:5px; font-size:.7rem; }
+    .messy-phone .app-input { width:95px; font-size:.7rem; }
+    .arrangement-demo { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+    .arr-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:14px; }
+    .arr-stack { display:grid; gap:8px; }
+    .arr-row { display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .mini-component { padding:8px 10px; background:#eef7ff; border:1px solid #cfe7fb; border-radius:8px; font-weight:800; font-size:.86rem; }
+    .component-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+    .component-pill { border:2px solid var(--line); border-radius:999px; background:#fff; padding:8px 11px; font-weight:800; cursor:pointer; }
+    .component-pill.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .mini-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem; }
+    .mini-table th,.mini-table td { border:1px solid var(--line); padding:9px; text-align:left; }
+    .mini-table th { background:var(--blue); color:#fff; }
+    @media (max-width:960px){ body{overflow:auto;height:auto}.main-container{flex-direction:column;height:auto;min-height:100vh}.slides-panel,.explanation-panel{width:100%;height:auto;min-height:50vh}.slides-panel{min-height:100vh}.slide-content{padding:20px 20px 92px}.explanation-panel{padding:24px}.header-badge{display:none}.ui-sample-grid,.arrangement-demo{grid-template-columns:1fr} }
+  
+    .section-label { display:inline-block; font-size:.75rem; font-weight:900; color:#fff; background:linear-gradient(90deg,var(--uob-red),var(--blue)); border-radius:999px; padding:5px 10px; margin-bottom:8px; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:12px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .term-card { border:2px solid var(--line); border-radius:12px; padding:13px; background:#fff; margin:8px 0; }
+    .term-card strong { color:var(--blue); }
+    .compact-list { margin-left:18px !important; }
+    .compact-list li { margin-bottom:4px !important; }
+    .property-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .property-card { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px; }
+    .property-card h4 { color:var(--blue); margin-bottom:5px; }
+    .small-phone { width:170px !important; min-height:275px !important; border-width:6px !important; border-radius:20px !important; }
+    .wide-placeholder { min-height:145px; }
+    .scenario-box { padding:14px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .sort-bank { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin:10px 0; }
+    .sort-card { border:2px solid var(--line); border-radius:10px; padding:10px; background:white; cursor:grab; font-weight:700; }
+    .drop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+    .drop-zone { min-height:145px; border:2px dashed #a9bfd2; border-radius:12px; padding:10px; background:#f8fbfe; }
+    .drop-zone h4 { color:var(--blue); font-size:.95rem; }
+    .drop-zone .sort-card { margin:6px 0; }
+    .hint-text { font-size:.86rem; color:var(--muted); }
+    @media(max-width:960px){.drop-grid{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}}
+</style>
+</head>
+<body>
+  <div class="access-popup-overlay" id="accessPopup">
+    <div class="access-popup">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode akses Middle School untuk membuka materi Sesi 2.</p>
+      <input type="text" class="access-input" id="accessInput" placeholder="MASUKKAN KODE" maxlength="20" autocomplete="off" />
+      <button class="access-submit" onclick="checkAccessCode()">Masuk</button>
+      <div class="access-error" id="accessError">Kode akses belum tepat. Coba lagi.</div>
+      <div class="access-hint">Kode akses diberikan oleh guru.</div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="main-container" id="mainContent" style="display:none;">
+    <div class="slides-panel">
+      <div class="slide-header">
+        <h1>UOB My Digital Space — Middle School</h1>
+        <p>Sesi 2 · Kalkulator Saku UI</p>
+        <span class="header-badge">MIT App Inventor · Middle School</span>
+      </div>
+      <div class="slide-content">
+        <div class="floating-element" style="top:12%;left:7%;">📱</div>
+        <div class="floating-element" style="top:18%;right:10%;">🧩</div>
+        <div class="floating-element" style="bottom:25%;left:14%;">🎛️</div>
+        <div class="floating-element" style="bottom:15%;right:16%;">⚙️</div>
+        <section class="slide active" id="slide-1">
+          <span class="eyebrow">Sesi 2</span>
+          <h2>Kalkulator Saku UI</h2>
+          <p class="lead">Hari ini kalian membuat tampilan aplikasi kalkulator sederhana yang rapi, mudah dipakai, dan siap diberi fungsi.</p>
+          <div class="metrics">
+            <div class="metric-box"><strong>🎨</strong><span>Membedakan UI dan UX</span></div>
+            <div class="metric-box"><strong>📐</strong><span>Mengatur layout aplikasi</span></div>
+            <div class="metric-box"><strong>🏷️</strong><span>Rename komponen</span></div>
+            <div class="metric-box"><strong>🧪</strong><span>Testing tampilan dan tombol</span></div>
+          </div>
+          <div class="phone-preview">
+            <div class="phone-bar">Screen1</div>
+            <div class="phone-body">
+              <div class="app-title">KALKULATOR SAKU UI</div>
+              <input class="app-input" placeholder="Masukkan angka" disabled>
+              <button class="app-button">HITUNG</button>
+              <div class="app-label">Aplikasi siap menghitung!</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" id="slide-2">
+          <h3>Misi Belajar Hari Ini</h3>
+          <div class="visual-grid">
+            <div class="visual-card"><div class="visual-icon">🧭</div><h4>Buka LMS</h4><p>Masuk ke Sesi 2 dan ikuti materi yang sesuai.</p></div>
+            <div class="visual-card"><div class="visual-icon">👀</div><h4>UI & UX</h4><p>Membedakan tampilan aplikasi dan pengalaman pengguna.</p></div>
+            <div class="visual-card"><div class="visual-icon">📦</div><h4>Arrangement</h4><p>Menyusun komponen agar layar rapi dan konsisten.</p></div>
+            <div class="visual-card"><div class="visual-icon">🧩</div><h4>Blocks Dasar</h4><p>Menguji event Button.Click dengan output sederhana.</p></div>
+          </div>
+          <div class="interactive-box"><h4>Fokus sesi</h4><p>Hari ini kita membangun <strong>fondasi layar</strong>. Kalau fondasinya rapi, sesi berikutnya akan lebih mudah.</p></div>
+        </section>
+
+        <section class="slide" id="slide-3">
+          <h3>Siapkan Perangkat dan Akun</h3>
+          <p class="lead">Sebelum mulai, pastikan semua yang dibutuhkan sudah siap agar waktu coding tidak banyak terbuang.</p>
+          <div class="choice-grid">
+            <button class="choice-btn" onclick="deviceCheck(this)">Laptop/komputer sudah menyala</button>
+            <button class="choice-btn" onclick="deviceCheck(this)">Internet stabil</button>
+            <button class="choice-btn" onclick="deviceCheck(this)">Browser sudah terbuka</button>
+            <button class="choice-btn" onclick="deviceCheck(this)">Akun LMS siap digunakan</button>
+            <button class="choice-btn" onclick="deviceCheck(this)">Akun MIT App Inventor siap</button>
+            <button class="choice-btn" onclick="deviceCheck(this)">HP testing/AI2 Companion siap jika digunakan</button>
+          </div>
+          <div class="info-box"><strong>Alamat LMS:</strong><br><a href="https://app.uobmydigitalspace.com/" target="_blank" rel="noopener noreferrer">https://app.uobmydigitalspace.com/</a></div>
+          <p class="mini-note">Klik kotak yang sudah siap. Kalau ada kendala teknis, sampaikan sejak awal.</p>
+        </section>
+
+        <section class="slide" id="slide-4">
+          <h3>Buka Materi Sesi 2</h3>
+          <p class="lead">Buka materi melalui menu <strong>Sesi Kelas</strong>, lalu pilih kartu sesi sesuai arahan guru.</p>
+          <div class="scratch-map-wrap lms-map-wrap">
+            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/6a973bfb-a09a-42af-a4ea-a4db56b12f56.png" alt="Tampilan halaman LMS UOB My Digital Space">
+            <button class="hotspot" style="left:10.5%;top:39%;" onclick="showLmsStep(1,this)" aria-label="Langkah 1: menu Sesi Kelas">1</button>
+            <button class="session-card-hotspot" onclick="showLmsStep(2,this)" aria-label="Langkah 2: kartu sesi"><span>2</span></button>
+          </div>
+          <div class="area-live-card" id="lmsStepInfo"><h4>Mulai dari angka 1</h4><p>Klik menu <strong>Sesi Kelas</strong>, lalu cari kartu sesi yang sesuai.</p></div>
+          <p class="mini-note">Nama sekolah, rombel, atau urutan sesi di akunmu bisa berbeda dari gambar contoh.</p>
+        </section>
+
+        <section class="slide" id="slide-5">
+          <h3>Kenapa UI Perlu Dirancang?</h3>
+          <p class="lead">Coba bayangkan aplikasi yang tombolnya kecil, inputnya tidak jelas, dan hasilnya muncul di tempat yang sulit ditemukan.</p>
+          <div class="scenario-box">
+            <strong>Situasi:</strong> Kamu membuka aplikasi kalkulator. Ada kotak kosong, tombol “OK”, dan teks “hasil”, tetapi kamu tidak yakin harus mulai dari mana.
+          </div>
+          <div class="choice-grid">
+            <button class="choice-btn" onclick="quiz(this,true,'q5')">UI-nya perlu diperjelas</button>
+            <button class="choice-btn" onclick="quiz(this,false,'q5')">Cukup ganti warna saja</button>
+            <button class="choice-btn" onclick="quiz(this,false,'q5')">Masalahnya pasti internet</button>
+          </div>
+          <div class="feedback-line" id="q5"></div>
+          <p class="mini-note">UI yang jelas membuat user tahu langkah pertama, tombol aksi, dan tempat melihat hasil.</p>
+        </section>
+
+        <section class="slide" id="slide-6">
+          <h3>UI dan UX Bukan Hal yang Sama</h3>
+          <div class="visual-grid">
+            <div class="visual-card"><div class="visual-icon">🖼️</div><h4>UI</h4><p>Bagian yang terlihat: teks, tombol, warna, ukuran, posisi, dan kotak input.</p></div>
+            <div class="visual-card"><div class="visual-icon">🧭</div><h4>UX</h4><p>Pengalaman saat memakai aplikasi: mudah, bingung, cepat, nyaman, atau menyulitkan.</p></div>
+          </div>
+          <div class="info-box"><strong>Contoh:</strong> Tombol terlihat keren adalah UI. User langsung tahu tombol itu untuk apa adalah UX.</div>
+          <div class="interactive-box"><h4>Quiz cepat</h4><p>“Pengguna mudah menemukan tombol Hitung.” Ini lebih dekat ke...</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q6')">UI saja</button><button class="choice-btn" onclick="quiz(this,true,'q6')">UX</button></div><div class="feedback-line" id="q6"></div></div>
+        </section>
+
+        <section class="slide" id="slide-7">
+          <h3>Mini Activity: Mana UI yang Lebih Nyaman?</h3>
+          <p>Klik salah satu contoh UI, lalu baca alasannya.</p>
+          <div class="ui-sample-grid">
+            <div class="ui-card" onclick="chooseUi('A',this)">
+              <h4>UI A</h4>
+              <div class="phone-preview messy-phone small-phone"><div class="phone-bar">Screen1</div><div class="phone-body"><span style="font-size:.62rem;font-weight:900;">Kalkulator</span><input class="app-input" placeholder="angka" disabled><button class="app-button">OK</button><div class="app-label" style="font-size:.66rem;min-height:30px;">hasil</div></div></div>
+            </div>
+            <div class="ui-card" onclick="chooseUi('B',this)">
+              <h4>UI B</h4>
+              <div class="phone-preview small-phone"><div class="phone-bar">Screen1</div><div class="phone-body"><div class="app-title">Kalkulator Saku</div><input class="app-input" placeholder="Masukkan angka" disabled><button class="app-button">HITUNG</button><div class="app-label">Hasil muncul di sini</div></div></div>
+            </div>
+          </div>
+          <div class="area-live-card" id="uiFeedback"><h4>Pilih salah satu UI</h4><p>Alasan akan muncul di sini.</p></div>
+        </section>
+
+        <section class="slide" id="slide-8">
+          <h3>Sortir: Ini UI atau UX?</h3>
+          <p>Seret kartu ke kotak yang sesuai.</p>
+          <div class="sort-bank" id="sortBank">
+            <div class="sort-card" draggable="true" data-kind="ui">Warna tombol</div>
+            <div class="sort-card" draggable="true" data-kind="ux">Mudah menemukan tombol</div>
+            <div class="sort-card" draggable="true" data-kind="ui">Ukuran TextBox</div>
+            <div class="sort-card" draggable="true" data-kind="ux">Tidak bingung setelah klik</div>
+            <div class="sort-card" draggable="true" data-kind="ui">Tulisan pada Label</div>
+            <div class="sort-card" draggable="true" data-kind="ux">Proses terasa cepat dipahami</div>
+          </div>
+          <div class="drop-grid">
+            <div class="drop-zone" data-accept="ui"><h4>UI</h4><p class="hint-text">Bagian yang terlihat di layar.</p></div>
+            <div class="drop-zone" data-accept="ux"><h4>UX</h4><p class="hint-text">Pengalaman saat menggunakan aplikasi.</p></div>
+          </div>
+          <button class="primary-btn" onclick="checkSort()">Cek Sortir</button><div class="feedback-line" id="sortFeedback"></div>
+        </section>
+
+        <section class="slide" id="slide-9">
+          <h3>Layout Arrangement</h3>
+          <p class="lead">Arrangement adalah “wadah” untuk menyusun komponen agar posisinya lebih teratur.</p>
+          <div class="arrangement-demo">
+            <div class="visual-card"><div class="visual-icon">↕️</div><h4>Vertical Arrangement</h4><p>Menyusun komponen dari atas ke bawah.</p><div class="flow-row"><div class="flow-step">Judul</div><div class="flow-step">Input</div><div class="flow-step">Tombol</div></div></div>
+            <div class="visual-card"><div class="visual-icon">↔️</div><h4>Horizontal Arrangement</h4><p>Menyusun komponen dari kiri ke kanan.</p><div class="flow-row"><div class="flow-step">Tombol</div><div class="flow-step">Hasil</div></div></div>
+          </div>
+          <div class="warning-box"><strong>Kesalahan umum:</strong> semua komponen langsung diletakkan di Screen tanpa wadah, lalu sulit dirapikan.</div>
+        </section>
+
+        <section class="slide" id="slide-10">
+          <h3>Kapan Pakai Vertical atau Horizontal?</h3>
+          <div class="interactive-box"><h4>Kasus 1</h4><p>Judul, input angka, tombol, dan hasil ingin disusun dari atas ke bawah.</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q10a')">Vertical Arrangement</button><button class="choice-btn" onclick="quiz(this,false,'q10a')">Horizontal Arrangement</button></div><div class="feedback-line" id="q10a"></div></div>
+          <div class="interactive-box"><h4>Kasus 2</h4><p>Tombol Reset dan tombol Hitung ingin diletakkan sejajar.</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q10b')">Vertical Arrangement</button><button class="choice-btn" onclick="quiz(this,true,'q10b')">Horizontal Arrangement</button></div><div class="feedback-line" id="q10b"></div></div>
+        </section>
+
+        <section class="slide" id="slide-11">
+          <h3>Susun Struktur Layar</h3>
+          <p>Seret urutan komponen ke area bawah sesuai alur yang paling masuk akal untuk kalkulator.</p>
+          <div id="sequenceSource" class="sequence-source">
+            <div class="sequence-card" draggable="true" data-order="3">TextBox: tempat mengetik angka</div>
+            <div class="sequence-card" draggable="true" data-order="1">Label judul: nama aplikasi</div>
+            <div class="sequence-card" draggable="true" data-order="4">Button Hitung: menjalankan aksi</div>
+            <div class="sequence-card" draggable="true" data-order="2">Instruksi singkat: apa yang harus diketik</div>
+            <div class="sequence-card" draggable="true" data-order="5">Label hasil: menampilkan output</div>
+          </div>
+          <h4 style="margin-top:16px;">Drop urutan di sini:</h4>
+          <div id="sequenceTarget" class="sequence-target"></div>
+          <button class="primary-btn" onclick="checkSequence()">Cek Urutan</button><div class="feedback-line" id="sequenceFeedback"></div>
+        </section>
+
+        <section class="slide" id="slide-12">
+          <h3>Asset Renaming</h3>
+          <p>Nama default seperti <strong>Button1</strong> atau <strong>Label2</strong> bisa membingungkan saat komponen bertambah.</p>
+          <table class="mini-table">
+            <tr><th>Nama default</th><th>Nama setelah rename</th><th>Fungsi</th></tr>
+            <tr><td>TextBox1</td><td>txtAngka</td><td>Tempat user mengetik angka</td></tr>
+            <tr><td>Button1</td><td>btnHitung</td><td>Tombol utama untuk menjalankan aksi</td></tr>
+            <tr><td>Label2</td><td>lblHasil</td><td>Menampilkan output atau pesan</td></tr>
+          </table>
+          <div class="info-box"><strong>Pola singkat:</strong> <span class="pill blue">btn</span> Button · <span class="pill green">txt</span> TextBox · <span class="pill orange">lbl</span> Label · <span class="pill purple">arr</span> Arrangement</div>
+        </section>
+
+        <section class="slide" id="slide-13">
+          <h3>Pola Nama yang Rapi</h3>
+          <div class="visual-grid">
+            <div class="visual-card"><div class="visual-icon">🔘</div><h4>Button</h4><p><strong>btn</strong> + fungsi<br>Contoh: btnHitung</p></div>
+            <div class="visual-card"><div class="visual-icon">⌨️</div><h4>TextBox</h4><p><strong>txt</strong> + isi input<br>Contoh: txtAngka</p></div>
+            <div class="visual-card"><div class="visual-icon">🏷️</div><h4>Label</h4><p><strong>lbl</strong> + isi tampilan<br>Contoh: lblHasil</p></div>
+            <div class="visual-card"><div class="visual-icon">📦</div><h4>Arrangement</h4><p><strong>arr</strong> + posisi/fungsi<br>Contoh: arrMain</p></div>
+          </div>
+          <p class="mini-note">Gunakan huruf yang konsisten. Nama tidak perlu panjang, yang penting jelas.</p>
+        </section>
+
+        <section class="slide" id="slide-14">
+          <h3>Latihan Naming</h3>
+          <p>Pilih nama komponen yang paling jelas.</p>
+          <div class="interactive-box"><h4>Komponen: tombol untuk menghitung</h4><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q14a')">Button1</button><button class="choice-btn" onclick="quiz(this,true,'q14a')">btnHitung</button><button class="choice-btn" onclick="quiz(this,false,'q14a')">TombolYangDipakaiUntukMenghitung</button></div><div class="feedback-line" id="q14a"></div></div>
+          <div class="interactive-box"><h4>Komponen: tempat user mengetik angka</h4><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q14b')">txtAngka</button><button class="choice-btn" onclick="quiz(this,false,'q14b')">lblAngka</button><button class="choice-btn" onclick="quiz(this,false,'q14b')">btnAngka</button></div><div class="feedback-line" id="q14b"></div></div>
+          <div class="interactive-box"><h4>Komponen: label untuk menampilkan hasil</h4><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q14c')">txtHasil</button><button class="choice-btn" onclick="quiz(this,true,'q14c')">lblHasil</button><button class="choice-btn" onclick="quiz(this,false,'q14c')">Button2</button></div><div class="feedback-line" id="q14c"></div></div>
+        </section>
+
+        <section class="slide" id="slide-15">
+          <h3>Komponen Project Hari Ini</h3>
+          <p>Klik nama komponen untuk melihat fungsinya.</p>
+          <div class="component-bank">
+            <button class="component-pill" onclick="showComponent('Screen1',this)">Screen1</button>
+            <button class="component-pill" onclick="showComponent('arrMain',this)">arrMain</button>
+            <button class="component-pill" onclick="showComponent('lblJudul',this)">lblJudul</button>
+            <button class="component-pill" onclick="showComponent('txtAngka',this)">txtAngka</button>
+            <button class="component-pill" onclick="showComponent('btnHitung',this)">btnHitung</button>
+            <button class="component-pill" onclick="showComponent('lblHasil',this)">lblHasil</button>
+          </div>
+          <div class="area-live-card" id="componentInfo"><h4>Pilih komponen</h4><p>Fungsi komponen akan muncul di sini.</p></div>
+        </section>
+
+        <section class="slide" id="slide-16">
+          <h3>Alur Input → Proses → Output</h3>
+          <div class="flow-row">
+            <div class="flow-step">Input<br><small>user mengetik angka</small></div><div class="flow-arrow">→</div><div class="flow-step">Proses<br><small>button diklik</small></div><div class="flow-arrow">→</div><div class="flow-step">Output<br><small>label berubah</small></div>
+          </div>
+          <div class="mini-table-wrap"><table class="mini-table"><tr><th>Tahap</th><th>Komponen</th><th>Contoh</th></tr><tr><td>Input</td><td>txtAngka</td><td>Pengguna mengetik 15000</td></tr><tr><td>Proses</td><td>btnHitung</td><td>Tombol ditekan</td></tr><tr><td>Output</td><td>lblHasil</td><td>Menampilkan pesan hasil</td></tr></table></div>
+          <p class="mini-note">Sesi ini baru menguji alur dasar. Fungsi hitung akan lebih mudah dibuat setelah alurnya benar.</p>
+        </section>
+
+        <section class="slide" id="slide-17">
+          <h3>Rancang Wireframe Dulu</h3>
+          <p>Wireframe adalah rancangan kasar sebelum warna, ikon, dan detail visual ditambahkan.</p>
+          <div class="phone-preview"><div class="phone-bar">Screen1</div><div class="phone-body" id="wireframeBody"><div class="app-label">Klik tombol di bawah untuk menyusun wireframe.</div></div></div>
+          <div class="choice-grid"><button class="choice-btn" onclick="addWire('title')">Tambah Judul</button><button class="choice-btn" onclick="addWire('input')">Tambah Input</button><button class="choice-btn" onclick="addWire('button')">Tambah Tombol</button><button class="choice-btn" onclick="addWire('result')">Tambah Hasil</button><button class="choice-btn" onclick="resetWire()">Reset</button></div>
+        </section>
+
+        <section class="slide" id="slide-18">
+          <h3>Build Step 1: Struktur Utama</h3>
+          <div class="property-grid">
+            <div class="property-card"><h4>1. Screen1</h4><p>Halaman utama aplikasi.</p></div>
+            <div class="property-card"><h4>2. Vertical Arrangement</h4><p>Wadah utama dari atas ke bawah.</p></div>
+            <div class="property-card"><h4>3. Width</h4><p>Gunakan Fill Parent agar lebar menyesuaikan layar.</p></div>
+            <div class="property-card"><h4>4. Align</h4><p>Atur agar komponen terlihat seimbang.</p></div>
+          </div>
+          <div class="placeholder-box wide-placeholder"><div><div class="placeholder-icon">🖼️</div><strong>PLACEHOLDER SCREENSHOT DESIGNER</strong><small>Ganti dengan gambar App Inventor: Screen1 + Vertical Arrangement utama.</small></div></div>
+        </section>
+
+        <section class="slide" id="slide-19">
+          <h3>Build Step 2: Komponen Utama</h3>
+          <table class="mini-table">
+            <tr><th>Komponen</th><th>Text/Hint yang disarankan</th><th>Tujuan</th></tr>
+            <tr><td>Label Judul</td><td>KALKULATOR SAKU UI</td><td>Memberi tahu nama aplikasi</td></tr>
+            <tr><td>TextBox</td><td>Hint: Masukkan angka</td><td>Memberi petunjuk input</td></tr>
+            <tr><td>Button</td><td>HITUNG</td><td>Menjalankan aksi</td></tr>
+            <tr><td>Label Hasil</td><td>Hasil muncul di sini</td><td>Area output</td></tr>
+          </table>
+          <div class="info-box"><strong>Catatan:</strong> tulisan yang terlihat user boleh berbeda dengan nama internal komponen.</div>
+        </section>
+
+        <section class="slide" id="slide-20">
+          <h3>Properties yang Perlu Dicek</h3>
+          <div class="visual-grid">
+            <div class="visual-card"><div class="visual-icon">↔️</div><h4>Width</h4><p>Atur lebar komponen, misalnya Fill Parent.</p></div>
+            <div class="visual-card"><div class="visual-icon">🎯</div><h4>Alignment</h4><p>Atur posisi komponen agar tidak berantakan.</p></div>
+            <div class="visual-card"><div class="visual-icon">💬</div><h4>Hint</h4><p>Petunjuk di TextBox sebelum user mengetik.</p></div>
+            <div class="visual-card"><div class="visual-icon">🔤</div><h4>Text</h4><p>Tulisan yang muncul di layar aplikasi.</p></div>
+          </div>
+          <div class="interactive-box"><h4>Quiz cepat</h4><p>Property apa yang membantu TextBox memberi petunjuk sebelum user mengetik?</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q20')">Width</button><button class="choice-btn" onclick="quiz(this,true,'q20')">Hint</button><button class="choice-btn" onclick="quiz(this,false,'q20')">Visible</button></div><div class="feedback-line" id="q20"></div></div>
+        </section>
+
+        <section class="slide" id="slide-21">
+          <h3>Text Tampilan vs Nama Internal</h3>
+          <table class="mini-table"><tr><th>Yang dilihat user</th><th>Nama internal developer</th></tr><tr><td>Tombol bertuliskan “HITUNG”</td><td>btnHitung</td></tr><tr><td>Kotak dengan hint “Masukkan angka”</td><td>txtAngka</td></tr><tr><td>Label “Hasil muncul di sini”</td><td>lblHasil</td></tr></table>
+          <div class="interactive-box"><h4>Quiz cepat</h4><p>Nama mana yang dipakai saat menyusun Blocks?</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q21')">Text yang terlihat user</button><button class="choice-btn" onclick="quiz(this,true,'q21')">Nama internal komponen</button></div><div class="feedback-line" id="q21"></div></div>
+        </section>
+
+        <section class="slide" id="slide-22">
+          <h3>Review Blocks: Button.Click</h3>
+          <p class="lead">Di sesi sebelumnya, tombol bisa diberi event agar aplikasi merespons saat user menekan tombol.</p>
+          <div class="flow-row"><div class="flow-step">User klik tombol</div><div class="flow-arrow">→</div><div class="flow-step">Event Button.Click berjalan</div><div class="flow-arrow">→</div><div class="flow-step">Label berubah</div></div>
+          <div class="info-box"><strong>Tujuan sesi ini:</strong> bukan menghitung dulu, tetapi memastikan tombol dan label sudah terhubung.</div>
+        </section>
+
+        <section class="slide" id="slide-23">
+          <h3>Placeholder Kode App Inventor</h3>
+          <div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR</strong><br><small>Ganti bagian ini dengan gambar blok asli: <code>when btnHitung.Click</code> → <code>set lblHasil.Text</code></small></div></div>
+          <h4>Pseudocode</h4>
+          <ol class="pseudo-list"><li>Ketika <strong>btnHitung</strong> diklik.</li><li>Ubah teks pada <strong>lblHasil</strong>.</li><li>Tampilkan kalimat: <strong>“Aplikasi siap menghitung!”</strong></li></ol>
+          <p class="mini-note">Screenshot blok asli bisa kamu replace nanti agar tampilannya sama dengan App Inventor.</p>
+        </section>
+
+        <section class="slide" id="slide-24">
+          <h3>Coba Event Dasar</h3>
+          <p>Klik tombol pada mockup untuk melihat contoh respons.</p>
+          <div class="phone-preview"><div class="phone-bar">Screen1</div><div class="phone-body"><div class="app-title">KALKULATOR SAKU UI</div><input class="app-input" placeholder="Masukkan angka" disabled><button class="app-button" onclick="runCalcMock()">HITUNG</button><div class="app-label" id="mockCalcLabel">Hasil muncul di sini</div></div></div>
+          <button class="secondary-btn" onclick="resetCalcMock()">Reset Mockup</button>
+        </section>
+
+        <section class="slide" id="slide-25">
+          <h3>Testing dengan AI2 Companion</h3>
+          <p class="lead">Jika kelas menggunakan HP testing, gunakan AI2 Companion untuk melihat tampilan aplikasi secara langsung.</p>
+          <div class="visual-grid">
+            <div class="visual-card"><div class="visual-icon">🔗</div><h4>Connect</h4><p>Pilih menu Connect di App Inventor.</p></div>
+            <div class="visual-card"><div class="visual-icon">📱</div><h4>AI Companion</h4><p>Hubungkan dengan QR Code atau kode.</p></div>
+            <div class="visual-card"><div class="visual-icon">👀</div><h4>Lihat di HP</h4><p>Cek apakah tampilan nyaman pada layar HP.</p></div>
+          </div>
+          <div class="warning-box"><strong>Catatan:</strong> perubahan di Designer bisa muncul di HP secara real-time jika koneksi berhasil.</div>
+        </section>
+
+        <section class="slide" id="slide-26">
+          <h3>Peer Test: Tanpa Dijelaskan</h3>
+          <p>Minta teman mencoba tampilanmu. Jangan jelaskan terlalu banyak dulu.</p>
+          <ul class="checklist">
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Teman tahu nama aplikasi dari judulnya.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Teman tahu tempat mengetik angka.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Teman tahu tombol yang perlu ditekan.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Teman tahu di mana hasil akan muncul.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Teman tidak perlu bertanya langkah pertama.</li>
+          </ul>
+        </section>
+
+        <section class="slide" id="slide-27">
+          <h3>Debugging UI dan Blocks</h3>
+          <div class="debug-tabs"><button class="debug-tab active" onclick="showDebug('debug1',this)">Komponen Berantakan</button><button class="debug-tab" onclick="showDebug('debug2',this)">Nama Masih Default</button><button class="debug-tab" onclick="showDebug('debug3',this)">Button Tidak Merespons</button></div>
+          <div class="debug-scenario active" id="debug1"><div class="warning-box"><h4>Masalah</h4><p>Komponen muncul, tetapi jarak dan urutannya tidak rapi.</p></div><div class="example-box"><h4>Cek</h4><p>Pastikan komponen masuk ke Arrangement yang benar dan Width sudah diatur sesuai kebutuhan.</p></div></div>
+          <div class="debug-scenario" id="debug2"><div class="warning-box"><h4>Masalah</h4><p>Di Blocks, masih muncul Button1, TextBox1, dan Label2.</p></div><div class="example-box"><h4>Cek</h4><p>Kembali ke Designer, rename komponen sebelum menyusun logika lebih banyak.</p></div></div>
+          <div class="debug-scenario" id="debug3"><div class="warning-box"><h4>Masalah</h4><p>Button ditekan, tetapi Label tidak berubah.</p></div><div class="example-box"><h4>Cek</h4><p>Pastikan event dipasang pada btnHitung dan output diarahkan ke lblHasil.</p></div></div>
+        </section>
+
+        <section class="slide" id="slide-28">
+          <h3>Output Minimum</h3>
+          <ul class="checklist">
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Seluruh komponen tersusun rapi dengan Vertical/Horizontal Arrangement.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Komponen sudah diberi nama yang jelas melalui Asset Renaming.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Tombol Hitung dapat ditekan.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Label menampilkan tulisan “Aplikasi siap menghitung!”.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Tampilan aplikasi terlihat rapi saat diuji.</li>
+          </ul>
+          <p class="mini-note">Selesaikan output minimum sebelum mengambil challenge tambahan.</p>
+        </section>
+
+        <section class="slide" id="slide-29">
+          <h3>Challenge Tambahan</h3>
+          <div class="visual-grid">
+            <div class="visual-card"><div class="visual-icon">🖼️</div><h4>Ikon Kecil</h4><p>Tambahkan ikon/gambar kecil yang sesuai tema kalkulator.</p></div>
+            <div class="visual-card"><div class="visual-icon">🧹</div><h4>Button Reset</h4><p>Tambahkan tombol reset untuk mengosongkan input dan hasil.</p></div>
+            <div class="visual-card"><div class="visual-icon">🎨</div><h4>Tema Warna</h4><p>Atur warna agar konsisten dan tetap mudah dibaca.</p></div>
+          </div>
+          <div class="code-placeholder"><div><strong>PLACEHOLDER BLOK CHALLENGE</strong><br><small>Pseudocode reset: ketika btnReset diklik → kosongkan txtAngka → ubah lblHasil ke teks awal.</small></div></div>
+        </section>
+
+        <section class="slide" id="slide-30">
+          <h3>Simpan Project</h3>
+          <div class="info-box"><h4>Nama project</h4><p><strong>KalkulatorSakuUI_NamaPanggilan</strong></p></div>
+          <ul class="checklist">
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Nama project sudah jelas.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Project sudah tersimpan di My Projects.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Tampilan sudah dites minimal satu kali.</li>
+            <li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Komponen sudah direname.</li>
+          </ul>
+          <p class="mini-note">Jangan menutup tab sebelum yakin project sudah tersimpan.</p>
+        </section>
+
+        <section class="slide" id="slide-31">
+          <h3>Refleksi Cepat</h3>
+          <div class="interactive-box"><h4>Diskusikan singkat</h4><ol><li>Apa perbedaan UI dan UX?</li><li>Mengapa komponen perlu disusun dengan Arrangement?</li><li>Mengapa Button1 sebaiknya diganti menjadi btnHitung?</li><li>Bagian mana dari tampilanmu yang paling nyaman digunakan?</li><li>Bagian mana yang masih perlu diperbaiki?</li></ol></div>
+          <div class="example-box"><h4>Kesimpulan sesi</h4><p>Aplikasi yang baik bukan hanya bisa berjalan, tetapi juga mudah dipahami oleh pengguna.</p></div>
+        </section>
+      </div>
+      <div class="navigation"><button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)"><span>←</span> Previous</button><div class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">31</span></div><button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next <span>→</span></button></div>
+    </div>
+    <div class="explanation-panel">
+      <section class="explanation active" id="explanation-1">
+        <h3>Project yang Akan Kamu Buat</h3>
+        <p><strong>Kalkulator Saku UI</strong> adalah latihan membuat tampilan aplikasi sebelum aplikasi benar-benar menghitung. Fokusnya bukan rumus matematika dulu, tetapi cara menyusun layar agar pengguna tahu harus mengetik di mana, menekan tombol apa, dan melihat hasil di bagian mana.</p>
+        <div class="info-box"><h4>Target minimum</h4><p>Aplikasi memiliki judul, TextBox untuk input angka, tombol <strong>HITUNG</strong>, Label hasil, layout yang rapi, dan satu event sederhana saat tombol ditekan.</p></div>
+        <p>Di dunia nyata, aplikasi yang fiturnya bagus tetap bisa gagal dipakai kalau tampilannya membingungkan. Karena itu, sesi ini melatih cara berpikir sebagai developer: bukan hanya “apakah aplikasi berjalan?”, tetapi juga “apakah pengguna nyaman memakainya?”.</p>
+        <div class="example-box"><h4>Contoh hasil sesi ini</h4><p>Ketika tombol <strong>HITUNG</strong> diklik, Label hasil berubah menjadi “Aplikasi siap menghitung!”. Perhitungan lengkap akan lebih mudah dibuat jika struktur UI sudah benar.</p></div>
+      </section>
+
+      <section class="explanation" id="explanation-2">
+        <h3>Alur Belajar Hari Ini</h3>
+        <p>Alur sesi ini dibuat bertahap. Pertama, kalian membuka materi di LMS dan memastikan App Inventor siap digunakan. Setelah itu, kalian melihat contoh tampilan aplikasi, membedakan UI dan UX, lalu mulai menyusun layout di Designer.</p>
+        <p>Bagian penting sesi ini adalah <strong>Layout Arrangement</strong> dan <strong>Asset Renaming</strong>. Arrangement membantu komponen tertata, sedangkan renaming membuat komponen mudah dikenali saat pindah ke Blocks.</p>
+        <div class="info-box"><h4>Kenapa belum langsung menghitung?</h4><p>Kalau tampilan belum jelas, logika hitung akan lebih sulit dites. Kita perlu memastikan layar sudah punya tempat input, tombol aksi, dan tempat output terlebih dahulu.</p></div>
+        <p>Di akhir sesi, project kalian belum harus menjadi kalkulator penuh. Namun, aplikasi harus sudah siap untuk dilanjutkan: komponennya lengkap, rapi, dan mudah ditemukan.</p>
+      </section>
+
+      <section class="explanation" id="explanation-3">
+        <h3>Persiapan Teknis</h3>
+        <p>Sesi ini menggunakan LMS dan MIT App Inventor. Karena itu, pastikan browser, akun, dan koneksi internet berjalan dengan baik. Jika kelas memakai AI2 Companion, HP testing juga perlu siap agar tampilan aplikasi bisa dilihat secara langsung.</p>
+        <p>Persiapan teknis terlihat sederhana, tetapi sangat berpengaruh. Kalau akun belum masuk, halaman tidak terbuka, atau koneksi sering putus, proses membuat project akan terhambat.</p>
+        <div class="warning-box"><h4>Jangan menunggu diam-diam</h4><p>Jika ada masalah saat login atau membuka halaman, langsung beri tahu guru. Masalah teknis biasanya lebih cepat selesai jika diketahui di awal.</p></div>
+        <p>Jaga juga area kerja tetap rapi. Kita akan berpindah antara materi, Designer, Blocks, dan testing. Semakin rapi persiapannya, semakin mudah mengikuti langkah berikutnya.</p>
+      </section>
+
+      <section class="explanation" id="explanation-4">
+        <h3>Membuka Sesi di LMS</h3>
+        <p>Materi dibuka dari menu <strong>Sesi Kelas</strong>. Di sana, kalian akan menemukan kartu sesi yang sudah diberikan untuk rombel kalian. Pilih sesi sesuai arahan guru, bukan berdasarkan gambar contoh saja.</p>
+        <div class="info-box"><h4>Urutan membuka materi</h4><ol><li>Klik menu <strong>Sesi Kelas</strong>.</li><li>Cari kartu sesi yang diarahkan guru.</li><li>Buka detail materi.</li><li>Pastikan judulnya sesuai: <strong>Sesi 2 — Kalkulator Saku UI</strong>.</li></ol></div>
+        <p>Jika halaman LMS menampilkan nama rombel atau urutan yang berbeda, tetap ikuti instruksi kelas. Gambar pada slide hanya membantu kalian mengenali area yang perlu diklik.</p>
+        <p>Setelah materi terbuka, jangan langsung melompat ke langkah akhir. Project App Inventor biasanya lebih aman dibuat berurutan: Designer dulu, properties, renaming, lalu Blocks.</p>
+      </section>
+
+      <section class="explanation" id="explanation-5">
+        <h3>Masalah Tampilan yang Sering Terjadi</h3>
+        <p>Banyak aplikasi tidak gagal karena idenya buruk, tetapi karena tampilannya sulit digunakan. Pengguna bisa bingung ketika tombol terlalu kecil, teks tidak jelas, posisi komponen berantakan, atau urutan layar tidak mengikuti cara berpikir pengguna.</p>
+        <p>Pada project kalkulator, pengguna seharusnya langsung paham: ketik angka di TextBox, tekan tombol, lalu lihat hasil di Label. Kalau pengguna harus menebak-nebak, berarti UI perlu diperbaiki.</p>
+        <div class="example-box"><h4>Contoh masalah UI</h4><p>Tombol bertuliskan “OK” mungkin bisa dipakai, tetapi tombol bertuliskan “HITUNG” lebih jelas karena memberi tahu aksi yang akan dilakukan.</p></div>
+        <p>Di sesi ini, kalian belajar melihat tampilan dari sudut pandang pengguna, bukan hanya dari sudut pandang pembuat aplikasi.</p>
+      </section>
+
+      <section class="explanation" id="explanation-6">
+        <h3>Mengenal UI dan UX</h3>
+        <p><strong>UI</strong> adalah tampilan yang dilihat pengguna. Di App Inventor, UI dibuat di halaman Designer dengan komponen seperti Label, TextBox, Button, Image, dan Arrangement.</p>
+        <p><strong>UX</strong> adalah pengalaman pengguna saat memakai aplikasi. UX terasa dari apakah user cepat paham, nyaman membaca, tidak salah klik, dan tidak perlu bertanya terlalu banyak.</p>
+        <div class="info-box"><h4>Hubungan UI dan UX</h4><p>UI yang rapi biasanya membantu UX menjadi lebih baik, tetapi tampilan yang menarik belum tentu nyaman digunakan. Aplikasi bisa terlihat bagus, tetapi tetap membingungkan jika alurnya tidak jelas.</p></div>
+        <p>Untuk project hari ini, UI yang baik berarti komponen tersusun jelas. UX yang baik berarti temanmu bisa mencoba aplikasi dan tahu langkah yang harus dilakukan tanpa penjelasan panjang.</p>
+      </section>
+
+      <section class="explanation" id="explanation-7">
+        <h3>Menilai UI dengan Alasan</h3>
+        <p>Pada aktivitas ini, kalian tidak memilih berdasarkan warna favorit. Kalian menilai apakah tampilan mudah dipakai. Lihat urutan komponen, ukuran tombol, kejelasan teks, dan letak hasil.</p>
+        <p>UI yang baik biasanya memberi petunjuk tanpa harus dijelaskan. Judul memberi konteks, TextBox memberi tempat input, tombol menjelaskan aksi, dan Label memberi tempat output.</p>
+        <div class="example-box"><h4>Contoh alasan yang kuat</h4><p>“UI B lebih nyaman karena urutannya jelas: judul di atas, input di tengah, tombol setelah input, dan hasil terlihat di bawah tombol.”</p></div>
+        <p>Ketika membuat project sendiri, gunakan cara berpikir yang sama. Jangan hanya bertanya “bagus tidak?”, tetapi tanyakan “apakah pengguna paham cara memakainya?”.</p>
+      </section>
+
+      <section class="explanation" id="explanation-8">
+        <h3>Memisahkan UI dan UX</h3>
+        <p>Developer perlu bisa membedakan bagian yang terlihat dan pengalaman yang dirasakan pengguna. Ini membantu saat memperbaiki aplikasi. Jika warna kurang kontras, itu masalah UI. Jika pengguna tidak tahu langkah berikutnya, itu masalah UX.</p>
+        <p>Keduanya saling terhubung. Misalnya, teks tombol yang jelas adalah bagian UI, tetapi efeknya membuat UX lebih baik karena user tidak perlu menebak fungsi tombol.</p>
+        <div class="info-box"><h4>Cara mengecek</h4><p>Tanyakan: “Apakah ini bentuk/teks/posisi yang terlihat?” Jika iya, itu UI. Tanyakan juga: “Apakah ini rasa nyaman/mudah/bingung saat memakai aplikasi?” Jika iya, itu UX.</p></div>
+        <p>Latihan sortir membantu kalian melihat bahwa aplikasi bukan hanya soal coding. Desain tampilan juga merupakan bagian dari cara aplikasi berkomunikasi dengan pengguna.</p>
+      </section>
+
+      <section class="explanation" id="explanation-9">
+        <h3>Mengenal Layout Arrangement</h3>
+        <p>Di MIT App Inventor, Arrangement digunakan untuk mengatur posisi komponen. Tanpa Arrangement, komponen bisa terlihat menumpuk, jaraknya tidak konsisten, atau sulit dirapikan ketika jumlah komponen bertambah.</p>
+        <p><strong>Vertical Arrangement</strong> cocok untuk susunan utama dari atas ke bawah, seperti judul, input, tombol, dan hasil. <strong>Horizontal Arrangement</strong> cocok untuk komponen yang ingin disejajarkan dari kiri ke kanan.</p>
+        <div class="info-box"><h4>Analogi sederhana</h4><p>Arrangement seperti kotak penyimpanan. Kalau semua barang ditaruh begitu saja di meja, meja cepat berantakan. Kalau barang dikelompokkan ke dalam kotak, semuanya lebih mudah dicari dan diatur.</p></div>
+        <p>Project Kalkulator Saku UI menggunakan Arrangement agar layar lebih rapi, konsisten, dan siap dikembangkan pada sesi berikutnya.</p>
+      </section>
+
+      <section class="explanation" id="explanation-10">
+        <h3>Memilih Arrangement yang Tepat</h3>
+        <p>Pemilihan Arrangement bergantung pada arah susunan komponen. Jika kalian ingin komponen berurutan dari atas ke bawah, gunakan Vertical Arrangement. Jika komponen harus berdampingan dari kiri ke kanan, gunakan Horizontal Arrangement.</p>
+        <p>Untuk aplikasi kalkulator sederhana, Vertical Arrangement biasanya menjadi struktur utama. Komponen seperti judul, TextBox, tombol, dan Label hasil akan lebih mudah dibaca jika disusun dari atas ke bawah.</p>
+        <div class="example-box"><h4>Contoh penggunaan</h4><p>Gunakan Vertical Arrangement untuk kerangka halaman. Gunakan Horizontal Arrangement jika ingin menaruh dua tombol sejajar, misalnya <strong>HITUNG</strong> dan <strong>RESET</strong>.</p></div>
+        <p>Semakin jelas struktur layout, semakin mudah juga melakukan debugging saat tampilan tidak sesuai.</p>
+      </section>
+
+      <section class="explanation" id="explanation-11">
+        <h3>Urutan Komponen yang Mudah Dipahami</h3>
+        <p>User biasanya membaca layar dari atas ke bawah. Karena itu, urutan komponen sebaiknya mengikuti alur berpikir pengguna: pahami judul, baca instruksi, isi input, tekan tombol, lalu lihat hasil.</p>
+        <p>Urutan yang rapi membantu UX. Jika Label hasil diletakkan terlalu jauh dari tombol, user mungkin tidak sadar bahwa hasil sudah berubah. Jika instruksi tidak ada, user bisa bingung angka apa yang perlu dimasukkan.</p>
+        <div class="info-box"><h4>Alur ideal</h4><p><strong>Judul → Instruksi → TextBox → Button → Label hasil</strong>. Ini bukan satu-satunya desain yang mungkin, tetapi cocok untuk project awal karena sederhana dan jelas.</p></div>
+        <p>Saat membuat di Designer, gunakan urutan ini sebagai patokan agar project tidak hanya terlihat rapi, tetapi juga mudah digunakan.</p>
+      </section>
+
+      <section class="explanation" id="explanation-12">
+        <h3>Mengapa Komponen Perlu Direname?</h3>
+        <p>MIT App Inventor memberi nama otomatis seperti Button1, Button2, TextBox1, atau Label3. Nama ini hanya menunjukkan urutan pembuatan, bukan fungsi komponen.</p>
+        <p>Saat project masih kecil, nama default mungkin terlihat tidak masalah. Namun, begitu komponen bertambah, kalian bisa salah memilih komponen di Blocks. Misalnya, ingin mengubah Label hasil, tetapi yang dipilih ternyata Label judul.</p>
+        <div class="warning-box"><h4>Efek saat debugging</h4><p>Nama yang jelas membuat error lebih cepat ditemukan. Jika tombol tidak bekerja, kalian bisa langsung mencari <strong>btnHitung</strong>, bukan menebak-nebak Button1 atau Button2.</p></div>
+        <p>Biasakan rename sejak awal. Kebiasaan ini membuat project lebih rapi dan membantu kalian bekerja seperti developer sungguhan.</p>
+      </section>
+
+      <section class="explanation" id="explanation-13">
+        <h3>Aturan Naming yang Mudah Dibaca</h3>
+        <p>Nama komponen yang baik biasanya singkat, konsisten, dan menjelaskan fungsi. Kalian tidak perlu menulis kalimat panjang sebagai nama komponen.</p>
+        <p>Pola yang umum digunakan adalah awalan jenis komponen + fungsi. Misalnya, <strong>btnHitung</strong> berarti komponen Button untuk menghitung. <strong>txtAngka</strong> berarti TextBox untuk memasukkan angka.</p>
+        <div class="example-box"><h4>Bandingkan</h4><p><strong>Button1</strong> tidak memberi informasi fungsi. <strong>btnHitung</strong> langsung memberi tahu bahwa tombol ini dipakai untuk aksi hitung.</p></div>
+        <p>Semakin konsisten penamaan kalian, semakin mudah project dibaca oleh diri sendiri, teman, dan guru.</p>
+      </section>
+
+      <section class="explanation" id="explanation-14">
+        <h3>Mengecek Nama Komponen</h3>
+        <p>Latihan naming membantu kalian membiasakan pola pikir developer. Saat membuat aplikasi, kalian tidak hanya membuat sesuatu yang terlihat di layar, tetapi juga membuat struktur project yang mudah dibaca dari dalam.</p>
+        <p>Nama <strong>btnHitung</strong> lebih jelas daripada Button1 karena menunjukkan dua hal sekaligus: jenis komponennya Button, dan fungsinya untuk menghitung.</p>
+        <div class="info-box"><h4>Cara memilih nama</h4><ul><li>Gunakan awalan sesuai jenis komponen.</li><li>Tambahkan fungsi utama komponen.</li><li>Hindari nama terlalu panjang.</li><li>Gunakan pola yang konsisten di seluruh project.</li></ul></div>
+        <p>Kebiasaan ini akan sangat membantu pada sesi berikutnya, ketika jumlah Blocks semakin banyak.</p>
+      </section>
+
+      <section class="explanation" id="explanation-15">
+        <h3>Komponen yang Digunakan</h3>
+        <p>Project ini menggunakan komponen dasar App Inventor yang sering muncul di aplikasi input-output: Screen, Label, TextBox, Button, dan Arrangement.</p>
+        <p><strong>Screen1</strong> adalah halaman utama aplikasi. <strong>Label</strong> dipakai untuk judul dan hasil. <strong>TextBox</strong> menerima input dari pengguna. <strong>Button</strong> menjalankan aksi. <strong>Arrangement</strong> menjaga tampilan tetap rapi.</p>
+        <div class="info-box"><h4>Komponen dan fungsi</h4><ul><li><strong>txtAngka</strong>: tempat mengetik angka.</li><li><strong>btnHitung</strong>: tombol yang ditekan user.</li><li><strong>lblHasil</strong>: tempat output ditampilkan.</li></ul></div>
+        <p>Jika fungsi setiap komponen sudah jelas, kalian akan lebih mudah menyusun Blocks dan memperbaiki error.</p>
+      </section>
+
+      <section class="explanation" id="explanation-16">
+        <h3>Memahami Alur Aplikasi</h3>
+        <p>Banyak aplikasi sederhana bekerja dengan pola <strong>Input → Proses → Output</strong>. Pengguna memberikan data, aplikasi memproses data tersebut, lalu aplikasi menampilkan hasil.</p>
+        <p>Pada Kalkulator Saku UI, input berasal dari TextBox, proses dimulai ketika Button diklik, dan output muncul pada Label. Walaupun belum menghitung angka secara lengkap, struktur ini sudah melatih cara berpikir aplikasi.</p>
+        <div class="example-box"><h4>Contoh alur</h4><p>User mengetik angka di <strong>txtAngka</strong>, menekan <strong>btnHitung</strong>, lalu <strong>lblHasil</strong> berubah menjadi pesan tertentu.</p></div>
+        <p>Jika kalian memahami alur ini, sesi berikutnya akan lebih mudah karena kalian tinggal menambahkan logika perhitungan di bagian proses.</p>
+      </section>
+
+      <section class="explanation" id="explanation-17">
+        <h3>Mengapa Perlu Wireframe?</h3>
+        <p>Wireframe adalah sketsa susunan layar. Pada tahap ini, kalian belum perlu memikirkan warna, ikon, atau dekorasi. Fokusnya adalah posisi komponen dan alur penggunaan.</p>
+        <p>Untuk project ini, wireframe membantu memastikan semua bagian penting ada: judul, instruksi atau input, tombol, dan area hasil. Jika urutan dasarnya sudah jelas, pengaturan visual akan lebih mudah.</p>
+        <div class="info-box"><h4>Fokus wireframe</h4><p>Tanyakan: “Apakah user tahu aplikasi ini untuk apa?”, “Di mana user mengetik?”, “Tombol mana yang ditekan?”, dan “Di mana hasil muncul?”.</p></div>
+        <p>Wireframe yang baik mencegah kita menghabiskan waktu merapikan warna sebelum struktur utama benar.</p>
+      </section>
+
+      <section class="explanation" id="explanation-18">
+        <h3>Membangun Struktur di Designer</h3>
+        <p>Langkah pertama di Designer adalah membuat wadah utama. Tambahkan <strong>Vertical Arrangement</strong> ke Viewer agar komponen utama tersusun dari atas ke bawah.</p>
+        <p>Setelah itu, atur properties penting seperti Width dan Alignment. Width membantu komponen mengikuti lebar layar, sedangkan Alignment membantu posisi komponen terlihat lebih rapi.</p>
+        <div class="warning-box"><h4>Jangan langsung menumpuk komponen</h4><p>Jika semua komponen diletakkan langsung di Screen tanpa Arrangement, tampilan mungkin masih terlihat jalan, tetapi akan sulit dirapikan ketika project bertambah.</p></div>
+        <p>Struktur yang baik membuat project lebih mudah dikembangkan dan lebih mudah diperbaiki jika ada tampilan yang tidak sesuai.</p>
+      </section>
+
+      <section class="explanation" id="explanation-19">
+        <h3>Menambahkan Komponen Utama</h3>
+        <p>Setelah wadah utama siap, tambahkan komponen yang akan dilihat dan digunakan oleh user. Komponen pertama adalah Label judul, lalu TextBox, Button, dan Label hasil.</p>
+        <p>TextBox sebaiknya memiliki Hint seperti “Masukkan angka”. Hint membantu pengguna mengetahui apa yang perlu diketik tanpa harus membaca instruksi panjang.</p>
+        <div class="info-box"><h4>Text vs nama komponen</h4><p>Button bisa bertuliskan <strong>HITUNG</strong> di layar, tetapi nama internalnya tetap <strong>btnHitung</strong>. User melihat Text, developer memakai nama internal.</p></div>
+        <p>Bagian ini penting karena App Inventor memisahkan tampilan yang dilihat user dan nama komponen yang dipakai di belakang layar.</p>
+      </section>
+
+      <section class="explanation" id="explanation-20">
+        <h3>Properties dalam App Inventor</h3>
+        <p>Properties adalah pengaturan detail pada setiap komponen. Melalui Properties, kalian bisa mengubah teks, ukuran, lebar, posisi, warna, dan beberapa perilaku dasar komponen.</p>
+        <p>Untuk project ini, beberapa Properties yang paling penting adalah <strong>Text</strong>, <strong>Hint</strong>, <strong>Width</strong>, dan <strong>Alignment</strong>. Properti ini membantu aplikasi terlihat jelas dan nyaman digunakan.</p>
+        <div class="example-box"><h4>Contoh</h4><p>TextBox tanpa Hint terlihat seperti kotak kosong biasa. Dengan Hint “Masukkan angka”, user langsung tahu data apa yang harus dimasukkan.</p></div>
+        <p>Jangan hanya fokus pada warna. Pastikan setiap pengaturan membantu aplikasi menjadi lebih mudah dipahami.</p>
+      </section>
+
+      <section class="explanation" id="explanation-21">
+        <h3>Memahami Dua Jenis Nama</h3>
+        <p>Di App Inventor, ada tulisan yang terlihat oleh user dan ada nama komponen yang digunakan oleh developer. Keduanya sering tertukar oleh siswa yang baru mulai membuat aplikasi.</p>
+        <p><strong>Text</strong> adalah tulisan yang tampil di layar. Misalnya, tombol bertuliskan “HITUNG”. Sementara itu, <strong>btnHitung</strong> adalah nama internal yang dipakai saat memilih komponen di Blocks.</p>
+        <div class="warning-box"><h4>Kenapa ini penting?</h4><p>Jika kalian hanya mengganti Text tombol menjadi “HITUNG” tetapi tidak rename komponennya, di Blocks tombol itu mungkin masih bernama Button1.</p></div>
+        <p>Biasakan mengecek keduanya: apakah tulisan yang dilihat user sudah jelas, dan apakah nama internal komponen sudah mudah dikenali.</p>
+      </section>
+
+      <section class="explanation" id="explanation-22">
+        <h3>Menyambungkan UI ke Blocks</h3>
+        <p>Designer membuat tampilan aplikasi. Blocks membuat aplikasi merespons tindakan pengguna. Pada sesi ini, kalian menggunakan event sederhana: ketika tombol diklik, aplikasi mengubah teks pada Label hasil.</p>
+        <p>Event yang digunakan adalah konsep <strong>Button.Click</strong>. Artinya, perintah di dalam event hanya berjalan ketika pengguna menekan tombol tersebut.</p>
+        <div class="info-box"><h4>Kenapa pakai event sederhana?</h4><p>Karena fokus sesi ini masih UI. Kita hanya perlu mengecek bahwa tombol yang dibuat di Designer bisa dikenali di Blocks dan dapat mengubah Label yang benar.</p></div>
+        <p>Jika event dasar sudah berhasil, kalian siap menambahkan logika perhitungan pada sesi berikutnya.</p>
+      </section>
+
+      <section class="explanation" id="explanation-23">
+        <h3>Membaca Pseudocode Sebelum Blok</h3>
+        <p>Pseudocode adalah cara menuliskan logika program dengan bahasa sederhana. Bentuknya belum seperti blok App Inventor, tetapi membantu kalian memahami alur sebelum menyusun blok asli.</p>
+        <p>Dalam project ini, logikanya pendek: ketika tombol Hitung diklik, ubah teks Label hasil. Dengan alur sederhana ini, kalian bisa mengecek apakah komponen sudah terhubung dengan benar.</p>
+        <div class="example-box"><h4>Yang akan terjadi</h4><p>Sebelum tombol diklik, Label hasil bisa bertuliskan “Hasil muncul di sini”. Setelah tombol diklik, Label berubah menjadi “Aplikasi siap menghitung!”.</p></div>
+        <p>Bagian screenshot blok sengaja dibuat placeholder agar bisa diganti dengan gambar blok App Inventor asli dan tampilannya tetap sesuai platform.</p>
+      </section>
+
+      <section class="explanation" id="explanation-24">
+        <h3>Testing Event</h3>
+        <p>Testing dilakukan untuk memastikan aplikasi merespons sesuai rencana. Jika tombol ditekan, Label hasil harus berubah. Jika tidak berubah, berarti ada bagian yang perlu dicek.</p>
+        <p>Dalam testing, jangan langsung menghapus semua komponen. Cek satu per satu: apakah tombol yang dipakai benar, apakah event dipasang pada tombol yang tepat, dan apakah output diarahkan ke Label yang benar.</p>
+        <div class="warning-box"><h4>Urutan cek cepat</h4><ol><li>Cek nama tombol: btnHitung.</li><li>Cek event: when btnHitung.Click.</li><li>Cek target output: set lblHasil.Text.</li><li>Cek teks output yang ingin ditampilkan.</li></ol></div>
+        <p>Testing kecil seperti ini membantu kalian menemukan error sebelum project menjadi lebih besar.</p>
+      </section>
+
+      <section class="explanation" id="explanation-25">
+        <h3>Live Testing Tampilan</h3>
+        <p>Testing di layar komputer dan testing di HP bisa terasa berbeda. Aplikasi yang terlihat rapi di komputer belum tentu nyaman di layar HP jika ukuran atau jaraknya kurang pas.</p>
+        <p>AI2 Companion membantu kalian melihat aplikasi secara langsung di HP. Dengan begitu, kalian bisa mengecek ukuran tombol, posisi TextBox, dan keterbacaan Label dari sudut pandang pengguna.</p>
+        <div class="info-box"><h4>Yang perlu dicek saat live testing</h4><ul><li>Apakah tombol mudah ditekan?</li><li>Apakah TextBox mudah ditemukan?</li><li>Apakah teks terlihat jelas?</li><li>Apakah hasil muncul di tempat yang mudah dilihat?</li></ul></div>
+        <p>Jika live testing belum digunakan di kelas, kalian tetap bisa melakukan pengecekan dari preview App Inventor dan diskusi dengan teman.</p>
+      </section>
+
+      <section class="explanation" id="explanation-26">
+        <h3>Melakukan Peer Test</h3>
+        <p>Peer test adalah saat teman mencoba aplikasi kalian. Tujuannya bukan mencari siapa yang paling bagus, tetapi menemukan bagian tampilan yang masih membingungkan.</p>
+        <p>Saat teman mencoba, jangan langsung menjelaskan semuanya. Amati apakah temanmu bisa menemukan input, tombol, dan hasil secara mandiri. Jika temanmu bingung, itu tanda UI atau UX perlu diperbaiki.</p>
+        <div class="example-box"><h4>Pertanyaan untuk tester</h4><p>“Menurutmu, apa yang harus diketik?”, “Tombol mana yang kamu tekan?”, dan “Di mana hasilnya muncul?”</p></div>
+        <p>Masukan dari tester membantu kalian melihat aplikasi dari sudut pandang pengguna, bukan hanya pembuat aplikasi.</p>
+      </section>
+
+      <section class="explanation" id="explanation-27">
+        <h3>Cara Debugging Sesi Ini</h3>
+        <p>Debugging pada sesi ini tidak hanya tentang blok. Tampilan juga bisa memiliki masalah: komponen berantakan, urutan tidak jelas, nama komponen membingungkan, atau tombol tidak mengubah output.</p>
+        <p>Gunakan cara cek satu per satu. Jika tampilan berantakan, cek Arrangement dan Properties. Jika Blocks membingungkan, cek nama komponen. Jika tombol tidak merespons, cek event dan target output.</p>
+        <div class="warning-box"><h4>Jangan panik saat error</h4><p>Error bukan tanda gagal. Error adalah petunjuk bahwa ada bagian yang perlu diperiksa. Cek dari struktur paling besar dulu, baru masuk ke detail.</p></div>
+        <p>Kebiasaan debugging yang rapi akan berguna di semua sesi berikutnya.</p>
+      </section>
+
+      <section class="explanation" id="explanation-28">
+        <h3>Kriteria Project Berhasil</h3>
+        <p>Output minimum adalah target utama yang perlu selesai. Jika target ini belum terpenuhi, jangan terburu-buru menambahkan fitur baru atau dekorasi tambahan.</p>
+        <p>Project dianggap berhasil jika komponen sudah lengkap, layout menggunakan Arrangement, nama komponen jelas, tombol dapat diklik, dan Label hasil berubah sesuai perintah.</p>
+        <div class="info-box"><h4>Ukuran keberhasilan</h4><p>Orang lain bisa melihat aplikasimu dan memahami alurnya tanpa penjelasan panjang: ketik angka, tekan tombol, lihat hasil.</p></div>
+        <p>Jika semua checklist sudah selesai, project kalian sudah siap menjadi dasar untuk sesi berikutnya.</p>
+      </section>
+
+      <section class="explanation" id="explanation-29">
+        <h3>Mengembangkan Project Setelah Target Utama</h3>
+        <p>Challenge tambahan boleh dikerjakan jika output minimum sudah selesai. Tantangan ini melatih kalian meningkatkan tampilan tanpa mengorbankan kejelasan aplikasi.</p>
+        <p>Jika menambahkan ikon, pastikan ikon tidak menutupi input, tombol, atau hasil. Jika menambahkan tombol Reset, pastikan nama komponennya jelas, misalnya <strong>btnReset</strong>.</p>
+        <div class="example-box"><h4>Ide reset</h4><p>Ketika btnReset diklik, TextBox kembali kosong dan Label hasil kembali ke “Hasil muncul di sini”.</p></div>
+        <p>Ingat, dekorasi harus membantu tampilan, bukan membuat aplikasi semakin sulit dipakai.</p>
+      </section>
+
+      <section class="explanation" id="explanation-30">
+        <h3>Menyimpan dengan Nama yang Jelas</h3>
+        <p>Nama project yang jelas membuat project mudah ditemukan pada sesi berikutnya. Hindari nama seperti “Project Baru”, “Coba-coba”, atau “Untitled”.</p>
+        <p>Gunakan nama yang menunjukkan isi project dan pemiliknya. Contohnya, <strong>KalkulatorSakuUI_Rafa</strong> atau <strong>KalkulatorSakuUI_Nadia</strong>.</p>
+        <div class="warning-box"><h4>Sebelum keluar</h4><p>Pastikan project sudah muncul di daftar My Projects. Jika belum yakin, minta bantuan guru untuk mengecek.</p></div>
+        <p>Project ini akan menjadi dasar untuk sesi berikutnya, jadi pastikan tidak hilang atau tertukar dengan project lain.</p>
+      </section>
+
+      <section class="explanation" id="explanation-31">
+        <h3>Menutup Sesi</h3>
+        <p>Hari ini kalian tidak hanya membuat tampilan aplikasi, tetapi juga belajar berpikir seperti developer. Developer perlu memikirkan struktur komponen, nama internal, tampilan yang dibaca user, dan pengalaman saat aplikasi digunakan.</p>
+        <p>Kalian juga sudah menghubungkan satu event sederhana di Blocks. Walaupun belum membuat kalkulator penuh, kalian sudah menyiapkan pondasi penting: input, tombol aksi, dan output.</p>
+        <div class="info-box"><h4>Yang dibawa ke sesi berikutnya</h4><p>Project <strong>Kalkulator Saku UI</strong> yang sudah rapi akan lebih mudah dikembangkan menjadi aplikasi yang benar-benar memproses input.</p></div>
+        <p>Simpan project dengan baik, karena pekerjaan hari ini akan menjadi dasar untuk belajar logika aplikasi berikutnya.</p>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const ACCESS_CODE = 'RGMDSMS26';
+    let currentSlide = 1;
+    const totalSlides = document.querySelectorAll('.slide').length;
+    document.getElementById('totalSlides').textContent = totalSlides;
+    window.addEventListener('load', () => {
+      setTimeout(() => document.querySelector('.access-popup').classList.add('show'), 50);
+      const input = document.getElementById('accessInput');
+      input.focus();
+      input.addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') checkAccessCode(); });
+      initDragDrop();
+      initSortDrop();
+    });
+    function checkAccessCode(){
+      const input = document.getElementById('accessInput');
+      const error = document.getElementById('accessError');
+      if(input.value.trim().toUpperCase() === ACCESS_CODE){
+        document.getElementById('accessPopup').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'flex';
+        updateSlide();
+      } else { error.classList.add('show'); input.value=''; input.focus(); }
+    }
+    function changeSlide(direction){ const next = currentSlide + direction; if(next < 1 || next > totalSlides) return; currentSlide = next; updateSlide(); }
+    function updateSlide(){
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.explanation').forEach(e => e.classList.remove('active'));
+      const slide = document.getElementById(`slide-${currentSlide}`); if(slide) slide.classList.add('active');
+      const exp = document.getElementById(`explanation-${currentSlide}`); if(exp) exp.classList.add('active');
+      document.getElementById('currentSlide').textContent = currentSlide;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+      document.getElementById('progressFill').style.width = `${(currentSlide/totalSlides)*100}%`;
+    }
+    document.addEventListener('keydown', e => { if(document.getElementById('mainContent').style.display === 'none') return; if(e.key === 'ArrowRight') changeSlide(1); if(e.key === 'ArrowLeft') changeSlide(-1); });
+    function deviceCheck(btn){ btn.classList.toggle('correct'); }
+    function quiz(btn, ok, feedbackId){
+      const group = btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      btn.classList.add(ok ? 'correct' : 'wrong');
+      const feedback = document.getElementById(feedbackId);
+      feedback.textContent = ok ? 'Betul.' : 'Belum tepat. Coba cek penjelasan di kanan.';
+      feedback.style.color = ok ? '#176b35' : '#a42820';
+    }
+    function showLmsStep(step, btn){
+      document.querySelectorAll('.lms-map-wrap .hotspot, .lms-map-wrap .session-card-hotspot').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const box = document.getElementById('lmsStepInfo');
+      if(step === 1) box.innerHTML = '<h4><span class="area-number">1</span>Menu Sesi Kelas</h4><p>Klik menu Sesi Kelas untuk melihat sesi yang tersedia untuk rombelmu.</p>';
+      else box.innerHTML = '<h4><span class="area-number">2</span>Kartu Sesi</h4><p>Pilih kartu Sesi 2 sesuai arahan guru. Nama sekolah atau rombel bisa berbeda dari gambar contoh.</p>';
+    }
+    function chooseUi(choice, card){
+      document.querySelectorAll('.ui-card').forEach(c => c.classList.remove('active')); card.classList.add('active');
+      const box = document.getElementById('uiFeedback');
+      if(choice === 'B') box.innerHTML = '<h4>UI B lebih nyaman</h4><p>Urutannya jelas, tombol mudah ditemukan, dan area hasil terlihat. Ini membantu UX menjadi lebih baik.</p>';
+      else box.innerHTML = '<h4>UI A masih perlu diperbaiki</h4><p>Komponen terlalu rapat, teks belum memberi petunjuk yang jelas, dan tombol OK tidak menjelaskan aksi yang dilakukan.</p>';
+    }
+    function showComponent(name, btn){
+      document.querySelectorAll('.component-pill').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+      const data = {
+        Screen1:'Halaman utama aplikasi. Semua komponen project ditampilkan di sini.',
+        arrMain:'Vertical Arrangement utama untuk menyusun komponen dari atas ke bawah.',
+        lblJudul:'Label untuk menampilkan judul aplikasi agar user tahu aplikasi apa yang sedang dibuka.',
+        txtAngka:'TextBox tempat user mengetik angka atau nominal yang ingin diproses.',
+        btnHitung:'Button yang ditekan user untuk menjalankan aksi utama aplikasi.',
+        lblHasil:'Label yang menampilkan output, hasil, atau pesan setelah tombol ditekan.'
+      };
+      document.getElementById('componentInfo').innerHTML = `<h4>${name}</h4><p>${data[name]}</p>`;
+    }
+    function addWire(type){
+      const body = document.getElementById('wireframeBody');
+      if(body.textContent.includes('Klik tombol di bawah')) body.innerHTML = '';
+      const el = document.createElement(type === 'button' ? 'button' : 'div');
+      if(type === 'title'){ el.className='app-title'; el.textContent='KALKULATOR SAKU UI'; }
+      if(type === 'input'){ el.className='app-input'; el.textContent='Masukkan angka'; }
+      if(type === 'button'){ el.className='app-button'; el.textContent='HITUNG'; }
+      if(type === 'result'){ el.className='app-label'; el.textContent='Hasil muncul di sini'; }
+      body.appendChild(el);
+    }
+    function resetWire(){ document.getElementById('wireframeBody').innerHTML = '<div class="app-label">Klik tombol di bawah untuk menyusun wireframe.</div>'; }
+    function initDragDrop(){
+      const cards = document.querySelectorAll('.sequence-card');
+      cards.forEach(card => { card.addEventListener('dragstart', () => card.classList.add('dragging')); card.addEventListener('dragend', () => card.classList.remove('dragging')); });
+      [document.getElementById('sequenceSource'), document.getElementById('sequenceTarget')].filter(Boolean).forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); const dragging = document.querySelector('.sequence-card.dragging'); if(dragging) zone.appendChild(dragging); });
+      });
+    }
+    function checkSequence(){
+      const target = document.getElementById('sequenceTarget');
+      const orders = [...target.querySelectorAll('.sequence-card')].map(c => Number(c.dataset.order));
+      const ok = orders.length === 5 && orders.every((v,i)=>v===i+1);
+      const feedback = document.getElementById('sequenceFeedback');
+      feedback.textContent = ok ? 'Urutannya sudah rapi.' : 'Urutannya belum tepat. Coba mulai dari judul, instruksi, input, tombol, lalu hasil.';
+      feedback.style.color = ok ? '#176b35' : '#a42820';
+    }
+    function initSortDrop(){
+      document.querySelectorAll('.sort-card').forEach(card => {
+        card.addEventListener('dragstart', () => card.classList.add('dragging-sort'));
+        card.addEventListener('dragend', () => card.classList.remove('dragging-sort'));
+      });
+      document.querySelectorAll('.drop-zone, #sortBank').forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); const dragging = document.querySelector('.dragging-sort'); if(dragging) zone.appendChild(dragging); });
+      });
+    }
+    function checkSort(){
+      let correct = 0, total = 0;
+      document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.querySelectorAll('.sort-card').forEach(card => { total++; if(card.dataset.kind === zone.dataset.accept) correct++; });
+      });
+      const fb = document.getElementById('sortFeedback');
+      if(total < 6){ fb.textContent = 'Masih ada kartu yang belum dipindahkan.'; fb.style.color = '#a42820'; return; }
+      fb.textContent = correct === 6 ? 'Semua sudah tepat.' : `Masih ada ${6-correct} kartu yang perlu dipindahkan.`;
+      fb.style.color = correct === 6 ? '#176b35' : '#a42820';
+    }
+    function runCalcMock(){ document.getElementById('mockCalcLabel').textContent = 'Aplikasi siap menghitung!'; }
+    function resetCalcMock(){ document.getElementById('mockCalcLabel').textContent = 'Hasil muncul di sini'; }
+    function toggleCheck(item){ const cb = item.querySelector('input'); cb.checked = !cb.checked; item.classList.toggle('done', cb.checked); }
+    function showDebug(id, btn){
+      document.querySelectorAll('.debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      document.querySelectorAll('.debug-scenario').forEach(s=>s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
