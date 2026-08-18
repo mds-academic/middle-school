@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UOB My Digital Space — Middle School Sesi 5</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue:#0056b3; --light-blue:#4a9eff; --uob-red:#e60012; --uob-red-soft:#ff5a6b;
+      --uob-blue-deep:#0056b3; --uob-blue-soft:#5aa7ff; --teal:#11a9b7; --bg:#f5f6f8;
+      --panel:#ffffff; --text:#2c3e50; --muted:#6c757d; --line:#e3e8ef; --green:#2e9d57;
+      --orange:#f39c12; --red:#e74c3c; --purple:#8e44ad; --yellow-soft:#fff8dc; --blue-soft:#eef7ff; --green-soft:#effaf2;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text); }
+    button, input, select { font: inherit; }
+    a { color: var(--blue); font-weight: 800; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { width: 100%; height: 6px; background: linear-gradient(90deg,#f5d7da,#d9e9ff); position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: inset 0 1px 2px rgba(0,0,0,.08); }
+    .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg,var(--uob-red) 0%,var(--uob-red-soft) 28%,var(--uob-blue-deep) 72%,var(--uob-blue-soft) 100%); transition: width .3s ease; box-shadow:0 0 8px rgba(0,86,179,.18); }
+    .main-container { display:flex; height:100vh; }
+    .slides-panel { width:50%; background:#f8f9fa; border-right:2px solid var(--line); display:flex; flex-direction:column; position:relative; }
+    .explanation-panel { width:50%; background:#fff; overflow-y:auto; padding:32px; }
+    .slide-header { background:#fff; padding:17px 20px 15px; border-bottom:2px solid var(--line); box-shadow:0 2px 4px rgba(0,0,0,.04); position:relative; }
+    .slide-header::before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(var(--uob-red),var(--light-blue)); }
+    .slide-header h1 { font-size:1.28rem; color:var(--text); margin-bottom:3px; }
+    .slide-header p { font-size:.9rem; color:var(--muted); }
+    .header-badge { position:absolute; right:18px; top:17px; background:var(--blue-soft); color:var(--blue); border:1px solid #cce7ff; border-radius:999px; padding:5px 10px; font-weight:700; font-size:.76rem; }
+    .slide-content { flex:1; padding:24px 28px 94px; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; min-height:0; }
+    .slide, .explanation { display:none; opacity:0; transition:opacity .25s ease; }
+    .slide.active, .explanation.active { display:block; opacity:1; }
+    .slide { width:100%; max-width:820px; }
+    .explanation { max-width:760px; margin:0 auto; }
+    .slide h2 { font-size:2.25rem; color:var(--blue); margin-bottom:10px; line-height:1.15; }
+    .slide h3 { font-size:1.78rem; color:var(--blue); margin-bottom:16px; line-height:1.2; }
+    .slide h4, .explanation h4 { font-size:1.05rem; margin-bottom:9px; color:var(--text); }
+    .slide p, .explanation p { font-size:1rem; line-height:1.58; color:#495057; margin-bottom:14px; }
+    .explanation h3 { font-size:1.65rem; margin-bottom:16px; color:var(--text); line-height:1.25; }
+    .slide ul, .slide ol, .explanation ul, .explanation ol { margin-left:22px; margin-bottom:10px; }
+    .slide li, .explanation li { margin-bottom:7px; line-height:1.5; }
+    .eyebrow { display:inline-block; color:var(--uob-red); font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+    .lead { font-size:1.08rem !important; }
+    .mini-note { font-size:.9rem !important; color:var(--muted) !important; margin-top:10px; }
+    .visual-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:13px; margin:16px 0; }
+    .visual-card,.metric-box,.info-box,.example-box,.warning-box,.placeholder-box,.interactive-box,.code-placeholder,.quiz-card { background:#fff; border:2px solid var(--line); border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .visual-card { padding:15px; }
+    .visual-card h4 { margin-bottom:5px; }
+    .visual-card p { margin-bottom:0; font-size:.92rem; line-height:1.42; }
+    .visual-icon { font-size:1.9rem; margin-bottom:8px; }
+    .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:16px; }
+    .metric-box { padding:16px 12px; text-align:center; }
+    .metric-box strong { display:block; font-size:1.55rem; color:var(--blue); margin-bottom:7px; }
+    .metric-box span { font-size:.9rem; line-height:1.35; color:#495057; display:block; }
+    .info-box,.example-box,.warning-box,.interactive-box { padding:17px; margin:16px 0; }
+    .info-box { border-left:5px solid var(--light-blue); }
+    .example-box { border-left:5px solid var(--green); background:#f8fff8; }
+    .warning-box { border-left:5px solid var(--orange); background:#fffaf0; }
+    .interactive-box { border-left:5px solid var(--purple); background:#fcf8ff; }
+    .placeholder-box { min-height:215px; padding:24px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; background:linear-gradient(135deg,#fbfdff,#f5f9fc); }
+    .placeholder-box .placeholder-icon { font-size:2.3rem; margin-bottom:8px; }
+    .placeholder-box strong { display:block; color:var(--blue); margin-bottom:5px; }
+    .placeholder-box small { color:var(--muted); line-height:1.4; }
+    .code-placeholder { min-height:230px; padding:22px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; border-color:#9ab7d3; background:#f8fbfe; }
+    .code-placeholder strong { color:var(--blue); display:block; margin-bottom:7px; }
+    .code-placeholder code { color:var(--muted); background:#eef3f8; padding:3px 7px; border-radius:5px; }
+    .pseudo-list { list-style:none; margin-left:0 !important; counter-reset:pseudo; }
+    .pseudo-list li { counter-increment:pseudo; background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 12px 10px 44px; position:relative; margin-bottom:8px; }
+    .pseudo-list li::before { content:counter(pseudo); position:absolute; left:11px; top:9px; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--blue); color:#fff; font-weight:800; font-size:.8rem; }
+    .navigation { position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:2px solid var(--line); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 -2px 4px rgba(0,0,0,.04); }
+    .nav-btn { background:var(--light-blue); color:#fff; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; font-size:.94rem; font-weight:700; display:flex; gap:8px; align-items:center; transition:.2s ease; }
+    .nav-btn:hover { transform:translateY(-1px); background:#357abd; }
+    .nav-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    .slide-indicator { font-size:.9rem; color:var(--muted); font-weight:700; }
+    .floating-element { position:absolute; opacity:.07; pointer-events:none; font-size:2rem; animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(0);}33%{transform:translateY(-12px) rotate(4deg);}66%{transform:translateY(7px) rotate(-3deg);} }
+    .access-popup-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999; display:flex; justify-content:center; align-items:center; }
+    .access-popup { background:#fff; border:3px solid var(--light-blue); border-radius:15px; padding:38px; max-width:450px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.3); transform:scale(.8); opacity:0; transition:all .3s ease; }
+    .access-popup.show { transform:scale(1); opacity:1; }
+    .access-popup h2 { color:var(--text); margin-bottom:13px; font-size:1.8rem; }
+    .access-popup p { color:#666; margin-bottom:22px; line-height:1.55; }
+    .access-input { width:100%; padding:14px; font-size:1.15rem; border:2px solid #dee2e6; border-radius:8px; margin-bottom:18px; text-align:center; letter-spacing:2px; font-weight:bold; text-transform:uppercase; }
+    .access-input:focus { outline:none; border-color:var(--light-blue); box-shadow:0 0 0 3px rgba(74,158,255,.12); }
+    .access-submit { background:var(--light-blue); color:#fff; border:none; padding:13px 28px; border-radius:8px; font-size:1.05rem; font-weight:bold; cursor:pointer; }
+    .access-submit:hover { background:#357abd; }
+    .access-error { color:var(--red); margin-top:13px; font-weight:bold; opacity:0; transition:opacity .2s; }
+    .access-error.show { opacity:1; }
+    .access-hint { background:#fff3cd; border:1px solid #ffc107; border-radius:5px; padding:9px; margin-top:18px; font-size:.88rem; color:#856404; }
+    .choice-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .choice-btn { border:2px solid var(--line); background:#fff; color:var(--text); border-radius:10px; padding:11px 12px; cursor:pointer; font-weight:700; transition:.18s; text-align:left; }
+    .choice-btn:hover { border-color:var(--light-blue); transform:translateY(-1px); }
+    .choice-btn.correct { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .choice-btn.wrong { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .choice-btn.selected { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+    .feedback-line { min-height:28px; font-weight:700; margin-top:8px; }
+    .form-grid { display:grid; gap:10px; margin:12px 0; }
+    .form-grid label { font-weight:700; font-size:.9rem; color:var(--text); }
+    .form-grid input { width:100%; padding:10px 12px; border:2px solid var(--line); border-radius:8px; margin-top:5px; }
+    .form-grid input:focus { outline:none; border-color:var(--light-blue); }
+    .primary-btn,.secondary-btn { border:none; border-radius:8px; padding:10px 14px; font-weight:800; cursor:pointer; }
+    .primary-btn { background:var(--blue); color:#fff; }
+    .secondary-btn { background:#e9ecef; color:var(--text); }
+    .scratch-map-wrap { position:relative; width:100%; margin:12px auto; border:2px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    .scratch-map-wrap img { width:100%; display:block; }
+    .hotspot { position:absolute; width:30px; height:30px; border-radius:50%; border:3px solid #fff; background:var(--uob-red); color:#fff; font-weight:900; cursor:pointer; box-shadow:0 3px 9px rgba(0,0,0,.35); display:grid; place-items:center; transform:translate(-50%,-50%); transition:transform .16s,background .16s; }
+    .hotspot:hover,.hotspot.active { transform:translate(-50%,-50%) scale(1.16); background:var(--blue); }
+    .scratch-caption { text-align:center; font-size:.85rem; color:var(--muted); margin-top:8px; }
+    .area-live-card { min-height:120px; border:2px solid #cfe7fb; background:var(--blue-soft); border-radius:12px; padding:16px; margin-top:14px; }
+    .area-live-card .area-number { display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--uob-red); color:#fff; font-weight:900; margin-right:7px; }
+    .lms-map-wrap { position:relative; }
+    .session-card-hotspot { position:absolute; left:19.1%; top:43%; width:25.5%; height:51%; padding:0; border:3px dashed transparent; border-radius:12px; background:transparent; cursor:pointer; transition:.2s ease; }
+    .session-card-hotspot span { position:absolute; top:8px; right:8px; width:32px; height:32px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; background:var(--uob-red); color:#fff; font-size:.9rem; font-weight:900; box-shadow:0 3px 9px rgba(0,0,0,.35); }
+    .session-card-hotspot:hover,.session-card-hotspot.active { border-color:var(--uob-red); background:rgba(230,0,18,.08); }
+    .session-card-hotspot:hover span,.session-card-hotspot.active span { background:var(--blue); transform:scale(1.1); }
+    .sequence-source,.sequence-target { display:grid; gap:8px; margin-top:10px; }
+    .sequence-card { padding:10px 12px; border:2px solid var(--line); background:#fff; border-radius:9px; cursor:grab; user-select:none; font-weight:700; }
+    .sequence-card.dragging { opacity:.45; }
+    .sequence-target { min-height:170px; border:2px dashed #a9bfd2; background:#f8fbfe; border-radius:10px; padding:10px; }
+    .checklist { list-style:none; margin-left:0 !important; display:grid; gap:8px; }
+    .check-item { display:flex; gap:9px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; cursor:pointer; }
+    .check-item input { margin-top:3px; transform:scale(1.2); }
+    .check-item.done { background:var(--green-soft); border-color:#9cd9af; text-decoration:line-through; color:#3e6b4c; }
+    .debug-scenario { display:none; }
+    .debug-scenario.active { display:block; }
+    .debug-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .debug-tab { border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 11px; cursor:pointer; font-weight:700; }
+    .debug-tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .pill { display:inline-block; padding:4px 9px; border-radius:999px; font-size:.78rem; font-weight:800; color:#fff; margin:2px; }
+    .pill.blue{background:var(--blue);} .pill.green{background:var(--green);} .pill.orange{background:var(--orange);} .pill.purple{background:var(--purple);} .pill.red{background:var(--uob-red);}
+    .phone-preview { margin:16px auto; width:220px; min-height:355px; border:9px solid #1f2937; border-radius:28px; background:#fff; box-shadow:0 12px 22px rgba(0,0,0,.13); overflow:hidden; }
+    .phone-bar { height:34px; background:#294bd8; color:#fff; display:flex; align-items:center; padding-left:12px; font-size:.8rem; font-weight:800; }
+    .phone-body { padding:18px 14px; text-align:center; display:grid; gap:12px; }
+    .app-title { font-weight:900; color:var(--text); font-size:.95rem; }
+    .app-input { padding:9px; border:1px solid var(--line); border-radius:8px; text-align:center; background:#fff; }
+    .app-label { min-height:50px; padding:10px; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+    .app-button { background:var(--uob-red); color:#fff; border:none; border-radius:8px; padding:10px; font-weight:900; cursor:pointer; }
+    .app-button.blue { background:var(--blue); } .app-button.gray { background:#667085; }
+    .ui-sample-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+    .ui-card { border:2px solid var(--line); border-radius:14px; background:#fff; padding:12px; cursor:pointer; transition:.18s; }
+    .ui-card:hover,.ui-card.active { border-color:var(--blue); background:var(--blue-soft); transform:translateY(-1px); }
+    .messy-phone .phone-body { gap:4px; text-align:left; }
+    .messy-phone .app-button { width:70px; padding:5px; font-size:.7rem; }
+    .messy-phone .app-input { width:95px; font-size:.7rem; }
+    .arrangement-demo { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+    .arr-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:14px; }
+    .arr-stack { display:grid; gap:8px; }
+    .arr-row { display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .mini-component { padding:8px 10px; background:#eef7ff; border:1px solid #cfe7fb; border-radius:8px; font-weight:800; font-size:.86rem; }
+    .component-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+    .component-pill { border:2px solid var(--line); border-radius:999px; background:#fff; padding:8px 11px; font-weight:800; cursor:pointer; }
+    .component-pill.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .mini-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem; }
+    .mini-table th,.mini-table td { border:1px solid var(--line); padding:9px; text-align:left; }
+    .mini-table th { background:var(--blue); color:#fff; }
+    @media (max-width:960px){ body{overflow:auto;height:auto}.main-container{flex-direction:column;height:auto;min-height:100vh}.slides-panel,.explanation-panel{width:100%;height:auto;min-height:50vh}.slides-panel{min-height:100vh}.slide-content{padding:20px 20px 92px}.explanation-panel{padding:24px}.header-badge{display:none}.ui-sample-grid,.arrangement-demo{grid-template-columns:1fr} }
+  
+    .section-label { display:inline-block; font-size:.75rem; font-weight:900; color:#fff; background:linear-gradient(90deg,var(--uob-red),var(--blue)); border-radius:999px; padding:5px 10px; margin-bottom:8px; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:12px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .term-card { border:2px solid var(--line); border-radius:12px; padding:13px; background:#fff; margin:8px 0; }
+    .term-card strong { color:var(--blue); }
+    .compact-list { margin-left:18px !important; }
+    .compact-list li { margin-bottom:4px !important; }
+    .property-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .property-card { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px; }
+    .property-card h4 { color:var(--blue); margin-bottom:5px; }
+    .small-phone { width:170px !important; min-height:275px !important; border-width:6px !important; border-radius:20px !important; }
+    .wide-placeholder { min-height:145px; }
+    .scenario-box { padding:14px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .sort-bank { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin:10px 0; }
+    .sort-card { border:2px solid var(--line); border-radius:10px; padding:10px; background:white; cursor:grab; font-weight:700; }
+    .drop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+    .drop-zone { min-height:145px; border:2px dashed #a9bfd2; border-radius:12px; padding:10px; background:#f8fbfe; }
+    .drop-zone h4 { color:var(--blue); font-size:.95rem; }
+    .drop-zone .sort-card { margin:6px 0; }
+    .hint-text { font-size:.86rem; color:var(--muted); }
+    @media(max-width:960px){.drop-grid{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}}
+
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:14px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .wide-note { padding:13px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .mini-phone-wide { display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:center; margin:16px 0; }
+    .readout { min-height:54px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; padding:10px; font-weight:800; color:var(--blue); }
+    .component-table { width:100%; border-collapse:collapse; background:#fff; border:2px solid var(--line); border-radius:12px; overflow:hidden; margin:14px 0; font-size:.92rem; }
+    .component-table th { background:var(--blue); color:#fff; padding:10px; text-align:left; }
+    .component-table td { border-top:1px solid var(--line); padding:10px; vertical-align:top; }
+    .block-pseudo { background:#111827; color:#e5e7eb; border-radius:14px; padding:14px; margin:12px 0; font-family:Consolas,Monaco,monospace; line-height:1.5; white-space:pre-wrap; box-shadow:0 8px 16px rgba(0,0,0,.12); }
+    .keyboard-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:14px 0; }
+    .keycap { min-width:44px; height:44px; border:2px solid var(--line); border-radius:9px; background:#fff; display:grid; place-items:center; font-weight:900; box-shadow:0 3px 0 #d8dee6; }
+    .canvas-shell { background:#fff; border:2px solid var(--line); border-radius:16px; padding:14px; box-shadow:0 4px 12px rgba(0,0,0,.08); margin:14px 0; }
+    .draw-canvas { width:100%; max-width:520px; height:260px; border:2px dashed #9ab7d3; border-radius:12px; display:block; background:#fff; touch-action:none; margin:0 auto; cursor:crosshair; }
+    .canvas-tools { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 0; }
+    .coord-box { text-align:center; font-weight:800; color:var(--blue); margin-top:8px; }
+    .consent-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:12px; cursor:pointer; font-weight:800; }
+    .consent-card.safe { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .consent-card.risky { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .canvas-mini { height:165px; background:#fff; border:2px dashed #9ab7d3; border-radius:12px; position:relative; overflow:hidden; margin:12px 0; }
+    .canvas-line { position:absolute; height:3px; background:var(--blue); transform-origin:left center; border-radius:999px; }
+    @media(max-width:960px){.two-col,.mini-phone-wide{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}.draw-canvas{height:220px}}
+
+
+    .memory-demo { background:#fff; border:2px solid var(--line); border-radius:16px; padding:16px; margin:16px 0; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+    .memory-box-visual { display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; margin:14px 0; }
+    .memory-slot-big { border:3px solid #cfe7fb; background:var(--blue-soft); border-radius:16px; padding:18px; min-height:110px; display:grid; place-items:center; text-align:center; }
+    .memory-slot-big strong { color:var(--blue); font-size:1.05rem; display:block; margin-bottom:5px; }
+    .memory-slot-big .value { font-size:1.5rem; font-weight:900; color:var(--uob-red); }
+    .memory-arrow-big { color:var(--uob-red); font-size:1.8rem; font-weight:900; text-align:center; }
+    .block-color-list { list-style:none; margin-left:0 !important; display:grid; gap:9px; }
+    .block-color-list li { padding:10px 12px; border-radius:10px; background:#fff; border:2px solid var(--line); font-weight:700; }
+    .block-color-list .orange { border-left:8px solid #ff9f1a; }
+    .block-color-list .purple { border-left:8px solid #8e44ad; }
+    .block-color-list .blue { border-left:8px solid #1f75fe; }
+    .block-color-list .green { border-left:8px solid #2e9d57; }
+    .block-color-list .pink { border-left:8px solid #e84393; }
+    .app-sim { margin:16px auto; max-width:260px; border:9px solid #1f2937; border-radius:28px; background:#fff; overflow:hidden; box-shadow:0 12px 22px rgba(0,0,0,.13); }
+    .app-sim-top { background:#294bd8; color:white; padding:9px 12px; font-weight:900; font-size:.9rem; }
+    .app-sim-body { padding:18px 14px; display:grid; gap:12px; text-align:center; }
+    .app-sim input { padding:10px; border:2px solid var(--line); border-radius:10px; text-align:center; }
+    .app-sim button { background:var(--uob-red); color:white; border:0; border-radius:10px; padding:11px; font-weight:900; cursor:pointer; }
+    .app-sim-result { min-height:56px; border:2px dashed #9ab7d3; background:#f8fbfe; color:var(--blue); font-weight:900; display:grid; place-items:center; border-radius:12px; padding:10px; }
+    .var-tile-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:10px; margin:14px 0; }
+    .var-tile { background:#fff; border:2px solid var(--line); border-radius:12px; padding:13px; cursor:pointer; transition:.18s; }
+    .var-tile:hover,.var-tile.active { border-color:var(--blue); background:var(--blue-soft); transform:translateY(-1px); }
+    .var-tile strong { color:var(--blue); display:block; margin-bottom:4px; }
+    .block-map { display:grid; gap:10px; margin:14px 0; }
+    .block-row { display:grid; grid-template-columns:145px 1fr; gap:10px; align-items:center; background:#fff; border:2px solid var(--line); border-radius:12px; padding:10px; }
+    .block-chip { border-radius:999px; color:white; padding:8px 10px; text-align:center; font-weight:900; }
+    .chip-orange { background:#ff9f1a; } .chip-purple { background:#8e44ad; } .chip-blue { background:#1f75fe; } .chip-green { background:#2e9d57; } .chip-pink { background:#e84393; }
+    .mini-code-note { background:#111827; color:#e5e7eb; border-radius:14px; padding:14px; margin:12px 0; font-family:Consolas,Monaco,monospace; line-height:1.55; white-space:pre-wrap; box-shadow:0 8px 16px rgba(0,0,0,.12); }
+    .quick-accordion { display:grid; gap:8px; margin:14px 0; }
+    .acc-btn { width:100%; text-align:left; border:2px solid var(--line); background:#fff; border-radius:10px; padding:11px 12px; font-weight:900; cursor:pointer; }
+    .acc-content { display:none; padding:12px; border:2px solid #cfe7fb; background:var(--blue-soft); border-radius:10px; margin-top:-4px; }
+    .acc-content.show { display:block; }
+    @media(max-width:960px){.memory-box-visual,.block-row{grid-template-columns:1fr}.memory-arrow-big{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+  <div class="access-popup-overlay" id="accessPopup">
+    <div class="access-popup">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode akses Middle School untuk membuka materi Sesi 5.</p>
+      <input type="text" class="access-input" id="accessInput" placeholder="MASUKKAN KODE" maxlength="20" autocomplete="off" />
+      <button class="access-submit" onclick="checkAccessCode()">Masuk</button>
+      <div class="access-error" id="accessError">Kode akses belum tepat. Coba lagi.</div>
+      <div class="access-hint">Kode akses diberikan oleh guru.</div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="main-container" id="mainContent" style="display:none;">
+    <div class="slides-panel">
+      <div class="slide-header">
+        <h1>UOB My Digital Space — Middle School</h1>
+        <p>Sesi 5 · Aplikasi Sapaan</p>
+        <span class="header-badge">MIT App Inventor · Middle School</span>
+      </div>
+      <div class="slide-content">
+        <div class="floating-element" style="top:12%;left:7%;">📱</div>
+        <div class="floating-element" style="top:18%;right:10%;">📦</div>
+        <div class="floating-element" style="bottom:25%;left:14%;">🧩</div>
+        <div class="floating-element" style="bottom:15%;right:16%;">💬</div>
+        <section class="slide active" id="slide-1"><span class="eyebrow">Sesi 5</span><h2>Aplikasi Sapaan</h2><p class="lead">Hari ini kalian membuat aplikasi yang bisa menyimpan nama, lalu menyapa user dengan nama itu.</p><div class="metrics"><div class="metric-box"><strong>📦</strong><span>Variabel sebagai kotak memori</span></div><div class="metric-box"><strong>🌐</strong><span>Global variable</span></div><div class="metric-box"><strong>⌨️</strong><span>Input dari TextBox</span></div><div class="metric-box"><strong>💬</strong><span>Output di Label</span></div></div><div class="example-box"><h4>Target akhir</h4><p>User mengetik nama di TextBox, menekan tombol <strong>Sapa!</strong>, lalu aplikasi menampilkan sapaan seperti <strong>Halo, Budi!</strong></p></div></section>
+<section class="slide " id="slide-2"><h3>Misi Belajar Hari Ini</h3><div class="visual-grid"><div class="visual-card"><div class="visual-icon">📦</div><h4>Paham Variabel</h4><p>Melihat variabel sebagai tempat menyimpan data sementara.</p></div><div class="visual-card"><div class="visual-icon">🧠</div><h4>Global Variable</h4><p>Menyimpan nama agar bisa dipakai di blok lain.</p></div><div class="visual-card"><div class="visual-icon">🔁</div><h4>Input → Simpan → Output</h4><p>Membaca alur data dari TextBox sampai Label.</p></div><div class="visual-card"><div class="visual-icon">🧪</div><h4>Testing</h4><p>Menguji aplikasi dengan beberapa nama berbeda.</p></div></div><div class="interactive-box"><h4>Cek awal</h4><p>Menurut kalian, kenapa aplikasi perlu “mengingat” nama user?</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q2')">Agar aplikasi bisa memberi respons yang sesuai</button><button class="choice-btn" onclick="quiz(this,false,'q2')">Agar layar terlihat lebih penuh</button><button class="choice-btn" onclick="quiz(this,false,'q2')">Agar tombol tidak bisa ditekan</button></div><div class="feedback-line" id="q2"></div></div></section>
+<section class="slide " id="slide-3"><h3>Siapkan Workspace</h3><p class="lead">Sebelum mulai, pastikan akun dan perangkat siap untuk membuat project di MIT App Inventor.</p><div class="choice-grid"><button class="choice-btn" onclick="deviceCheck(this)">MIT App Inventor sudah terbuka</button><button class="choice-btn" onclick="deviceCheck(this)">Project baru sudah dibuat</button><button class="choice-btn" onclick="deviceCheck(this)">AI2 Companion siap untuk testing</button><button class="choice-btn" onclick="deviceCheck(this)">Nama project jelas, misalnya KotakMemori_Nama</button><button class="choice-btn" onclick="deviceCheck(this)">Tidak memakai nama lengkap asli jika tidak perlu</button><button class="choice-btn" onclick="deviceCheck(this)">Siap mengetes dengan data contoh</button></div><div class="info-box"><strong>Alamat LMS:</strong><br><a href="https://app.uobmydigitalspace.com/" target="_blank" rel="noopener noreferrer">https://app.uobmydigitalspace.com/</a></div></section>
+<section class="slide " id="slide-4"><h3>Buka Sesi 5 di LMS</h3><p class="lead">Masuk ke LMS, lalu buka kartu sesi yang diarahkan oleh guru.</p><div class="scratch-map-wrap lms-map-wrap"><img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/6a973bfb-a09a-42af-a4ea-a4db56b12f56.png" alt="Tampilan LMS UOB My Digital Space"><button class="hotspot" style="left:10.5%;top:39%;" onclick="showLmsStep(1,this)">1</button><button class="session-card-hotspot" onclick="showLmsStep(2,this)"><span>2</span></button></div><p class="scratch-caption">Klik angka 1 untuk menu Sesi Kelas, lalu pilih kartu sesi yang sesuai.</p><div class="area-live-card" id="lmsStepInfo"><h4>👆 Mulai dari Langkah 1</h4><p>Klik menu <strong>Sesi Kelas</strong> di sebelah kiri.</p></div></section>
+<section class="slide " id="slide-5"><h3>Aplikasi yang “Mengingat” Data</h3><p>Pernah melihat aplikasi yang menyapa kamu dengan nama? Itu bisa terjadi karena aplikasi menyimpan data yang kamu masukkan.</p><div class="flow-row"><div class="flow-step">User mengetik nama</div><div class="flow-arrow">→</div><div class="flow-step">Aplikasi menyimpan</div><div class="flow-arrow">→</div><div class="flow-step">Aplikasi menyapa</div></div><div class="interactive-box"><h4>Contoh yang mirip</h4><p>Klik contoh yang menurutmu memakai data user.</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q5')">Aplikasi menampilkan “Halo, Rani!”</button><button class="choice-btn" onclick="quiz(this,false,'q5')">Aplikasi menampilkan judul tetap “Menu Utama”</button><button class="choice-btn" onclick="quiz(this,true,'q5')">Game menampilkan nama pemain</button></div><div class="feedback-line" id="q5"></div></div></section>
+<section class="slide " id="slide-6"><h3>Apa Itu Variabel?</h3><p><strong>Variabel</strong> adalah tempat menyimpan data sementara di dalam aplikasi.</p><div class="memory-box-visual"><div class="flow-step">Data masuk<br><small>“Budi”</small></div><div class="memory-arrow-big">→</div><div class="memory-slot-big"><strong>global nama</strong><div class="value">Budi</div><small>kotak memori aplikasi</small></div></div><div class="info-box"><h4>Analogi gampang</h4><p>Variabel seperti kotak berlabel. Labelnya adalah nama variabel, isinya adalah data yang disimpan.</p></div></section>
+<section class="slide " id="slide-7"><h3>Simulasi Kotak Memori</h3><p>Ketik nama panggilan, lalu simpan ke kotak memori.</p><div class="memory-demo"><div class="form-grid"><label>Nama panggilan<input id="memoryNameInput" type="text" placeholder="Contoh: Budi"></label><button class="primary-btn" onclick="saveMemoryName()">Simpan ke global nama</button><button class="secondary-btn" onclick="clearMemoryName()">Kosongkan memori</button></div><div class="memory-box-visual"><div class="flow-step">TextBox<br><small id="textboxPreview">kosong</small></div><div class="memory-arrow-big">→</div><div class="memory-slot-big"><strong>global nama</strong><div class="value" id="memoryValue">""</div><small>isi variabel saat ini</small></div></div><div class="feedback-line" id="memoryFeedback">Variabel masih kosong.</div></div></section>
+<section class="slide " id="slide-8"><h3>Global Variable</h3><p><strong>Global variable</strong> adalah variabel yang bisa dipakai oleh berbagai blok pada Screen yang sama.</p><div class="var-tile-grid"><div class="var-tile active" onclick="showVarConcept('init',this)"><strong>Initialize</strong><span>Membuat kotak memori</span></div><div class="var-tile" onclick="showVarConcept('set',this)"><strong>Set</strong><span>Mengisi atau mengganti isi</span></div><div class="var-tile" onclick="showVarConcept('get',this)"><strong>Get</strong><span>Mengambil isi</span></div></div><div class="area-live-card" id="varConceptInfo"><h4>Initialize</h4><p>Membuat global variable, misalnya <strong>initialize global nama to ""</strong>. Tanda <strong>""</strong> berarti nilai awalnya masih kosong.</p></div></section>
+<section class="slide " id="slide-9"><h3>TextBox dan Label</h3><p>Di project ini, TextBox dan Label punya tugas yang berbeda.</p><div class="two-col"><div class="visual-card"><div class="visual-icon">⌨️</div><h4>TextBox</h4><p>Tempat user mengetik data. Di sini, user mengetik nama.</p></div><div class="visual-card"><div class="visual-icon">💬</div><h4>Label</h4><p>Tempat aplikasi menampilkan hasil. Di sini, Label menampilkan sapaan.</p></div></div><div class="interactive-box"><h4>Mana yang jadi input?</h4><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q9')">txtNama</button><button class="choice-btn" onclick="quiz(this,false,'q9')">lblHasil</button><button class="choice-btn" onclick="quiz(this,false,'q9')">LabelJudul</button></div><div class="feedback-line" id="q9"></div></div></section>
+<section class="slide " id="slide-10"><h3>Alur Input → Simpan → Output</h3><p>Klik setiap kotak untuk melihat perannya.</p><div class="flow-row"><div class="flow-step" onclick="showGreetingFlow('input')">Input<br><small>txtNama.Text</small></div><div class="flow-arrow">→</div><div class="flow-step" onclick="showGreetingFlow('store')">Simpan<br><small>global nama</small></div><div class="flow-arrow">→</div><div class="flow-step" onclick="showGreetingFlow('output')">Output<br><small>lblHasil.Text</small></div></div><div class="area-live-card" id="greetingFlowInfo"><h4>Input</h4><p>User mengetik nama di TextBox. Data ini diambil dari <strong>txtNama.Text</strong>.</p></div></section>
+<section class="slide " id="slide-11"><h3>Rencana Tampilan Aplikasi</h3><div class="phone-preview"><div class="phone-bar">Screen1</div><div class="phone-body"><div class="app-title">Aplikasi Sapaan</div><input class="app-input" placeholder="Masukkan nama panggilanmu" disabled><button class="app-button">Sapa!</button><div class="app-label">Halo, ...</div></div></div><div class="info-box"><h4>UI sederhana</h4><ol><li>Judul aplikasi.</li><li>TextBox untuk mengetik nama.</li><li>Button untuk menjalankan sapaan.</li><li>Label untuk menampilkan hasil.</li></ol></div></section>
+<section class="slide " id="slide-12"><h3>Komponen Project</h3><table class="component-table"><tr><th>Komponen</th><th>Nama</th><th>Fungsi</th></tr><tr><td>Label</td><td><code>LabelJudul</code></td><td>Menampilkan judul aplikasi.</td></tr><tr><td>TextBox</td><td><code>txtNama</code></td><td>Tempat user mengetik nama.</td></tr><tr><td>Button</td><td><code>btnSapa</code></td><td>Menjalankan proses menyimpan dan menyapa.</td></tr><tr><td>Label</td><td><code>lblHasil</code></td><td>Menampilkan hasil sapaan.</td></tr></table><div class="interactive-box"><h4>Nama yang paling jelas untuk tombol sapaan?</h4><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,false,'q12')">Button1</button><button class="choice-btn" onclick="quiz(this,true,'q12')">btnSapa</button><button class="choice-btn" onclick="quiz(this,false,'q12')">Tombol</button></div><div class="feedback-line" id="q12"></div></div></section>
+<section class="slide " id="slide-13"><h3>Properties yang Perlu Diatur</h3><div class="property-grid"><div class="property-card"><h4>txtNama Hint</h4><p>Isi dengan: <strong>Masukkan nama panggilanmu</strong>.</p></div><div class="property-card"><h4>btnSapa Text</h4><p>Isi dengan: <strong>Sapa!</strong>.</p></div><div class="property-card"><h4>lblHasil Text</h4><p>Boleh kosong atau berisi: <strong>Hasil sapaan muncul di sini</strong>.</p></div><div class="property-card"><h4>Alignment</h4><p>Atur agar tampilan rapi dan mudah dibaca.</p></div></div><p class="mini-note">Hint membantu user tahu apa yang harus diketik sebelum aplikasi dipakai.</p></section>
+<section class="slide " id="slide-14"><h3>Blocks Utama Hari Ini</h3><div class="block-map"><div class="block-row"><div class="block-chip chip-orange">Variables</div><div><strong>initialize global nama to ""</strong><br><small>Membuat tempat penyimpanan nama.</small></div></div><div class="block-row"><div class="block-chip chip-green">Button</div><div><strong>when btnSapa.Click do</strong><br><small>Menjalankan aksi saat tombol ditekan.</small></div></div><div class="block-row"><div class="block-chip chip-orange">Variables</div><div><strong>set global nama to txtNama.Text</strong><br><small>Menyimpan nama yang diketik user.</small></div></div><div class="block-row"><div class="block-chip chip-purple">Text</div><div><strong>join "Halo, " get global nama "!"</strong><br><small>Menggabungkan teks dan isi variabel.</small></div></div></div></section>
+<section class="slide " id="slide-15"><h3>Pseudocode 1: Buat Kotak Memori</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR</strong><small>Ganti area ini dengan screenshot blok: <code>initialize global nama to ""</code></small><ul class="block-color-list"><li class="orange">🟧 <strong>Variables:</strong> initialize global <code>nama</code> to</li><li class="purple">🟪 <strong>Text:</strong> teks kosong <code>""</code></li></ul></div></div><p class="mini-note">Nilai awal kosong berarti aplikasi belum menyimpan nama apa pun saat pertama dibuka.</p></section>
+<section class="slide " id="slide-16"><h3>Pseudocode 2: Simpan Nama dari TextBox</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR</strong><small>Ganti dengan screenshot blok: <code>when btnSapa.Click</code> + <code>set global nama to txtNama.Text</code></small><ul class="block-color-list"><li class="green">🟩 <strong>Event Button:</strong> ketika <code>btnSapa.Click</code></li><li class="orange">🟧 <strong>Variables:</strong> set global <code>nama</code> to</li><li class="blue">🟦 <strong>Component:</strong> get <code>txtNama.Text</code></li></ul></div></div></section>
+<section class="slide " id="slide-17"><h3>Pseudocode 3: Tampilkan Sapaan</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR</strong><small>Ganti dengan screenshot blok: <code>set lblHasil.Text to join "Halo, " get global nama "!"</code></small><ul class="block-color-list"><li class="blue">🟦 <strong>Component:</strong> set <code>lblHasil.Text</code> to</li><li class="purple">🟪 <strong>Text:</strong> join <code>"Halo, "</code> + <code>get global nama</code> + <code>"!"</code></li><li class="orange">🟧 <strong>Variables:</strong> get global <code>nama</code></li></ul></div></div></section>
+<section class="slide " id="slide-18"><h3>Rangkaian Blocks Lengkap</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR LENGKAP</strong><small>Satu screenshot berisi: initialize global nama, when btnSapa.Click, set global nama, set lblHasil.Text dengan join.</small><ol class="pseudo-list"><li>Buat global variable <code>nama</code> dengan nilai awal kosong.</li><li>Ketika <code>btnSapa</code> diklik, ambil <code>txtNama.Text</code>.</li><li>Simpan isi TextBox ke <code>global nama</code>.</li><li>Set <code>lblHasil.Text</code> menjadi hasil join.</li></ol></div></div><p class="mini-note">Screenshot blok asli bisa menggantikan placeholder ini.</p></section>
+<section class="slide " id="slide-19"><h3>Simulasi Aplikasi Sapaan</h3><p>Coba jalankan versi simulasi sebelum membuat di App Inventor.</p><div class="app-sim"><div class="app-sim-top">Aplikasi Sapaan</div><div class="app-sim-body"><input id="greetInput" type="text" placeholder="Masukkan nama panggilanmu"><button onclick="runGreetingApp()">Sapa!</button><div class="app-sim-result" id="greetResult">Hasil sapaan muncul di sini</div></div></div><div class="interactive-box"><h4>Testing cepat</h4><p>Coba masukkan tiga nama berbeda. Apakah hasilnya ikut berubah?</p></div></section>
+<section class="slide " id="slide-20"><h3>Reading Blocks: Data dari Mana?</h3><p>Baca alur ini, lalu jawab pertanyaannya.</p><div class="mini-code-note">when btnSapa.Click do
+  set global nama to txtNama.Text
+  set lblHasil.Text to join "Halo, " get global nama "!"</div><div class="interactive-box"><h4>Pertanyaan</h4><p>Dari mana aplikasi mengambil nama yang diketik user?</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q20')">txtNama.Text</button><button class="choice-btn" onclick="quiz(this,false,'q20')">LabelJudul.Text</button><button class="choice-btn" onclick="quiz(this,false,'q20')">btnSapa.Text</button></div><div class="feedback-line" id="q20"></div></div></section>
+<section class="slide " id="slide-21"><h3>Kesalahan yang Sering Terjadi</h3><div class="debug-tabs"><button class="debug-tab active" onclick="showDebug('s5bug1',this)">Label kosong</button><button class="debug-tab" onclick="showDebug('s5bug2',this)">Sapaan tidak lengkap</button><button class="debug-tab" onclick="showDebug('s5bug3',this)">Variabel tidak berubah</button></div><div class="debug-scenario active" id="s5bug1"><div class="warning-box"><h4>Gejala</h4><p>Tombol ditekan, tetapi lblHasil tetap kosong.</p></div><div class="info-box"><h4>Cek</h4><p>Pastikan ada blok <strong>set lblHasil.Text to</strong> di dalam event <strong>btnSapa.Click</strong>.</p></div></div><div class="debug-scenario" id="s5bug2"><div class="warning-box"><h4>Gejala</h4><p>Yang tampil hanya nama, bukan “Halo, Nama!”</p></div><div class="info-box"><h4>Cek</h4><p>Pastikan memakai blok <strong>join</strong> untuk menggabungkan “Halo, ” + global nama + “!”.</p></div></div><div class="debug-scenario" id="s5bug3"><div class="warning-box"><h4>Gejala</h4><p>Nama yang tampil tidak mengikuti input terbaru.</p></div><div class="info-box"><h4>Cek</h4><p>Pastikan <strong>set global nama to txtNama.Text</strong> dijalankan setiap kali tombol diklik.</p></div></div></section>
+<section class="slide " id="slide-22"><h3>Bagaimana Kalau Input Kosong?</h3><p>Di sesi ini, kita belum fokus membuat validasi dengan kondisi, tapi kita bisa mulai berpikir sebagai tester.</p><div class="interactive-box"><h4>Coba tebak</h4><p>Jika TextBox kosong lalu tombol Sapa! ditekan, kemungkinan outputnya...</p><div class="choice-grid"><button class="choice-btn" onclick="quiz(this,true,'q22')">Halo, !</button><button class="choice-btn" onclick="quiz(this,false,'q22')">Aplikasi otomatis tahu nama user</button><button class="choice-btn" onclick="quiz(this,false,'q22')">TextBox berubah menjadi tombol</button></div><div class="feedback-line" id="q22"></div></div><div class="info-box"><h4>Catatan</h4><p>Nanti, saat belajar kondisi, aplikasi bisa dibuat lebih pintar: jika nama kosong, tampilkan pesan “Nama belum diisi.”</p></div></section>
+<section class="slide " id="slide-23"><h3>Challenge: Sapaan Bersuara</h3><p>Kalau project utama sudah berhasil, tambahkan TextToSpeech agar aplikasi membacakan sapaan.</p><div class="visual-grid"><div class="visual-card"><div class="visual-icon">🔊</div><h4>TextToSpeech</h4><p>Komponen non-visible untuk membacakan teks.</p></div><div class="visual-card"><div class="visual-icon">💬</div><h4>Kalimat sama</h4><p>Suara membaca sapaan yang sama dengan lblHasil.</p></div></div><div class="warning-box"><h4>Urutan aman</h4><p>Selesaikan sapaan teks dulu. Setelah Label berhasil, baru tambahkan suara.</p></div></section>
+<section class="slide " id="slide-24"><h3>Pseudocode Challenge TTS</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR - TTS</strong><small>Ganti dengan screenshot blok tambahan jika challenge digunakan.</small><ul class="block-color-list"><li class="green">🟩 <strong>Event:</strong> ketika <code>btnSapa.Click</code></li><li class="orange">🟧 <strong>Variables:</strong> set global <code>nama</code> to <code>txtNama.Text</code></li><li class="purple">🟪 <strong>Text:</strong> join <code>"Halo, "</code> + <code>get global nama</code> + <code>"!"</code></li><li class="blue">🟦 <strong>Component:</strong> set <code>lblHasil.Text</code> to hasil join</li><li class="pink">🩷 <strong>TextToSpeech:</strong> call <code>ttsSapaan.Speak</code> message hasil join</li></ul></div></div></section>
+<section class="slide " id="slide-25"><h3>Data Nama dan Privasi</h3><p>Nama terlihat sederhana, tetapi tetap termasuk data tentang seseorang. Untuk latihan, gunakan nama panggilan atau data contoh.</p><div class="choice-grid"><button class="consent-card" onclick="markConsent(this,true)">Menggunakan nama panggilan</button><button class="consent-card" onclick="markConsent(this,false)">Memasukkan nama lengkap + nomor HP</button><button class="consent-card" onclick="markConsent(this,true)">Menggunakan nama karakter fiksi</button><button class="consent-card" onclick="markConsent(this,false)">Memakai data teman tanpa izin</button></div><p class="mini-note">Klik tiap kartu. Hijau berarti aman untuk latihan; merah berarti perlu dihindari.</p></section>
+<section class="slide " id="slide-26"><h3>Testing dengan AI2 Companion</h3><p class="lead">Uji aplikasi langsung agar terlihat seperti aplikasi HP sungguhan.</p><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Companion berhasil terhubung.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> TextBox bisa diketik.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Tombol Sapa! bisa ditekan.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Label berubah sesuai nama yang diketik.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Jika memakai TTS, suara terdengar sesuai sapaan.</li></ul><div class="example-box"><h4>Test case</h4><p>Coba input: <strong>Budi</strong>, <strong>Nisa</strong>, dan satu nama pilihanmu.</p></div></section>
+<section class="slide " id="slide-27"><h3>Output Minimum</h3><p>Project dianggap selesai jika semua poin berikut terpenuhi.</p><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Ada TextBox bernama <strong>txtNama</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Ada Button bernama <strong>btnSapa</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Ada Label hasil bernama <strong>lblHasil</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Ada global variable untuk menyimpan nama.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Saat tombol ditekan, nama disimpan dan sapaan tampil.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Project sudah diuji dengan minimal 2 nama berbeda.</li></ul></section>
+<section class="slide " id="slide-28"><h3>Simpan dan Kumpulkan</h3><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Nama project sudah jelas.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Designer sudah rapi.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Blocks utama sudah lengkap.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Aplikasi sudah dites di Companion.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"> Link/file dikumpulkan sesuai arahan guru.</li></ul><div class="info-box"><h4>Nama file contoh</h4><p><strong>AplikasiSapaan_Nama</strong> atau <strong>KotakMemori_Nama</strong>.</p></div></section>
+<section class="slide " id="slide-29"><h3>Peer Test</h3><p class="lead">Minta teman mencoba aplikasimu tanpa kamu jelaskan terlalu banyak.</p><div class="interactive-box"><h4>Pertanyaan untuk tester</h4><ol><li>Apakah kamu tahu harus mengetik nama di mana?</li><li>Apakah tombol Sapa! mudah ditemukan?</li><li>Apakah hasil sapaan mudah dibaca?</li><li>Apakah aplikasi terasa rapi di HP?</li></ol></div><p class="mini-note">Catat satu masukan yang bisa dipakai untuk memperbaiki tampilan atau alur.</p></section>
+<section class="slide " id="slide-30"><span class="eyebrow">Penutup</span><h2>Ringkasan Sesi 5</h2><div class="visual-grid"><div class="visual-card"><div class="visual-icon">📦</div><h4>Variabel</h4><p>Kotak memori untuk menyimpan data sementara.</p></div><div class="visual-card"><div class="visual-icon">🌐</div><h4>Global Variable</h4><p>Bisa dipakai oleh beberapa blok dalam Screen.</p></div><div class="visual-card"><div class="visual-icon">⌨️</div><h4>TextBox</h4><p>Tempat user memasukkan nama.</p></div><div class="visual-card"><div class="visual-icon">💬</div><h4>Label</h4><p>Tempat aplikasi menampilkan sapaan.</p></div></div><div class="example-box"><h4>Kalimat kunci</h4><p><strong>Input masuk dari TextBox, disimpan di variabel, lalu ditampilkan sebagai output di Label.</strong></p></div></section>
+      </div>
+      <div class="navigation"><button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)"><span>←</span> Previous</button><div class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">30</span></div><button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next <span>→</span></button></div>
+    </div>
+    <div class="explanation-panel">
+      <section class="explanation active" id="explanation-1"><h3>Project yang Akan Dibuat</h3><p>Di sesi ini, kalian akan membuat aplikasi sederhana bernama <strong>Aplikasi Sapaan</strong>. Aplikasi ini terlihat sederhana, tetapi konsepnya penting banget untuk semua aplikasi yang memakai data dari user.</p><p>Alurnya seperti ini: user mengetik nama, aplikasi menyimpan nama itu ke dalam variabel, lalu nama tersebut dipakai lagi untuk membuat kalimat sapaan. Jadi aplikasi tidak hanya menampilkan teks statis, tetapi memakai data yang baru dimasukkan.</p><div class="info-box"><h4>Fokus sesi</h4><p>Kita akan belajar <strong>variabel</strong>, <strong>global variable</strong>, <strong>TextBox</strong>, <strong>Label</strong>, dan cara menggabungkan teks dengan data user menggunakan blok <strong>join</strong>.</p></div></section>
+<section class="explanation " id="explanation-2"><h3>Alur Belajar</h3><p>Sesi ini fokus pada cara aplikasi menyimpan dan memakai data. Konsep ini akan sering dipakai di project berikutnya, terutama saat aplikasi perlu menghitung, mengecek pilihan user, atau menampilkan hasil yang berbeda-beda.</p><p>Kalau aplikasi tidak punya tempat menyimpan data, aplikasi akan sulit memberi respons yang personal. Misalnya, aplikasi hanya bisa menampilkan “Halo!” tanpa tahu siapa nama user. Dengan variabel, aplikasi bisa menampilkan “Halo, Raka!” atau “Halo, Nisa!” sesuai input.</p><div class="info-box"><h4>Yang akan dikuasai</h4><ol><li>Membedakan input dari TextBox dan output di Label.</li><li>Membuat global variable.</li><li>Menyimpan isi TextBox ke variabel.</li><li>Mengambil isi variabel untuk membuat sapaan.</li><li>Menguji aplikasi dengan beberapa data berbeda.</li></ol></div></section>
+<section class="explanation " id="explanation-3"><h3>Persiapan Kelas</h3><p>Pastikan kalian berada di akun MIT App Inventor yang benar, lalu buat project baru. Nama project sebaiknya jelas agar mudah ditemukan lagi, misalnya <strong>KotakMemori_Nama</strong> atau <strong>AplikasiSapaan_Nama</strong>.</p><p>Karena project ini memakai nama, gunakan nama panggilan atau data contoh. Tidak perlu memasukkan nama lengkap, alamat, nomor HP, atau data pribadi lain. Untuk latihan coding, data dummy sudah cukup.</p><div class="warning-box"><h4>Tips aman</h4><p>Gunakan nama panggilan seperti “Budi”, “Nisa”, atau nama karakter fiksi. Ingat, yang kita pelajari adalah alur menyimpan data, bukan mengumpulkan data pribadi.</p></div></section>
+<section class="explanation " id="explanation-4"><h3>Cara Membuka Materi</h3><p>Seperti sesi sebelumnya, materi dibuka lewat LMS. Pastikan kalian membuka sesi yang benar agar instruksi, modul, dan project yang dikerjakan sesuai.</p><p>Setelah materi terbuka, ikuti urutan kegiatan. Jangan langsung masuk ke Blocks sebelum memahami konsep variabel, karena Blocks sesi ini akan terasa lebih mudah jika kalian paham alur input, simpan, lalu tampilkan.</p><div class="info-box"><h4>Yang perlu dicek</h4><ul><li>Judul sesi sesuai dengan Aplikasi Sapaan atau Kotak Memori.</li><li>Project dibuat di akun MIT App Inventor yang benar.</li><li>AI2 Companion bisa dipakai untuk live testing.</li></ul></div></section>
+<section class="explanation " id="explanation-5"><h3>Kenapa Data Perlu Disimpan?</h3><p>Banyak aplikasi terasa lebih hidup karena bisa memakai data dari user. Contohnya, aplikasi belajar menampilkan nama siswa, game menyimpan nama pemain, atau aplikasi keuangan menampilkan target tabungan yang pernah diisi.</p><p>Agar data bisa dipakai lagi, aplikasi membutuhkan tempat penyimpanan sementara. Dalam programming, tempat seperti itu disebut <strong>variabel</strong>. Pada sesi ini, kita memakai variabel untuk menyimpan nama yang diketik user.</p><div class="example-box"><h4>Contoh sederhana</h4><p>Tanpa variabel, aplikasi hanya bisa menampilkan sapaan umum. Dengan variabel, aplikasi bisa menampilkan sapaan yang mengikuti input user.</p></div></section>
+<section class="explanation " id="explanation-6"><h3>Variabel sebagai Kotak Memori</h3><p>Bayangkan kalian punya kotak kecil dengan label “nama”. Ketika sticky note bertuliskan “Budi” dimasukkan ke kotak itu, kita bisa membuka kotaknya kapan saja untuk membaca isi “Budi”.</p><p>Di aplikasi, variabel bekerja mirip seperti itu. Variabel punya nama sebagai label, lalu punya nilai sebagai isi. Nilainya bisa berubah saat aplikasi berjalan. Hari ini, isi variabel akan berasal dari TextBox yang diketik user.</p><div class="info-box"><h4>Kalimat penting</h4><p>Nama variabel tidak sama dengan isi variabel. <strong>global nama</strong> adalah label kotaknya, sedangkan <strong>Budi</strong> adalah isi yang sedang disimpan.</p></div></section>
+<section class="explanation " id="explanation-7"><h3>Mencoba Cara Kerja Variabel</h3><p>Simulasi di kiri menunjukkan alur yang akan terjadi di App Inventor. TextBox adalah tempat user mengetik. Saat tombol ditekan, isi TextBox disalin ke dalam variabel <strong>global nama</strong>.</p><p>Setelah disimpan, data tersebut bisa dipakai lagi. Misalnya untuk ditampilkan di Label, digabungkan dengan kata “Halo,”, atau bahkan dibacakan dengan Text-to-Speech sebagai challenge.</p><div class="warning-box"><h4>Catatan</h4><p>Variabel di project ini menyimpan data sementara. Jika aplikasi ditutup atau di-reset, isi variabel bisa kembali kosong.</p></div></section>
+<section class="explanation " id="explanation-8"><h3>Mengapa Memakai Global Variable?</h3><p>Di MIT App Inventor, global variable dapat dipakai di beberapa blok pada Screen yang sama. Untuk project ini, kita membuat <strong>global nama</strong> agar data nama bisa disimpan saat tombol ditekan, lalu dipakai lagi untuk membuat sapaan.</p><p>Tiga aksi yang perlu diingat adalah <strong>initialize</strong>, <strong>set</strong>, dan <strong>get</strong>. Initialize membuat variabel, set mengganti isinya, dan get mengambil isi yang tersimpan.</p><div class="example-box"><h4>Contoh alur</h4><p>Awalnya global nama berisi kosong. Setelah user mengetik “Nisa” dan menekan tombol Sapa!, global nama berubah menjadi “Nisa”.</p></div></section>
+<section class="explanation " id="explanation-9"><h3>Input dan Output di UI</h3><p><strong>TextBox</strong> dipakai untuk menerima data dari user. Karena itu, TextBox termasuk komponen input. Pada project ini, TextBox diberi nama <strong>txtNama</strong> agar jelas bahwa isinya adalah nama user.</p><p><strong>Label</strong> dipakai untuk menampilkan hasil. Label <strong>lblHasil</strong> akan berubah setelah tombol Sapa! ditekan. Isi Label tidak diketik langsung oleh user, tetapi diatur oleh blok program.</p><div class="info-box"><h4>Tips penamaan</h4><p>Awalan <strong>txt</strong> membantu kita mengingat komponen TextBox. Awalan <strong>lbl</strong> membantu kita mengingat komponen Label.</p></div></section>
+<section class="explanation " id="explanation-10"><h3>Alur Data Project</h3><p>Project ini punya alur yang jelas: input, simpan, lalu output. Pertama, user mengetik nama di TextBox. Kedua, aplikasi menyimpan isi TextBox ke dalam global variable. Ketiga, aplikasi mengambil isi variabel dan menampilkannya di Label dalam bentuk sapaan.</p><p>Alur ini penting karena banyak aplikasi berjalan dengan pola yang mirip. Bedanya, data yang disimpan bisa berupa nama, angka, pilihan menu, skor, atau status.</p><div class="info-box"><h4>Yang perlu diingat</h4><p>Data tidak otomatis pindah dari TextBox ke Label. Kita harus membuat Blocks yang mengambil, menyimpan, menggabungkan, lalu menampilkan data tersebut.</p></div></section>
+<section class="explanation " id="explanation-11"><h3>Desain UI yang Dibutuhkan</h3><p>Aplikasi Sapaan tidak membutuhkan banyak komponen. Justru, UI yang sederhana membuat user langsung paham apa yang harus dilakukan.</p><p>Di layar, user melihat judul, kolom untuk mengetik nama, tombol Sapa!, dan area hasil. Jika urutan komponen jelas, user tidak perlu menebak cara memakai aplikasi.</p><div class="example-box"><h4>Urutan yang nyaman</h4><p>Judul di atas, input di tengah, tombol setelah input, lalu hasil di bawah tombol. Urutan ini mengikuti alur kerja user.</p></div></section>
+<section class="explanation " id="explanation-12"><h3>Komponen dan Nama Internal</h3><p>Nama komponen yang jelas membuat Blocks lebih mudah dibaca. Jika tombol masih bernama Button1, kalian harus mengingat sendiri fungsinya. Jika namanya <strong>btnSapa</strong>, fungsinya langsung terlihat.</p><p>Pada project ini, komponen utamanya adalah <strong>txtNama</strong>, <strong>btnSapa</strong>, dan <strong>lblHasil</strong>. Komponen ini akan sering muncul saat kalian menyusun Blocks.</p><div class="warning-box"><h4>Hati-hati</h4><p>Nama komponen di Designer harus konsisten dengan yang dipakai di Blocks. Jika salah memilih komponen, hasil aplikasi bisa berbeda dari rencana.</p></div></section>
+<section class="explanation " id="explanation-13"><h3>Mengatur Properties</h3><p>Properties membantu membuat tampilan lebih jelas. Untuk TextBox, bagian pentingnya adalah <strong>Hint</strong>. Hint adalah teks petunjuk yang muncul sebelum user mengetik.</p><p>Untuk Button, ubah teksnya menjadi <strong>Sapa!</strong> agar user tahu tombol itu digunakan untuk menampilkan sapaan. Untuk Label hasil, kalian bisa membuat teks awal seperti “Hasil sapaan muncul di sini”.</p><div class="info-box"><h4>UI yang baik</h4><p>User tidak perlu bertanya “ini kolom untuk apa?” atau “tombol ini ngapain?”. Petunjuk singkat di tampilan bisa membuat aplikasi jauh lebih mudah dipakai.</p></div></section>
+<section class="explanation " id="explanation-14"><h3>Peta Blocks</h3><p>Blocks sesi ini bisa dibaca sebagai cerita pendek. Pertama, buat variabel kosong. Kedua, saat tombol Sapa! ditekan, ambil isi TextBox dan simpan ke variabel. Ketiga, gabungkan kata “Halo,” dengan isi variabel, lalu tampilkan hasilnya di Label.</p><p>Dengan peta ini, kalian bisa memahami kode sebelum menyusun bloknya. Jadi kalian tidak hanya menyalin blok, tetapi tahu fungsi tiap bagian.</p><div class="example-box"><h4>Kalimat logika</h4><p>Ketika tombol Sapa! diklik, simpan teks dari txtNama ke global nama, lalu set lblHasil.Text menjadi “Halo, ” + global nama + “!”.</p></div></section>
+<section class="explanation " id="explanation-15"><h3>Langkah 1: Membuat Variabel</h3><p>Blok <strong>initialize global nama to ""</strong> dipakai untuk membuat variabel bernama <strong>nama</strong>. Nilai awalnya adalah teks kosong, karena saat aplikasi baru dibuka, user belum mengetik nama apa pun.</p><p>Variabel ini disiapkan sejak awal supaya bisa dipakai ketika tombol Sapa! ditekan. Kalau variabel belum dibuat, kalian tidak bisa memakai blok <strong>set global nama</strong> atau <strong>get global nama</strong> dengan rapi.</p><div class="warning-box"><h4>Kesalahan umum</h4><p>Jangan memakai nama variabel yang terlalu umum seperti <strong>x</strong>. Gunakan nama yang menjelaskan isinya, misalnya <strong>nama</strong>.</p></div></section>
+<section class="explanation " id="explanation-16"><h3>Langkah 2: Menyimpan Input</h3><p>Saat user menekan tombol Sapa!, aplikasi perlu mengambil isi TextBox. Isi itu dibaca dari <strong>txtNama.Text</strong>. Setelah itu, data disimpan ke <strong>global nama</strong>.</p><p>Inilah bagian yang membuat aplikasi “mengingat” data user selama aplikasi berjalan. Jika user mengetik “Alya”, isi global nama menjadi “Alya”. Jika user mengganti input menjadi “Raka” lalu menekan tombol lagi, isi variabel berubah menjadi “Raka”.</p><div class="info-box"><h4>Perhatikan urutan</h4><p>Ambil data dari TextBox dulu, lalu simpan ke variabel. Jika urutannya tidak jelas, hasil di Label bisa tidak sesuai dengan input terakhir.</p></div></section>
+<section class="explanation " id="explanation-17"><h3>Langkah 3: Menggabungkan Teks</h3><p>Agar sapaan terlihat natural, kita tidak hanya menampilkan nama. Kita perlu menggabungkan teks tetap dengan isi variabel. Blok <strong>join</strong> dipakai untuk menyusun kalimat seperti <strong>Halo, Budi!</strong>.</p><p>Bagian “Halo, ” dan “!” adalah teks tetap. Bagian tengahnya diambil dari <strong>get global nama</strong>, yaitu isi variabel yang sudah disimpan dari TextBox.</p><div class="example-box"><h4>Contoh</h4><p>Jika global nama berisi “Nisa”, maka hasil join menjadi <strong>Halo, Nisa!</strong>.</p></div></section>
+<section class="explanation " id="explanation-18"><h3>Melihat Keseluruhan Logika</h3><p>Slide ini menjadi tempat untuk screenshot Blocks lengkap. Saat kalian melihat rangkaian penuh, cek apakah semua bagian sudah tersambung dengan urutan yang benar.</p><p>Project ini sebaiknya memakai variabel secara jelas: simpan input ke global nama, lalu ambil global nama untuk membuat output. Dengan begitu, konsep variabel benar-benar terlihat.</p><div class="warning-box"><h4>Catatan penting</h4><p>Kalau Label hanya diisi langsung dengan <strong>txtNama.Text</strong>, aplikasi memang bisa menampilkan nama, tetapi konsep menyimpan data ke variabel belum terlihat kuat. Untuk sesi ini, pastikan variabel dipakai.</p></div></section>
+<section class="explanation " id="explanation-19"><h3>Menguji Alur Aplikasi</h3><p>Simulasi di kiri meniru alur project: user mengetik nama, menekan tombol, lalu hasil muncul. Di App Inventor, alur ini dibuat menggunakan komponen TextBox, Button, Label, dan global variable.</p><p>Coba masukkan beberapa nama berbeda. Jika hasil berubah mengikuti input, berarti aplikasi sudah bersifat dinamis. Ini adalah tanda bahwa aplikasi tidak hanya menampilkan teks tetap.</p><div class="example-box"><h4>Test case sederhana</h4><ul><li>Input: Budi → Output: Halo, Budi!</li><li>Input: Nisa → Output: Halo, Nisa!</li><li>Input kosong → Output perlu diperhatikan, apakah masih nyaman dibaca?</li></ul></div></section>
+<section class="explanation " id="explanation-20"><h3>Membaca Logika Blocks</h3><p>Sebelum menekan Run atau mencoba di Companion, biasakan membaca Blocks sebagai kalimat. Pada contoh ini, event dimulai dari tombol Sapa! yang diklik.</p><p>Baris pertama di dalam event menyimpan isi <strong>txtNama.Text</strong> ke variabel. Baris kedua menampilkan kalimat sapaan di <strong>lblHasil.Text</strong>. Jika kalian bisa membaca alur ini, debugging akan jauh lebih mudah.</p><div class="info-box"><h4>Kebiasaan bagus</h4><p>Setiap kali membuat Blocks, tanyakan: inputnya dari mana, disimpan di mana, dan outputnya muncul di mana?</p></div></section>
+<section class="explanation " id="explanation-21"><h3>Debugging Aplikasi Sapaan</h3><p>Debugging dimulai dari gejala. Jika Label kosong, fokus pada bagian output. Jika sapaan tidak lengkap, fokus pada blok join. Jika nama tidak berubah, fokus pada cara variabel diisi.</p><p>Jangan langsung membongkar semua Blocks. Ubah satu bagian, tes lagi, lalu lihat apakah masalahnya berubah. Cara ini membuat kalian lebih cepat menemukan penyebab bug.</p><div class="warning-box"><h4>Tips developer</h4><p>Uji dengan nama pendek seperti “Budi” dulu. Setelah berhasil, baru coba nama lain atau input kosong.</p></div></section>
+<section class="explanation " id="explanation-22"><h3>Mulai Berpikir tentang Validasi</h3><p>Program dasar biasanya menjalankan apa yang kita tulis, tanpa menebak maksud user. Jika user belum mengetik nama, TextBox berisi teks kosong. Saat digabungkan, hasilnya bisa menjadi <strong>Halo, !</strong>.</p><p>Ini bukan berarti aplikasinya rusak total. Ini menunjukkan bahwa program belum punya validasi input. Materi validasi dengan kondisi akan berguna di sesi-sesi selanjutnya.</p><div class="example-box"><h4>Untuk sekarang</h4><p>Pastikan project utama berjalan dulu: input bisa dibaca, variabel bisa menyimpan, dan Label bisa menampilkan hasil.</p></div></section>
+<section class="explanation " id="explanation-23"><h3>Pengembangan dengan TextToSpeech</h3><p>Challenge ini membuat aplikasi terasa lebih interaktif. Setelah sapaan tampil di Label, aplikasi juga bisa membacakannya menggunakan TextToSpeech.</p><p>TextToSpeech adalah komponen non-visible. Artinya, komponen tidak terlihat oleh user di layar, tetapi bekerja di belakang layar untuk menghasilkan suara.</p><div class="info-box"><h4>Tips</h4><p>Gunakan kalimat yang sama dengan Label agar hasil teks dan suara konsisten. Jangan membuat dua kalimat berbeda jika belum diperlukan.</p></div></section>
+<section class="explanation " id="explanation-24"><h3>Menambahkan Suara dengan Rapi</h3><p>Jika kalian menambahkan TextToSpeech, usahakan bloknya tetap mudah dibaca. Jangan membuat teks sapaan dua kali dengan isi yang berbeda. Cara yang rapi adalah membuat sapaan yang sama untuk Label dan TTS.</p><p>Pada level ini, kalian boleh mengikuti instruksi guru untuk struktur blok yang dipakai. Yang penting, TextToSpeech membacakan sapaan berdasarkan nama yang user ketik.</p><div class="warning-box"><h4>Testing suara</h4><p>Pastikan volume perangkat aman dan tidak mengganggu teman satu kelas. Tes suara secukupnya.</p></div></section>
+<section class="explanation " id="explanation-25"><h3>Literasi Digital: Data Pribadi</h3><p>Walaupun project ini sederhana, kita tetap perlu membiasakan diri menjaga data. Nama panggilan untuk latihan aman digunakan. Namun, menggabungkan nama lengkap dengan data lain seperti nomor HP, alamat, atau sekolah bisa menjadi informasi pribadi yang sebaiknya tidak dimasukkan sembarangan.</p><p>Developer yang baik tidak hanya membuat aplikasi berjalan, tetapi juga memikirkan data apa yang benar-benar diperlukan.</p><div class="info-box"><h4>Prinsip aman</h4><p>Gunakan data secukupnya. Untuk project latihan, data dummy atau nama karakter sudah cukup.</p></div></section>
+<section class="explanation " id="explanation-26"><h3>Live Testing</h3><p>AI2 Companion membantu kalian melihat apakah aplikasi benar-benar nyaman dipakai di layar HP. Kadang tampilan di Designer terlihat rapi, tetapi saat diuji di HP ukuran komponen terasa kurang pas.</p><p>Untuk project ini, fokus testingnya adalah apakah input dapat diketik dan apakah output berubah sesuai data terbaru. Coba beberapa nama agar kalian yakin program tidak hanya bekerja untuk satu contoh saja.</p><div class="warning-box"><h4>Jika tidak berubah</h4><p>Cek lagi apakah event <strong>btnSapa.Click</strong> sudah berisi blok untuk mengubah <strong>lblHasil.Text</strong>.</p></div></section>
+<section class="explanation " id="explanation-27"><h3>Checklist Berhasil</h3><p>Output minimum memastikan konsep utama sudah tercapai. Untuk sesi ini, konsep utamanya bukan hanya “Label berubah”, tetapi juga “data disimpan ke variabel lalu dipakai kembali”.</p><p>Jika semua poin sudah terpenuhi, kalian boleh mencoba challenge seperti menambahkan TextToSpeech atau mempercantik tampilan. Namun, jangan lompat ke challenge sebelum logika utama benar-benar berjalan.</p><div class="info-box"><h4>Prioritas</h4><p>Aplikasi sederhana yang alurnya jelas lebih baik daripada aplikasi banyak fitur tetapi konsep variabelnya tidak terlihat.</p></div></section>
+<section class="explanation " id="explanation-28"><h3>Merapikan Project</h3><p>Sebelum dikumpulkan, pastikan project yang kalian kirim adalah versi terakhir. Cek kembali Designer dan Blocks agar tidak ada komponen penting yang tertinggal.</p><p>Nama project yang jelas membantu guru dan kalian sendiri menemukan file dengan cepat. Kalau diminta mengirim link, pastikan link yang dikirim mengarah ke project yang benar.</p><div class="example-box"><h4>Tips sebelum selesai</h4><p>Jalankan satu kali lagi dengan nama yang berbeda. Jika output ikut berubah, berarti aplikasi sudah dinamis.</p></div></section>
+<section class="explanation " id="explanation-29"><h3>Menguji dengan Teman</h3><p>Peer test membantu kalian melihat aplikasi dari sudut pandang user lain. Karena kalian pembuatnya, kalian mungkin merasa semua sudah jelas. Tetapi user baru bisa saja bingung.</p><p>Saat teman mencoba, amati tanpa langsung memberi petunjuk. Jika teman tahu harus mengetik nama, menekan tombol, dan membaca hasil, berarti UI kalian sudah cukup jelas.</p><div class="info-box"><h4>Feedback yang berguna</h4><p>Feedback yang spesifik lebih bermanfaat daripada “bagus”. Contoh: “Hint TextBox sudah jelas” atau “Label hasil sebaiknya dibuat lebih besar”.</p></div></section>
+<section class="explanation " id="explanation-30"><h3>Yang Sudah Dipelajari</h3><p>Hari ini kalian membuat aplikasi yang bisa memakai data dari user. Ini adalah dasar penting sebelum masuk ke aplikasi yang menghitung, mengecek kondisi, atau menyimpan daftar data.</p><p>Kalian juga mulai belajar membaca alur program: dari input, ke memori, lalu ke output. Kalau alur ini sudah kuat, sesi-sesi berikutnya akan lebih mudah dipahami.</p><div class="info-box"><h4>Siap lanjut?</h4><p>Di sesi berikutnya, data angka akan mulai diproses dengan operator matematika untuk membuat aplikasi yang lebih fungsional.</p></div></section>
+    </div>
+  </div>
+  <script>
+    const ACCESS_CODE = 'RGMDSMS26';
+    let currentSlide = 1;
+    let totalSlides = 0;
+    window.addEventListener('load', () => {
+      totalSlides = document.querySelectorAll('.slide').length;
+      document.getElementById('totalSlides').textContent = totalSlides;
+      setTimeout(() => document.querySelector('.access-popup').classList.add('show'), 50);
+      const input = document.getElementById('accessInput');
+      input.focus();
+      input.addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') checkAccessCode(); });
+      initSortDrop();
+      initDrawCanvas();
+      updateSlide();
+    });
+    function checkAccessCode(){
+      const input = document.getElementById('accessInput');
+      const error = document.getElementById('accessError');
+      if(input.value.trim().toUpperCase() === ACCESS_CODE){
+        document.getElementById('accessPopup').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'flex';
+        updateSlide();
+      } else { error.classList.add('show'); input.value=''; input.focus(); }
+    }
+    function changeSlide(direction){ const next = currentSlide + direction; if(next < 1 || next > totalSlides) return; currentSlide = next; updateSlide(); }
+    function updateSlide(){
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.explanation').forEach(e => e.classList.remove('active'));
+      const slide = document.getElementById(`slide-${currentSlide}`); if(slide) slide.classList.add('active');
+      const exp = document.getElementById(`explanation-${currentSlide}`); if(exp) exp.classList.add('active');
+      document.getElementById('currentSlide').textContent = currentSlide;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+      document.getElementById('progressFill').style.width = `${(currentSlide/totalSlides)*100}%`;
+      document.querySelector('.slide-content').scrollTop = 0;
+      document.querySelector('.explanation-panel').scrollTop = 0;
+    }
+    document.addEventListener('keydown', e => { if(document.getElementById('mainContent').style.display === 'none') return; if(e.key === 'ArrowRight') changeSlide(1); if(e.key === 'ArrowLeft') changeSlide(-1); });
+    function deviceCheck(btn){ btn.classList.toggle('correct'); }
+    function selectAny(btn){ const group=btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); }
+    function quiz(btn, ok, feedbackId){
+      const group = btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      btn.classList.add(ok ? 'correct' : 'wrong');
+      const feedback = document.getElementById(feedbackId);
+      if(feedback){ feedback.textContent = ok ? 'Betul.' : 'Belum tepat. Coba cek penjelasan di kanan.'; feedback.style.color = ok ? '#176b35' : '#a42820'; }
+    }
+    function toggleCheck(item){ const cb = item.querySelector('input'); cb.checked = !cb.checked; item.classList.toggle('done', cb.checked); }
+    function showLmsStep(step, btn){
+      document.querySelectorAll('.lms-map-wrap .hotspot, .lms-map-wrap .session-card-hotspot').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const box = document.getElementById('lmsStepInfo');
+      if(step === 1) box.innerHTML = '<h4><span class="area-number">1</span>Menu Sesi Kelas</h4><p>Klik menu Sesi Kelas untuk melihat sesi yang tersedia untuk rombelmu.</p>';
+      else box.innerHTML = '<h4><span class="area-number">2</span>Kartu Sesi</h4><p>Pilih kartu sesi sesuai arahan guru. Nama sekolah atau rombel bisa berbeda dari gambar contoh.</p>';
+    }
+    function showIPO(type){
+      const data = { input:['Input','Data yang diberikan pengguna, misalnya nominal harga atau gerakan jari di Canvas.'], process:['Process','Aplikasi menjalankan logika di Blocks, seperti menyusun kalimat, membaca suara, atau menggambar garis.'], output:['Output','Hasil yang dilihat atau didengar pengguna, misalnya suara TTS, label berubah, atau tanda tangan muncul.'] };
+      const el = document.getElementById('ipoInfo'); if(el) el.innerHTML = `<h4>${data[type][0]}</h4><p>${data[type][1]}</p>`;
+    }
+    function showDebug(id, btn){
+      document.querySelectorAll('.debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      document.querySelectorAll('.debug-scenario').forEach(s=>s.classList.remove('active'));
+      const el=document.getElementById(id); if(el) el.classList.add('active');
+    }
+    function initSortDrop(){
+      document.querySelectorAll('.sort-card').forEach(card => { card.addEventListener('dragstart', () => card.classList.add('dragging-sort')); card.addEventListener('dragend', () => card.classList.remove('dragging-sort')); });
+      document.querySelectorAll('.drop-zone, #sortBank').forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); const dragging = document.querySelector('.dragging-sort'); if(dragging) zone.appendChild(dragging); });
+      });
+    }
+    function checkSort(){
+      let correct = 0, total = 0;
+      document.querySelectorAll('.drop-zone').forEach(zone => { zone.querySelectorAll('.sort-card').forEach(card => { total++; if(card.dataset.kind === zone.dataset.accept) correct++; }); });
+      const fb = document.getElementById('sortFeedback'); if(!fb) return;
+      if(total < 1){ fb.textContent = 'Pindahkan dulu kartunya.'; fb.style.color = '#a42820'; return; }
+      fb.textContent = correct === total ? 'Sudah tepat.' : 'Masih ada kartu yang belum pas. Coba cek lagi jenis komponennya.';
+      fb.style.color = correct === total ? '#176b35' : '#a42820';
+    }
+    function initDrawCanvas(){}
+    
+
+    function markConsent(btn, ok){ btn.classList.remove('safe','risky'); btn.classList.add(ok ? 'safe' : 'risky'); }
+    const consentScenarios = [
+      {title:'Skenario 1 dari 3', text:'Aplikasi video call meminta akses kamera agar wajahmu terlihat saat panggilan berlangsung.', answer:'agree', feedback:'Setuju bisa tepat karena kamera memang diperlukan untuk tujuan yang dijelaskan. Tetap baca informasi yang muncul sebelum memberi izin.'},
+      {title:'Skenario 2 dari 3', text:'Sebuah game sederhana meminta akses ke semua kontak di ponsel, tetapi tidak menjelaskan untuk apa akses itu dipakai.', answer:'decline', feedback:'Tidak setuju adalah pilihan aman. Akses kontak tidak terlihat relevan untuk game sederhana dan tujuannya tidak jelas.'},
+      {title:'Skenario 3 dari 3', text:'Aplikasi penyimpanan foto meminta akses galeri. Kamu belum tahu apakah foto akan disimpan hanya di perangkat atau dibagikan ke internet.', answer:'ask', feedback:'Tanyakan dulu atau baca penjelasannya. Sebelum memberi akses, pahami lokasi penyimpanan dan siapa yang dapat melihat foto.'}
+    ];
+    let consentIndex = 0;
+    let selectedConsentAction = '';
+    function chooseConsentAction(btn, action){ selectAny(btn); selectedConsentAction = action; }
+    function checkConsentChoice(){
+      const feedback = document.getElementById('consentFeedback');
+      if(!feedback) return;
+      if(!selectedConsentAction){ feedback.textContent='Pilih tindakan dahulu.'; feedback.style.color='#a42820'; return; }
+      const item = consentScenarios[consentIndex];
+      const correct = selectedConsentAction === item.answer;
+      feedback.textContent = (correct ? 'Tepat. ' : 'Belum tepat. ') + item.feedback;
+      feedback.style.color = correct ? '#176b35' : '#a42820';
+    }
+    function nextConsentScenario(){
+      consentIndex = (consentIndex + 1) % consentScenarios.length;
+      selectedConsentAction = '';
+      const item = consentScenarios[consentIndex];
+      document.getElementById('consentScenarioTitle').textContent = item.title;
+      document.getElementById('consentScenarioText').textContent = item.text;
+      document.querySelectorAll('#slide-10 .choice-btn').forEach(btn => { btn.classList.remove('selected'); });
+      const feedback = document.getElementById('consentFeedback');
+      if(feedback){ feedback.textContent = 'Pilih tindakan dahulu.'; feedback.style.color='#1f4b99'; }
+    }
+    const testTypeItems = {
+      f1:{title:'HAPUS membuat Canvas kosong', prompt:'Ini termasuk pengujian apa?', answer:'function', feedback:'Ini pengujian fungsi karena kita mengecek apakah tombol benar-benar menjalankan Canvas.Clear.'},
+      f2:{title:'Instruksi mudah dibaca', prompt:'Ini termasuk pengujian apa?', answer:'ux', feedback:'Ini pengujian kenyamanan pengguna karena kita mengecek apakah user dapat memahami tampilan dengan mudah.'},
+      f3:{title:'Garis mengikuti drag', prompt:'Ini termasuk pengujian apa?', answer:'function', feedback:'Ini pengujian fungsi karena kita mengecek apakah event Dragged dan DrawLine bekerja sesuai gerakan.'}
+    };
+    let activeTestType = 'f1';
+    let selectedTestType = '';
+    function showTestType(id, btn){
+      document.querySelectorAll('#slide-19 .debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      activeTestType=id; selectedTestType='';
+      const item=testTypeItems[id];
+      document.getElementById('testTypePrompt').innerHTML='<h4>'+item.title+'</h4><p>'+item.prompt+'</p>';
+      document.querySelectorAll('#slide-19 .choice-btn').forEach(b=>b.classList.remove('selected'));
+      const feedback=document.getElementById('testTypeFeedback'); if(feedback){feedback.textContent='Pilih kategori dahulu.';feedback.style.color='#1f4b99';}
+    }
+    function chooseTestType(btn, type){ selectAny(btn); selectedTestType=type; }
+    function checkTestType(){
+      const feedback=document.getElementById('testTypeFeedback'); if(!feedback) return;
+      if(!selectedTestType){feedback.textContent='Pilih kategori dahulu.';feedback.style.color='#a42820';return;}
+      const item=testTypeItems[activeTestType]; const correct=selectedTestType===item.answer;
+      feedback.textContent=(correct?'Tepat. ':'Belum tepat. ')+item.feedback;
+      feedback.style.color=correct?'#176b35':'#a42820';
+    }
+    function initDrawCanvas(){
+      setupCanvas('signCanvas', true);
+      setupCanvas('coordCanvas', false);
+    }
+    function setupCanvas(id, drawing){
+      const canvas=document.getElementById(id); if(!canvas) return;
+      const ctx=canvas.getContext('2d'); ctx.lineWidth=3; ctx.lineCap='round'; ctx.strokeStyle='#0056b3';
+      let isDown=false, last=null;
+      function pos(e){ const r=canvas.getBoundingClientRect(); const p=e.touches?e.touches[0]:e; return {x:Math.round((p.clientX-r.left)*canvas.width/r.width), y:Math.round((p.clientY-r.top)*canvas.height/r.height)}; }
+      function show(p, previous){
+        if(id==='coordCanvas'){
+          const info=document.getElementById('coordInfo'); if(info) info.textContent = `Koordinat saat ini: X ${p.x}, Y ${p.y}`;
+          const detail=document.getElementById('dragPointInfo');
+          if(detail && previous) detail.innerHTML = `<h4>Garis kecil yang akan dibuat</h4><p>prevX, prevY: <strong>(${previous.x}, ${previous.y})</strong> &rarr; currentX, currentY: <strong>(${p.x}, ${p.y})</strong></p>`;
+        }
+        if(id==='signCanvas'){
+          const info=document.getElementById('signDragInfo');
+          if(info) info.textContent = previous ? `DrawLine: (${previous.x}, ${previous.y}) → (${p.x}, ${p.y})` : `Mulai dari titik (${p.x}, ${p.y}). Geser untuk membuat garis.`;
+        }
+      }
+      canvas.addEventListener('mousedown',e=>{isDown=true; last=pos(e); show(last);});
+      canvas.addEventListener('mousemove',e=>{const p=pos(e); show(p, last); if(drawing && isDown && last){ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p;}});
+      canvas.addEventListener('mouseup',()=>{isDown=false; last=null;});
+      canvas.addEventListener('mouseleave',()=>{isDown=false; last=null;});
+      canvas.addEventListener('touchstart',e=>{e.preventDefault(); isDown=true; last=pos(e); show(last);},{passive:false});
+      canvas.addEventListener('touchmove',e=>{e.preventDefault(); const p=pos(e); show(p, last); if(drawing && isDown && last){ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p;}},{passive:false});
+      canvas.addEventListener('touchend',()=>{isDown=false; last=null;});
+      if(id==='coordCanvas') { ctx.fillStyle='#eef7ff'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#cfe7fb'; for(let x=0;x<canvas.width;x+=52){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();} for(let y=0;y<canvas.height;y+=52){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();} ctx.strokeStyle='#0056b3'; }
+    }
+    function clearSignature(){ const c=document.getElementById('signCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); const info=document.getElementById('signDragInfo'); if(info) info.textContent='Status: Canvas sudah kosong. Siap mencoba lagi.'; }
+    function drawDemoLine(){ const c=document.getElementById('signCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.strokeStyle='#0056b3'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(70,150); ctx.bezierCurveTo(150,50,260,240,450,110); ctx.stroke(); const info=document.getElementById('signDragInfo'); if(info) info.textContent='Demo menunjukkan banyak titik dihubungkan menjadi garis lengkung.'; }
+
+
+    function saveMemoryName(){
+      const input=document.getElementById('memoryNameInput');
+      const name=(input.value||'').trim();
+      document.getElementById('textboxPreview').textContent = name || 'kosong';
+      document.getElementById('memoryValue').textContent = name ? name : '""';
+      const fb=document.getElementById('memoryFeedback');
+      fb.textContent = name ? `global nama sekarang menyimpan: ${name}` : 'TextBox kosong, jadi variabel juga kosong.';
+      fb.style.color = name ? '#176b35' : '#a42820';
+    }
+    function clearMemoryName(){
+      const input=document.getElementById('memoryNameInput'); if(input) input.value='';
+      document.getElementById('textboxPreview').textContent='kosong';
+      document.getElementById('memoryValue').textContent='""';
+      const fb=document.getElementById('memoryFeedback'); fb.textContent='Variabel dikosongkan lagi.'; fb.style.color='#1f4b99';
+    }
+    function showVarConcept(type, btn){
+      document.querySelectorAll('#slide-8 .var-tile').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      const data={
+        init:['Initialize','Membuat global variable, misalnya <strong>initialize global nama to ""</strong>. Tanda <strong>""</strong> berarti nilai awalnya masih kosong.'],
+        set:['Set','Mengisi atau mengganti isi variabel. Contoh: <strong>set global nama to txtNama.Text</strong>.'],
+        get:['Get','Mengambil isi variabel untuk dipakai lagi. Contoh: <strong>get global nama</strong> dipakai dalam blok join.']
+      };
+      const box=document.getElementById('varConceptInfo'); box.innerHTML=`<h4>${data[type][0]}</h4><p>${data[type][1]}</p>`;
+    }
+    function showGreetingFlow(type){
+      const data={
+        input:['Input','User mengetik nama di TextBox. Data ini diambil dari <strong>txtNama.Text</strong>.'],
+        store:['Simpan','Isi TextBox disimpan ke <strong>global nama</strong> agar bisa dipakai lagi.'],
+        output:['Output','Aplikasi mengatur <strong>lblHasil.Text</strong> menjadi sapaan yang sudah digabung dengan isi variabel.']
+      };
+      const box=document.getElementById('greetingFlowInfo'); if(box) box.innerHTML=`<h4>${data[type][0]}</h4><p>${data[type][1]}</p>`;
+    }
+    function runGreetingApp(){
+      const name=(document.getElementById('greetInput').value||'').trim();
+      const result=document.getElementById('greetResult');
+      result.textContent = name ? `Halo, ${name}!` : 'Halo, !';
+      result.style.color = name ? '#0056b3' : '#a42820';
+    }
+    function toggleAccordion(id){
+      const el=document.getElementById(id); if(el) el.classList.toggle('show');
+    }
+</script>
+</body>
+</html>
