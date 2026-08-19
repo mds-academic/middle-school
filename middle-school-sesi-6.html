@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UOB My Digital Space — Middle School Sesi 6</title>
+<link href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;✍️&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue:#0056b3; --light-blue:#4a9eff; --uob-red:#e60012; --uob-red-soft:#ff5a6b;
+      --uob-blue-deep:#0056b3; --uob-blue-soft:#5aa7ff; --teal:#11a9b7; --bg:#f5f6f8;
+      --panel:#ffffff; --text:#2c3e50; --muted:#6c757d; --line:#e3e8ef; --green:#2e9d57;
+      --orange:#f39c12; --red:#e74c3c; --purple:#8e44ad; --yellow-soft:#fff8dc; --blue-soft:#eef7ff; --green-soft:#effaf2;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text); }
+    button, input, select { font: inherit; }
+    a { color: var(--blue); font-weight: 800; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { width: 100%; height: 6px; background: linear-gradient(90deg,#f5d7da,#d9e9ff); position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: inset 0 1px 2px rgba(0,0,0,.08); }
+    .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg,var(--uob-red) 0%,var(--uob-red-soft) 28%,var(--uob-blue-deep) 72%,var(--uob-blue-soft) 100%); transition: width .3s ease; box-shadow:0 0 8px rgba(0,86,179,.18); }
+    .main-container { display:flex; height:100vh; }
+    .slides-panel { width:50%; background:#f8f9fa; border-right:2px solid var(--line); display:flex; flex-direction:column; position:relative; }
+    .explanation-panel { width:50%; background:#fff; overflow-y:auto; padding:32px; }
+    .slide-header { background:#fff; padding:17px 20px 15px; border-bottom:2px solid var(--line); box-shadow:0 2px 4px rgba(0,0,0,.04); position:relative; }
+    .slide-header::before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(var(--uob-red),var(--light-blue)); }
+    .slide-header h1 { font-size:1.28rem; color:var(--text); margin-bottom:3px; }
+    .slide-header p { font-size:.9rem; color:var(--muted); }
+    .header-badge { position:absolute; right:18px; top:17px; background:var(--blue-soft); color:var(--blue); border:1px solid #cce7ff; border-radius:999px; padding:5px 10px; font-weight:700; font-size:.76rem; }
+    .slide-content { flex:1; padding:24px 28px 94px; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; min-height:0; }
+    .slide, .explanation { display:none; opacity:0; transition:opacity .25s ease; }
+    .slide.active, .explanation.active { display:block; opacity:1; }
+    .slide { width:100%; max-width:820px; }
+    .explanation { max-width:760px; margin:0 auto; }
+    .slide h2 { font-size:2.25rem; color:var(--blue); margin-bottom:10px; line-height:1.15; }
+    .slide h3 { font-size:1.78rem; color:var(--blue); margin-bottom:16px; line-height:1.2; }
+    .slide h4, .explanation h4 { font-size:1.05rem; margin-bottom:9px; color:var(--text); }
+    .slide p, .explanation p { font-size:1rem; line-height:1.58; color:#495057; margin-bottom:14px; }
+    .explanation h3 { font-size:1.65rem; margin-bottom:16px; color:var(--text); line-height:1.25; }
+    .slide ul, .slide ol, .explanation ul, .explanation ol { margin-left:22px; margin-bottom:10px; }
+    .slide li, .explanation li { margin-bottom:7px; line-height:1.5; }
+    .eyebrow { display:inline-block; color:var(--uob-red); font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+    .lead { font-size:1.08rem !important; }
+    .mini-note { font-size:.9rem !important; color:var(--muted) !important; margin-top:10px; }
+    .visual-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:13px; margin:16px 0; }
+    .visual-card,.metric-box,.info-box,.example-box,.warning-box,.placeholder-box,.interactive-box,.code-placeholder,.quiz-card { background:#fff; border:2px solid var(--line); border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .visual-card { padding:15px; }
+    .visual-card h4 { margin-bottom:5px; }
+    .visual-card p { margin-bottom:0; font-size:.92rem; line-height:1.42; }
+    .visual-icon { font-size:1.9rem; margin-bottom:8px; }
+    .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:16px; }
+    .metric-box { padding:16px 12px; text-align:center; }
+    .metric-box strong { display:block; font-size:1.55rem; color:var(--blue); margin-bottom:7px; }
+    .metric-box span { font-size:.9rem; line-height:1.35; color:#495057; display:block; }
+    .info-box,.example-box,.warning-box,.interactive-box { padding:17px; margin:16px 0; }
+    .info-box { border-left:5px solid var(--light-blue); }
+    .example-box { border-left:5px solid var(--green); background:#f8fff8; }
+    .warning-box { border-left:5px solid var(--orange); background:#fffaf0; }
+    .interactive-box { border-left:5px solid var(--purple); background:#fcf8ff; }
+    .placeholder-box { min-height:215px; padding:24px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; background:linear-gradient(135deg,#fbfdff,#f5f9fc); }
+    .placeholder-box .placeholder-icon { font-size:2.3rem; margin-bottom:8px; }
+    .placeholder-box strong { display:block; color:var(--blue); margin-bottom:5px; }
+    .placeholder-box small { color:var(--muted); line-height:1.4; }
+    .code-placeholder { min-height:230px; padding:22px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; border-color:#9ab7d3; background:#f8fbfe; }
+    .code-placeholder strong { color:var(--blue); display:block; margin-bottom:7px; }
+    .code-placeholder code { color:var(--muted); background:#eef3f8; padding:3px 7px; border-radius:5px; }
+    .pseudo-list { list-style:none; margin-left:0 !important; counter-reset:pseudo; }
+    .pseudo-list li { counter-increment:pseudo; background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 12px 10px 44px; position:relative; margin-bottom:8px; }
+    .pseudo-list li::before { content:counter(pseudo); position:absolute; left:11px; top:9px; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--blue); color:#fff; font-weight:800; font-size:.8rem; }
+    .navigation { position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:2px solid var(--line); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 -2px 4px rgba(0,0,0,.04); }
+    .nav-btn { background:var(--light-blue); color:#fff; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; font-size:.94rem; font-weight:700; display:flex; gap:8px; align-items:center; transition:.2s ease; }
+    .nav-btn:hover { transform:translateY(-1px); background:#357abd; }
+    .nav-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    .slide-indicator { font-size:.9rem; color:var(--muted); font-weight:700; }
+    .floating-element { position:absolute; opacity:.07; pointer-events:none; font-size:2rem; animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(0);}33%{transform:translateY(-12px) rotate(4deg);}66%{transform:translateY(7px) rotate(-3deg);} }
+    .access-popup-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999; display:flex; justify-content:center; align-items:center; }
+    .access-popup { background:#fff; border:3px solid var(--light-blue); border-radius:15px; padding:38px; max-width:450px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.3); transform:scale(.8); opacity:0; transition:all .3s ease; }
+    .access-popup.show { transform:scale(1); opacity:1; }
+    .access-popup h2 { color:var(--text); margin-bottom:13px; font-size:1.8rem; }
+    .access-popup p { color:#666; margin-bottom:22px; line-height:1.55; }
+    .access-input { width:100%; padding:14px; font-size:1.15rem; border:2px solid #dee2e6; border-radius:8px; margin-bottom:18px; text-align:center; letter-spacing:2px; font-weight:bold; text-transform:uppercase; }
+    .access-input:focus { outline:none; border-color:var(--light-blue); box-shadow:0 0 0 3px rgba(74,158,255,.12); }
+    .access-submit { background:var(--light-blue); color:#fff; border:none; padding:13px 28px; border-radius:8px; font-size:1.05rem; font-weight:bold; cursor:pointer; }
+    .access-submit:hover { background:#357abd; }
+    .access-error { color:var(--red); margin-top:13px; font-weight:bold; opacity:0; transition:opacity .2s; }
+    .access-error.show { opacity:1; }
+    .access-hint { background:#fff3cd; border:1px solid #ffc107; border-radius:5px; padding:9px; margin-top:18px; font-size:.88rem; color:#856404; }
+    .choice-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .choice-btn { border:2px solid var(--line); background:#fff; color:var(--text); border-radius:10px; padding:11px 12px; cursor:pointer; font-weight:700; transition:.18s; text-align:left; }
+    .choice-btn:hover { border-color:var(--light-blue); transform:translateY(-1px); }
+    .choice-btn.correct { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .choice-btn.wrong { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .choice-btn.selected { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+    .feedback-line { min-height:28px; font-weight:700; margin-top:8px; }
+    .form-grid { display:grid; gap:10px; margin:12px 0; }
+    .form-grid label { font-weight:700; font-size:.9rem; color:var(--text); }
+    .form-grid input { width:100%; padding:10px 12px; border:2px solid var(--line); border-radius:8px; margin-top:5px; }
+    .form-grid input:focus { outline:none; border-color:var(--light-blue); }
+    .primary-btn,.secondary-btn { border:none; border-radius:8px; padding:10px 14px; font-weight:800; cursor:pointer; }
+    .primary-btn { background:var(--blue); color:#fff; }
+    .secondary-btn { background:#e9ecef; color:var(--text); }
+    .scratch-map-wrap { position:relative; width:100%; margin:12px auto; border:2px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    .scratch-map-wrap img { width:100%; display:block; }
+    .hotspot { position:absolute; width:30px; height:30px; border-radius:50%; border:3px solid #fff; background:var(--uob-red); color:#fff; font-weight:900; cursor:pointer; box-shadow:0 3px 9px rgba(0,0,0,.35); display:grid; place-items:center; transform:translate(-50%,-50%); transition:transform .16s,background .16s; }
+    .hotspot:hover,.hotspot.active { transform:translate(-50%,-50%) scale(1.16); background:var(--blue); }
+    .scratch-caption { text-align:center; font-size:.85rem; color:var(--muted); margin-top:8px; }
+    .area-live-card { min-height:120px; border:2px solid #cfe7fb; background:var(--blue-soft); border-radius:12px; padding:16px; margin-top:14px; }
+    .area-live-card .area-number { display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--uob-red); color:#fff; font-weight:900; margin-right:7px; }
+    .lms-map-wrap { position:relative; }
+    .session-card-hotspot { position:absolute; left:19.1%; top:43%; width:25.5%; height:51%; padding:0; border:3px dashed transparent; border-radius:12px; background:transparent; cursor:pointer; transition:.2s ease; }
+    .session-card-hotspot span { position:absolute; top:8px; right:8px; width:32px; height:32px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; background:var(--uob-red); color:#fff; font-size:.9rem; font-weight:900; box-shadow:0 3px 9px rgba(0,0,0,.35); }
+    .session-card-hotspot:hover,.session-card-hotspot.active { border-color:var(--uob-red); background:rgba(230,0,18,.08); }
+    .session-card-hotspot:hover span,.session-card-hotspot.active span { background:var(--blue); transform:scale(1.1); }
+    .sequence-source,.sequence-target { display:grid; gap:8px; margin-top:10px; }
+    .sequence-card { padding:10px 12px; border:2px solid var(--line); background:#fff; border-radius:9px; cursor:grab; user-select:none; font-weight:700; }
+    .sequence-card.dragging { opacity:.45; }
+    .sequence-target { min-height:170px; border:2px dashed #a9bfd2; background:#f8fbfe; border-radius:10px; padding:10px; }
+    .checklist { list-style:none; margin-left:0 !important; display:grid; gap:8px; }
+    .check-item { display:flex; gap:9px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; cursor:pointer; }
+    .check-item input { margin-top:3px; transform:scale(1.2); }
+    .check-item.done { background:var(--green-soft); border-color:#9cd9af; text-decoration:line-through; color:#3e6b4c; }
+    .debug-scenario { display:none; }
+    .debug-scenario.active { display:block; }
+    .debug-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .debug-tab { border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 11px; cursor:pointer; font-weight:700; }
+    .debug-tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .pill { display:inline-block; padding:4px 9px; border-radius:999px; font-size:.78rem; font-weight:800; color:#fff; margin:2px; }
+    .pill.blue{background:var(--blue);} .pill.green{background:var(--green);} .pill.orange{background:var(--orange);} .pill.purple{background:var(--purple);} .pill.red{background:var(--uob-red);}
+    .phone-preview { margin:16px auto; width:220px; min-height:355px; border:9px solid #1f2937; border-radius:28px; background:#fff; box-shadow:0 12px 22px rgba(0,0,0,.13); overflow:hidden; }
+    .phone-bar { height:34px; background:#294bd8; color:#fff; display:flex; align-items:center; padding-left:12px; font-size:.8rem; font-weight:800; }
+    .phone-body { padding:18px 14px; text-align:center; display:grid; gap:12px; }
+    .app-title { font-weight:900; color:var(--text); font-size:.95rem; }
+    .app-input { padding:9px; border:1px solid var(--line); border-radius:8px; text-align:center; background:#fff; }
+    .app-label { min-height:50px; padding:10px; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+    .app-button { background:var(--uob-red); color:#fff; border:none; border-radius:8px; padding:10px; font-weight:900; cursor:pointer; }
+    .app-button.blue { background:var(--blue); } .app-button.gray { background:#667085; }
+    .ui-sample-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+    .ui-card { border:2px solid var(--line); border-radius:14px; background:#fff; padding:12px; cursor:pointer; transition:.18s; }
+    .ui-card:hover,.ui-card.active { border-color:var(--blue); background:var(--blue-soft); transform:translateY(-1px); }
+    .messy-phone .phone-body { gap:4px; text-align:left; }
+    .messy-phone .app-button { width:70px; padding:5px; font-size:.7rem; }
+    .messy-phone .app-input { width:95px; font-size:.7rem; }
+    .arrangement-demo { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+    .arr-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:14px; }
+    .arr-stack { display:grid; gap:8px; }
+    .arr-row { display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .mini-component { padding:8px 10px; background:#eef7ff; border:1px solid #cfe7fb; border-radius:8px; font-weight:800; font-size:.86rem; }
+    .component-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+    .component-pill { border:2px solid var(--line); border-radius:999px; background:#fff; padding:8px 11px; font-weight:800; cursor:pointer; }
+    .component-pill.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .mini-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem; }
+    .mini-table th,.mini-table td { border:1px solid var(--line); padding:9px; text-align:left; }
+    .mini-table th { background:var(--blue); color:#fff; }
+    @media (max-width:960px){ body{overflow:auto;height:auto}.main-container{flex-direction:column;height:auto;min-height:100vh}.slides-panel,.explanation-panel{width:100%;height:auto;min-height:50vh}.slides-panel{min-height:100vh}.slide-content{padding:20px 20px 92px}.explanation-panel{padding:24px}.header-badge{display:none}.ui-sample-grid,.arrangement-demo{grid-template-columns:1fr} }
+  
+    .section-label { display:inline-block; font-size:.75rem; font-weight:900; color:#fff; background:linear-gradient(90deg,var(--uob-red),var(--blue)); border-radius:999px; padding:5px 10px; margin-bottom:8px; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:12px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .term-card { border:2px solid var(--line); border-radius:12px; padding:13px; background:#fff; margin:8px 0; }
+    .term-card strong { color:var(--blue); }
+    .compact-list { margin-left:18px !important; }
+    .compact-list li { margin-bottom:4px !important; }
+    .property-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .property-card { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px; }
+    .property-card h4 { color:var(--blue); margin-bottom:5px; }
+    .small-phone { width:170px !important; min-height:275px !important; border-width:6px !important; border-radius:20px !important; }
+    .wide-placeholder { min-height:145px; }
+    .scenario-box { padding:14px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .sort-bank { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin:10px 0; }
+    .sort-card { border:2px solid var(--line); border-radius:10px; padding:10px; background:white; cursor:grab; font-weight:700; }
+    .drop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+    .drop-zone { min-height:145px; border:2px dashed #a9bfd2; border-radius:12px; padding:10px; background:#f8fbfe; }
+    .drop-zone h4 { color:var(--blue); font-size:.95rem; }
+    .drop-zone .sort-card { margin:6px 0; }
+    .hint-text { font-size:.86rem; color:var(--muted); }
+    @media(max-width:960px){.drop-grid{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}}
+
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:14px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .wide-note { padding:13px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .mini-phone-wide { display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:center; margin:16px 0; }
+    .readout { min-height:54px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; padding:10px; font-weight:800; color:var(--blue); }
+    .component-table { width:100%; border-collapse:collapse; background:#fff; border:2px solid var(--line); border-radius:12px; overflow:hidden; margin:14px 0; font-size:.92rem; }
+    .component-table th { background:var(--blue); color:#fff; padding:10px; text-align:left; }
+    .component-table td { border-top:1px solid var(--line); padding:10px; vertical-align:top; }
+    .block-pseudo { background:#111827; color:#e5e7eb; border-radius:14px; padding:14px; margin:12px 0; font-family:Consolas,Monaco,monospace; line-height:1.5; white-space:pre-wrap; box-shadow:0 8px 16px rgba(0,0,0,.12); }
+    .keyboard-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:14px 0; }
+    .keycap { min-width:44px; height:44px; border:2px solid var(--line); border-radius:9px; background:#fff; display:grid; place-items:center; font-weight:900; box-shadow:0 3px 0 #d8dee6; }
+    .canvas-shell { background:#fff; border:2px solid var(--line); border-radius:16px; padding:14px; box-shadow:0 4px 12px rgba(0,0,0,.08); margin:14px 0; }
+    .draw-canvas { width:100%; max-width:520px; height:260px; border:2px dashed #9ab7d3; border-radius:12px; display:block; background:#fff; touch-action:none; margin:0 auto; cursor:crosshair; }
+    .canvas-tools { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 0; }
+    .coord-box { text-align:center; font-weight:800; color:var(--blue); margin-top:8px; }
+    .consent-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:12px; cursor:pointer; font-weight:800; }
+    .consent-card.safe { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .consent-card.risky { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .canvas-mini { height:165px; background:#fff; border:2px dashed #9ab7d3; border-radius:12px; position:relative; overflow:hidden; margin:12px 0; }
+    .canvas-line { position:absolute; height:3px; background:var(--blue); transform-origin:left center; border-radius:999px; }
+    @media(max-width:960px){.two-col,.mini-phone-wide{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}.draw-canvas{height:220px}}
+
+    .formula-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .formula-main{font-size:1.15rem;font-weight:900;color:var(--blue);line-height:1.5;text-align:center;margin:10px 0;padding:12px;border-radius:12px;background:#eef7ff;border:1px solid #cfe7fb;}
+    .money-demo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+    .money-input{width:100%;border:2px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:5px;}
+    .money-result{background:#f8fbfe;border:2px solid #cfe7fb;border-radius:12px;padding:14px;font-weight:800;color:var(--blue);min-height:64px;display:flex;align-items:center;}
+    .operator-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0;}
+    .operator-card{border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-weight:800;transition:.16s;}
+    .operator-card:hover,.operator-card.active{border-color:var(--blue);background:var(--blue-soft);transform:translateY(-1px)}
+    .operator-symbol{display:block;font-size:1.75rem;color:var(--uob-red);margin-bottom:4px;}
+    .phone-mini{margin:14px auto;width:230px;min-height:380px;border:9px solid #1f2937;border-radius:28px;background:#fff;box-shadow:0 12px 22px rgba(0,0,0,.13);overflow:hidden;}
+    .phone-screen{padding:16px 14px;display:grid;gap:10px;text-align:left;}
+    .phone-field{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;color:#667085;font-size:.86rem;}
+    .phone-result{border:1px solid var(--line);border-radius:8px;padding:10px;min-height:54px;background:#f8fbfe;font-size:.86rem;font-weight:800;color:var(--blue);display:flex;align-items:center;justify-content:center;text-align:center;}
+    .calc-flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0;}
+    .calc-step{background:#fff;border:2px solid var(--line);border-radius:12px;padding:11px 13px;font-weight:800;min-width:118px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .calc-arrow{font-weight:900;color:var(--uob-red);font-size:1.35rem;}
+    .block-line{background:#111827;color:#e5e7eb;border-radius:14px;padding:14px;margin:12px 0;font-family:Consolas,Monaco,monospace;line-height:1.55;white-space:pre-wrap;box-shadow:0 8px 16px rgba(0,0,0,.12)}
+    .block-blue{border-left:7px solid #4a9eff}.block-green{border-left:7px solid #2e9d57}.block-orange{border-left:7px solid #f39c12}.block-purple{border-left:7px solid #8e44ad}.block-red{border-left:7px solid #e60012}
+    .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+    .match-card{border:2px solid var(--line);border-radius:12px;background:#fff;padding:12px;font-weight:800;cursor:pointer;transition:.16s;}
+    .match-card:hover,.match-card.selected{border-color:var(--blue);background:var(--blue-soft)}
+    .trace-table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;border:2px solid var(--line);border-radius:12px;overflow:hidden;font-size:.92rem;}
+    .trace-table th{background:var(--blue);color:#fff;padding:9px;text-align:left}.trace-table td{border-top:1px solid var(--line);padding:9px;vertical-align:top}.trace-table tr.active td{background:#fff8dc;font-weight:800;}
+    @media(max-width:960px){.money-demo,.match-grid{grid-template-columns:1fr}.calc-flow{align-items:stretch}.calc-step{flex:1}}
+</style>
+</head>
+<body>
+<div class="access-popup-overlay" id="accessPopup">
+<div class="access-popup">
+<h2>🔐 Kode Akses</h2>
+<p>Masukkan kode akses Middle School untuk membuka materi Sesi 6.</p>
+<input autocomplete="off" class="access-input" id="accessInput" maxlength="20" placeholder="MASUKKAN KODE" type="text"/>
+<button class="access-submit" onclick="checkAccessCode()">Masuk</button>
+<div class="access-error" id="accessError">Kode akses belum tepat. Coba lagi.</div>
+<div class="access-hint">Kode akses diberikan oleh guru.</div>
+</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="main-container" id="mainContent" style="display:none;">
+<div class="slides-panel">
+<div class="slide-header">
+<h1>UOB My Digital Space — Middle School</h1>
+<p>Sesi 6 · Kalkulator Diskon</p>
+<span class="header-badge">MIT App Inventor · Middle School</span>
+</div>
+<div class="slide-content">
+<div class="floating-element" style="top:12%;left:7%;">🛒</div>
+<div class="floating-element" style="top:18%;right:10%;">🧮</div>
+<div class="floating-element" style="bottom:25%;left:14%;">💸</div>
+<div class="floating-element" style="bottom:15%;right:16%;">📱</div>
+<section class="slide active" id="slide-1"><span class="eyebrow">Sesi 6</span><h2>Kalkulator Diskon</h2><p class="lead">Hari ini kalian membuat aplikasi yang bisa menghitung harga akhir setelah diskon.</p><div class="metrics"><div class="metric-box"><strong>🏷️</strong><span>Harga awal</span></div><div class="metric-box"><strong>%</strong><span>Diskon</span></div><div class="metric-box"><strong>🧮</strong><span>Operator matematika</span></div><div class="metric-box"><strong>📱</strong><span>App Inventor</span></div></div><div class="example-box"><h4>Target akhir</h4><p>User memasukkan harga awal dan persen diskon, lalu aplikasi menampilkan harga akhir yang harus dibayar.</p></div></section><section class="slide" id="slide-2"><h3>Misi Belajar Hari Ini</h3><div class="visual-grid"><div class="visual-card"><div class="visual-icon">🛒</div><h4>Harga awal</h4><p>Memahami harga barang sebelum diskon.</p></div><div class="visual-card"><div class="visual-icon">🏷️</div><h4>Diskon</h4><p>Mengubah persen diskon menjadi potongan harga.</p></div><div class="visual-card"><div class="visual-icon">🧮</div><h4>Rumus</h4><p>Menghitung harga akhir dengan operator Math.</p></div><div class="visual-card"><div class="visual-icon">📲</div><h4>Testing</h4><p>Menguji aplikasi dengan angka sederhana.</p></div></div><div class="interactive-box"><h4>Quick poll</h4><p>Menurutmu, diskon membantu kalau kita...</p><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,true,'q2')">tahu harga akhir sebelum membeli</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q2')">langsung membeli karena terlihat murah</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q2')">mengabaikan harga awal</button></div><div class="feedback-line" id="q2"></div></div></section><section class="slide" id="slide-3"><h3>Siapkan Workspace</h3><p class="lead">Sebelum mulai, pastikan alat kerja sudah siap.</p><div class="choice-grid"><button class="choice-btn" onclick="deviceCheck(this)">MIT App Inventor terbuka</button><button class="choice-btn" onclick="deviceCheck(this)">Project baru siap dibuat</button><button class="choice-btn" onclick="deviceCheck(this)">AI2 Companion siap untuk testing</button><button class="choice-btn" onclick="deviceCheck(this)">Catatan angka sederhana siap digunakan</button><button class="choice-btn" onclick="deviceCheck(this)">Tidak memakai data belanja pribadi</button></div><div class="warning-box"><h4>Catatan</h4><p>Gunakan angka sederhana tanpa titik ribuan saat belajar, misalnya <strong>10000</strong>, bukan <strong>10.000</strong>. Ini membuat Blocks lebih mudah dipahami.</p></div></section><section class="slide" id="slide-4"><h3>Buka Sesi 6 di LMS</h3><p class="lead">Mulai dari menu Sesi Kelas, lalu buka kartu sesi yang sesuai.</p><div class="scratch-map-wrap lms-map-wrap"><img alt="Tampilan LMS UOB My Digital Space" src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/6a973bfb-a09a-42af-a4ea-a4db56b12f56.png"/><button class="hotspot" onclick="showLmsStep(1,this)" style="left:10.5%;top:39%;">1</button><button class="session-card-hotspot" onclick="showLmsStep(2,this)"><span>2</span></button></div><p class="scratch-caption">Klik angka 1 untuk menu Sesi Kelas, lalu pilih kartu sesi yang diarahkan guru.</p><div class="area-live-card" id="lmsStepInfo"><h4>👆 Mulai dari Langkah 1</h4><p>Klik menu <strong>Sesi Kelas</strong> di sebelah kiri.</p></div></section><section class="slide" id="slide-5"><h3>Harga Awal</h3><p><strong>Harga awal</strong> adalah harga barang sebelum diskon. Angka ini menjadi dasar perhitungan.</p><div class="money-demo"><div class="formula-card"><h4>Contoh</h4><p>Harga awal buku: <strong>10000</strong></p><p>Diskon: <strong>10%</strong></p></div><div class="formula-card"><h4>Kenapa penting?</h4><p>Tanpa harga awal, kita tidak bisa menghitung berapa potongan uangnya.</p></div></div><div class="interactive-box"><h4>Cek pemahaman</h4><p>Kalau harga awal barang 50000, angka mana yang menjadi dasar menghitung diskon?</p><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,true,'q5')">50000</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q5')">50</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q5')">diskon saja</button></div><div class="feedback-line" id="q5"></div></div></section><section class="slide" id="slide-6"><h3>Diskon Itu Persen dari Harga Awal</h3><p class="lead">Diskon 20% bukan berarti potongan Rp20.000. Artinya potongan sebesar 20% dari harga awal.</p><div class="formula-card"><div class="formula-main">Potongan = Harga Awal × Diskon ÷ 100</div><p class="mini-note">Contoh: 10000 × 10 ÷ 100 = 1000</p></div><div class="interactive-box"><h4>Benar atau salah?</h4><p>Diskon 10% dari harga 10000 berarti potongan 1000.</p><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,true,'q6')">Benar</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q6')">Salah</button></div><div class="feedback-line" id="q6"></div></div></section><section class="slide" id="slide-7"><h3>Harga Akhir</h3><p><strong>Harga akhir</strong> adalah jumlah uang yang dibayar setelah diskon dikurangkan.</p><div class="formula-card"><div class="formula-main">Harga Akhir = Harga Awal − (Harga Awal × Diskon ÷ 100)</div></div><div class="flow-row"><div class="flow-step">Harga awal</div><div class="flow-arrow">→</div><div class="flow-step">Hitung potongan</div><div class="flow-arrow">→</div><div class="flow-step">Kurangi</div><div class="flow-arrow">→</div><div class="flow-step">Harga akhir</div></div></section><section class="slide" id="slide-8"><h3>Simulasi Hitung Manual</h3><p class="lead">Isi angka sederhana, lalu cek apakah hasilnya sesuai.</p><div class="money-demo"><div class="formula-card"><label><strong>Harga awal</strong><input class="money-input" id="simHarga" type="number" value="10000"/></label><label><strong>Diskon (%)</strong><input class="money-input" id="simDiskon" type="number" value="10"/></label><button class="primary-btn" onclick="ms6Calc()">Hitung</button></div><div class="formula-card"><h4>Hasil simulasi</h4><div class="money-result" id="simResult">Klik Hitung untuk melihat hasil.</div></div></div></section><section class="slide" id="slide-9"><h3>Operator yang Dipakai</h3><p class="lead">Kalkulator Diskon memakai tiga operator utama.</p><div class="operator-row"><button class="operator-card active" onclick="ms6Operator('mul',this)"><span class="operator-symbol">×</span>Perkalian</button><button class="operator-card" onclick="ms6Operator('div',this)"><span class="operator-symbol">÷</span>Pembagian</button><button class="operator-card" onclick="ms6Operator('sub',this)"><span class="operator-symbol">−</span>Pengurangan</button></div><div class="info-box" id="operatorInfo"><h4>Perkalian</h4><p>Dipakai untuk menghitung bagian diskon dari harga awal.</p></div></section><section class="slide" id="slide-10"><h3>Urutan Operasi</h3><p class="lead">Rumus harus disusun dengan urutan yang jelas agar hasilnya benar.</p><div class="calc-flow"><div class="calc-step">1. Ambil harga awal</div><div class="calc-arrow">→</div><div class="calc-step">2. Ambil diskon</div><div class="calc-arrow">→</div><div class="calc-step">3. Harga × Diskon</div><div class="calc-arrow">→</div><div class="calc-step">4. ÷ 100</div><div class="calc-arrow">→</div><div class="calc-step">5. Harga − Potongan</div></div><div class="interactive-box"><h4>Langkah mana yang menghasilkan potongan?</h4><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,false,'q10')">Harga awal saja</button><button class="choice-btn" onclick="ms6Quiz(this,true,'q10')">Harga × Diskon ÷ 100</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q10')">Harga akhir saja</button></div><div class="feedback-line" id="q10"></div></div></section><section class="slide" id="slide-11"><h3>Input, Process, Output</h3><div class="visual-grid"><button class="visual-card" onclick="showIPO('input')"><div class="visual-icon">⌨️</div><h4>Input</h4><p>Harga awal dan diskon dari TextBox.</p></button><button class="visual-card" onclick="showIPO('process')"><div class="visual-icon">🧮</div><h4>Process</h4><p>Rumus dijalankan di Blocks.</p></button><button class="visual-card" onclick="showIPO('output')"><div class="visual-icon">📱</div><h4>Output</h4><p>Harga akhir muncul pada Label.</p></button></div><div class="info-box" id="ipoInfo"><h4>Input</h4><p>Data yang diberikan user ke aplikasi, misalnya harga awal 10000 dan diskon 10.</p></div></section><section class="slide" id="slide-12"><h3>Desain UI Kalkulator Diskon</h3><div class="mini-phone-wide"><div class="phone-mini"><div class="phone-bar">Screen1</div><div class="phone-screen"><div class="app-title">Kalkulator Diskon</div><div class="phone-field">Harga awal</div><div class="phone-field">Diskon %</div><button class="app-button blue">HITUNG</button><div class="phone-result">Harga akhir muncul di sini</div></div></div><div><div class="info-box"><h4>UI yang diperlukan</h4><ol><li>Judul aplikasi.</li><li>TextBox harga awal.</li><li>TextBox diskon.</li><li>Button Hitung.</li><li>Label hasil.</li></ol></div><p class="mini-note">Tampilan tidak perlu ramai. Yang penting user tahu angka mana yang harus diisi.</p></div></div></section><section class="slide" id="slide-13"><h3>Komponen Project</h3><table class="component-table"><tr><th>Komponen</th><th>Nama</th><th>Fungsi</th></tr><tr><td>Label</td><td><code>LabelJudul</code></td><td>Judul aplikasi.</td></tr><tr><td>TextBox</td><td><code>txtHargaAwal</code></td><td>Input harga sebelum diskon.</td></tr><tr><td>TextBox</td><td><code>txtDiskon</code></td><td>Input persen diskon.</td></tr><tr><td>Button</td><td><code>btnHitung</code></td><td>Menjalankan perhitungan.</td></tr><tr><td>Label</td><td><code>lblHasil</code></td><td>Menampilkan harga akhir.</td></tr></table><div class="interactive-box"><h4>Nama komponen yang paling jelas?</h4><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,false,'q13')">TextBox1 dan TextBox2</button><button class="choice-btn" onclick="ms6Quiz(this,true,'q13')">txtHargaAwal dan txtDiskon</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q13')">KotakA dan KotakB</button></div><div class="feedback-line" id="q13"></div></div></section><section class="slide" id="slide-14"><h3>Properties TextBox</h3><p class="lead">TextBox perlu diatur agar user tahu angka apa yang harus diisi.</p><div class="property-grid"><div class="property-card"><h4>Hint</h4><p>Contoh: Masukkan harga awal.</p></div><div class="property-card"><h4>NumbersOnly</h4><p>Jika tersedia, gunakan agar input lebih aman.</p></div><div class="property-card"><h4>Width</h4><p>Gunakan ukuran yang nyaman di layar HP.</p></div><div class="property-card"><h4>Text</h4><p>Kosongkan di awal agar user mengisi sendiri.</p></div></div><div class="warning-box"><h4>Catatan</h4><p>Gunakan angka polos tanpa titik ribuan saat testing awal.</p></div></section><section class="slide" id="slide-15"><h3>Pseudocode Blocks Utama</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK APP INVENTOR - btnHitung.Click</strong><small>Ganti area ini dengan screenshot blok MIT App Inventor asli.</small><ol class="pseudo-list"><li>ketika btnHitung.Click</li><li>ambil txtHargaAwal.Text</li><li>ambil txtDiskon.Text</li><li>hitung potongan = harga awal × diskon ÷ 100</li><li>hitung harga akhir = harga awal − potongan</li><li>set lblHasil.Text menjadi join "Harga akhir: Rp" + harga akhir</li></ol></div></div></section><section class="slide" id="slide-16"><h3>Blocks: Ambil Input</h3><p class="lead">Saat tombol Hitung ditekan, aplikasi perlu membaca dua TextBox.</p><div class="block-line block-blue">when btnHitung.Click do
+  get txtHargaAwal.Text
+  get txtDiskon.Text</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER BLOK INPUT</strong><small>Ganti dengan screenshot Blocks: btnHitung.Click + get txtHargaAwal.Text + get txtDiskon.Text.</small></div></div></section><section class="slide" id="slide-17"><h3>Blocks: Hitung Potongan</h3><p class="lead">Potongan diskon dihitung dari harga awal dan persentase diskon.</p><div class="block-line block-orange">potongan = txtHargaAwal.Text × txtDiskon.Text ÷ 100</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER BLOK MATH - POTONGAN</strong><small>Ganti dengan screenshot operator Math perkalian dan pembagian.</small></div></div></section><section class="slide" id="slide-18"><h3>Blocks: Hitung Harga Akhir</h3><p class="lead">Setelah potongan diketahui, kurangi harga awal dengan potongan.</p><div class="block-line block-green">hargaAkhir = txtHargaAwal.Text − potongan</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER BLOK MATH - HARGA AKHIR</strong><small>Ganti dengan screenshot blok pengurangan: harga awal - potongan.</small></div></div></section><section class="slide" id="slide-19"><h3>Blocks: Tampilkan Hasil</h3><p class="lead">Hasil yang baik tidak hanya angka. Beri teks agar user paham.</p><div class="block-line block-purple">set lblHasil.Text to join "Harga akhir: Rp" hargaAkhir</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER BLOK OUTPUT</strong><small>Ganti dengan screenshot set lblHasil.Text + join.</small></div></div></section><section class="slide" id="slide-20"><h3>Reading Blocks</h3><p class="lead">Coba tebak hasilnya sebelum menekan jawaban.</p><div class="formula-card"><p><strong>Harga awal:</strong> 10000</p><p><strong>Diskon:</strong> 10%</p><p><strong>Rumus:</strong> 10000 − (10000 × 10 ÷ 100)</p></div><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,false,'q18')">10000</button><button class="choice-btn" onclick="ms6Quiz(this,true,'q18')">9000</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q18')">1000</button></div><div class="feedback-line" id="q18"></div></section><section class="slide" id="slide-21"><h3>Trace Table</h3><p class="lead">Klik baris untuk melihat alur perhitungan.</p><table class="trace-table"><tr><th>Harga</th><th>Diskon</th><th>Potongan</th><th>Harga Akhir</th></tr><tr onclick="ms6Trace(this,'10000 × 10 ÷ 100 = 1000, jadi 10000 − 1000 = 9000')"><td>10000</td><td>10</td><td>1000</td><td>9000</td></tr><tr onclick="ms6Trace(this,'50000 × 20 ÷ 100 = 10000, jadi 50000 − 10000 = 40000')"><td>50000</td><td>20</td><td>10000</td><td>40000</td></tr><tr onclick="ms6Trace(this,'20000 × 25 ÷ 100 = 5000, jadi 20000 − 5000 = 15000')"><td>20000</td><td>25</td><td>5000</td><td>15000</td></tr></table><div class="info-box" id="traceInfo"><h4>Pilih salah satu baris.</h4><p>Penjelasan hitungnya akan muncul di sini.</p></div></section><section class="slide" id="slide-22"><h3>Test Case Wajib</h3><p class="lead">Gunakan test case untuk memastikan aplikasi menghitung dengan benar.</p><table class="component-table"><tr><th>Input Harga</th><th>Input Diskon</th><th>Output yang Diharapkan</th></tr><tr><td>10000</td><td>10</td><td>9000</td></tr><tr><td>50000</td><td>20</td><td>40000</td></tr><tr><td>20000</td><td>25</td><td>15000</td></tr></table><div class="interactive-box"><h4>Kenapa test case penting?</h4><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,true,'q20')">Untuk memastikan aplikasi tidak hanya terlihat rapi, tapi hasilnya benar</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q20')">Supaya tidak perlu membuat Blocks</button></div><div class="feedback-line" id="q20"></div></div></section><section class="slide" id="slide-23"><h3>Debugging: Hasil Tidak Sesuai</h3><div class="debug-tabs"><button class="debug-tab active" onclick="showDebug('d1',this)">Hasil terlalu kecil</button><button class="debug-tab" onclick="showDebug('d2',this)">Hasil tidak muncul</button><button class="debug-tab" onclick="showDebug('d3',this)">Angka terlihat aneh</button></div><div class="debug-scenario active" id="d1"><div class="warning-box"><h4>Gejala</h4><p>Harga akhir jauh lebih kecil dari yang seharusnya.</p></div><div class="info-box"><h4>Cek</h4><ol><li>Apakah diskon dibagi 100?</li><li>Apakah harga awal dikurangi potongan, bukan dikurangi diskon langsung?</li><li>Apakah operator tersusun di tempat yang benar?</li></ol></div></div><div class="debug-scenario" id="d2"><div class="warning-box"><h4>Gejala</h4><p>Label hasil kosong setelah tombol ditekan.</p></div><div class="info-box"><h4>Cek</h4><ol><li>Event yang dipakai sudah <strong>btnHitung.Click</strong>.</li><li>Set <strong>lblHasil.Text</strong> sudah terpasang.</li><li>Button yang ditekan adalah Button yang benar.</li></ol></div></div><div class="debug-scenario" id="d3"><div class="warning-box"><h4>Gejala</h4><p>Hasil tidak sesuai saat memakai angka dengan titik ribuan.</p></div><div class="info-box"><h4>Cek</h4><p>Gunakan angka polos, misalnya 10000, bukan 10.000, saat belajar menyusun Blocks.</p></div></div></section><section class="slide" id="slide-24"><h3>Literasi Finansial: Belanja Lebih Sadar</h3><p class="lead">Diskon membantu, tapi keputusan belanja tetap perlu dipikirkan.</p><div class="choice-grid"><button class="choice-btn" onclick="ms6Shop(this,true)">Cek harga akhir dan kebutuhan sebelum membeli</button><button class="choice-btn" onclick="ms6Shop(this,false)">Membeli karena tulisan diskonnya besar</button><button class="choice-btn" onclick="ms6Shop(this,true)">Bandingkan dengan budget yang tersedia</button><button class="choice-btn" onclick="ms6Shop(this,false)">Mengabaikan harga akhir</button></div><div class="feedback-line" id="shopFeedback">Pilih tindakan yang menurutmu bijak.</div></section><section class="slide" id="slide-25"><h3>Build Step-by-Step</h3><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Buat project baru di MIT App Inventor.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Label judul.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan TextBox harga awal dan diskon.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Button Hitung.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Label hasil.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Susun Blocks rumus diskon.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Test dengan Companion.</li></ul></section><section class="slide" id="slide-26"><h3>Output Minimum</h3><p>Project dianggap selesai jika semua poin berikut terpenuhi.</p><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> User bisa mengisi harga awal.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> User bisa mengisi persentase diskon.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tombol Hitung menjalankan perhitungan.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Harga akhir tampil pada Label.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Hasil sesuai dengan test case.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Aplikasi diuji lewat AI2 Companion.</li></ul></section><section class="slide" id="slide-27"><h3>Challenge: Tampilkan Uang yang Dihemat</h3><p class="lead">Jika project utama sudah berhasil, tambahkan Label baru untuk menampilkan potongan harga.</p><div class="block-line block-green">set lblHemat.Text to join "Kamu hemat: Rp" potongan</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER BLOCK CHALLENGE</strong><small>Tambahkan screenshot blok untuk menampilkan uang yang dihemat.</small></div></div><div class="interactive-box"><h4>Kalau harga 50000 diskon 20%, uang yang dihemat adalah...</h4><div class="choice-grid"><button class="choice-btn" onclick="ms6Quiz(this,true,'q24')">10000</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q24')">40000</button><button class="choice-btn" onclick="ms6Quiz(this,false,'q24')">20</button></div><div class="feedback-line" id="q24"></div></div></section><section class="slide" id="slide-28"><h3>Testing dengan AI2 Companion</h3><p class="lead">Coba aplikasi di HP agar UI dan hasil hitung terasa nyata.</p><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Sambungkan AI2 Companion.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Masukkan 10000 dan 10.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Pastikan hasil 9000.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Coba 50000 dan 20.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Pastikan tampilan tetap rapi di layar HP.</li></ul></section><section class="slide" id="slide-29"><h3>Simpan Project</h3><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Nama project jelas, misalnya <strong>KalkulatorDiskon_Nama</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Project muncul di My Projects.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Rumus sudah diuji minimal 2 test case.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Screenshot atau file dikumpulkan sesuai arahan guru.</li></ul><div class="warning-box"><h4>Ingat</h4><p>Jangan mengumpulkan project yang hanya rapi tampilannya tetapi belum diuji hasil hitungnya.</p></div></section><section class="slide" id="slide-30"><h3>Peer Test</h3><p class="lead">Minta teman mencoba aplikasimu dengan angka yang berbeda.</p><div class="interactive-box"><h4>Pertanyaan untuk tester</h4><ol><li>Apakah kamu tahu harus mengisi angka di mana?</li><li>Apakah tombol Hitung mudah ditemukan?</li><li>Apakah hasilnya muncul dengan jelas?</li><li>Apakah hasil sesuai rumus?</li></ol></div><p class="mini-note">Catat satu masukan yang bisa kamu pakai untuk memperbaiki aplikasi.</p></section><section class="slide" id="slide-31"><h3>Refleksi Project</h3><div class="interactive-box"><h4>Jawab setelah project selesai</h4><ol><li>Apa fungsi operator matematika pada aplikasi ini?</li><li>Dari mana aplikasi mengambil harga awal dan diskon?</li><li>Bagaimana aplikasi menghitung harga akhir?</li><li>Mengapa menghitung harga setelah diskon penting sebelum membeli barang?</li><li>Bagian mana yang paling sering perlu dicek saat debugging?</li></ol></div></section><section class="slide" id="slide-32"><span class="eyebrow">Penutup</span><h2>Ringkasan Sesi 6</h2><div class="visual-grid"><div class="visual-card"><div class="visual-icon">🛒</div><h4>Harga awal</h4><p>Harga sebelum diskon.</p></div><div class="visual-card"><div class="visual-icon">🏷️</div><h4>Diskon</h4><p>Potongan dalam persen.</p></div><div class="visual-card"><div class="visual-icon">🧮</div><h4>Rumus</h4><p>Harga − (Harga × Diskon ÷ 100).</p></div><div class="visual-card"><div class="visual-icon">📱</div><h4>Output</h4><p>Harga akhir tampil pada Label.</p></div></div><div class="example-box"><h4>Siap lanjut?</h4><p>Di sesi berikutnya, kalian akan memakai operator matematika lagi untuk membantu menghitung pembagian biaya atau patungan.</p></div></section></div>
+<div class="navigation"><button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)"><span>←</span> Previous</button><div class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">32</span></div><button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next <span>→</span></button></div>
+</div>
+<div class="explanation-panel">
+<section class="explanation active" id="explanation-1"><h3>Project yang Akan Dibuat</h3>
+<p>Sesi 6 membuka bagian baru: kalian mulai memakai <strong>operator matematika</strong> untuk membuat aplikasi yang benar-benar menghitung. Project hari ini adalah <strong>Kalkulator Diskon</strong>. User memasukkan harga awal dan persen diskon, lalu aplikasi menghitung berapa harga yang harus dibayar setelah potongan.</p>
+<p>Project ini terlihat sederhana, tetapi alurnya sudah mirip aplikasi kalkulasi sungguhan: ada data yang masuk, ada rumus yang diproses di Blocks, lalu ada hasil yang ditampilkan kembali ke user.</p>
+<div class="info-box"><h4>Fokus sesi</h4><ul><li>Membaca angka dari TextBox.</li><li>Memakai operator perkalian, pembagian, dan pengurangan.</li><li>Menyusun rumus dengan urutan yang benar.</li><li>Menampilkan hasil pada Label.</li></ul></div>
+<p>Targetnya bukan sekadar mendapatkan angka, tetapi memahami <strong>dari mana angka itu berasal</strong> dan bisa mengecek apakah hasilnya masuk akal.</p></section><section class="explanation" id="explanation-2"><h3>Alur Belajar Hari Ini</h3>
+<p>Sesi ini menggabungkan dua hal: <strong>coding</strong> dan <strong>literasi belanja</strong>. Dari sisi coding, kalian akan belajar bagaimana aplikasi menerima dua input angka, mengolahnya menggunakan operator Math, lalu menampilkan hasil. Dari sisi literasi finansial, kalian belajar bahwa tulisan “diskon” belum cukup untuk menentukan apakah sebuah barang benar-benar sesuai kebutuhan dan budget.</p>
+<div class="info-box"><h4>Urutan belajar</h4><ol><li>Pahami harga awal, diskon, dan harga akhir.</li><li>Coba hitung manual dengan angka sederhana.</li><li>Terjemahkan rumus menjadi Blocks.</li><li>Uji hasil dengan test case.</li><li>Coba aplikasi melalui AI2 Companion.</li></ol></div>
+<p>Jadi, sebelum masuk ke Blocks, kalian perlu paham dulu logika matematikanya. Kalau rumusnya sudah jelas, menyusun Blocks akan jauh lebih mudah.</p></section><section class="explanation" id="explanation-3"><h3>Persiapan Teknis</h3>
+<p>Sebelum mulai membangun aplikasi, pastikan workspace sudah siap. Buka MIT App Inventor dan siapkan project baru. Jika kelas menggunakan AI2 Companion, pastikan perangkat testing juga siap agar hasil kalkulasi bisa dicoba langsung setelah Blocks selesai.</p>
+<div class="warning-box"><h4>Gunakan angka sederhana dulu</h4><p>Saat latihan awal, masukkan angka seperti <strong>10000</strong> atau <strong>50000</strong>, bukan 10.000 atau Rp10.000. Tujuannya supaya kalian fokus pada logika rumus dan tidak bingung dengan format angka.</p></div>
+<p>Gunakan data simulasi. Project ini tidak membutuhkan informasi belanja pribadi, data rekening, PIN, atau informasi pembayaran apa pun.</p>
+<p>Kebiasaan developer yang baik: siapkan alat, tentukan test case, lalu baru mulai menyusun aplikasi.</p></section><section class="explanation" id="explanation-4"><h3>Cara Membuka Materi</h3>
+<p>Buka materi dari menu <strong>Sesi Kelas</strong> di LMS, lalu pilih kartu sesi sesuai arahan guru. Pastikan judul yang dibuka adalah Sesi 6 tentang Kalkulator Diskon agar materi, latihan, dan project yang kalian kerjakan tetap sesuai urutan.</p>
+<div class="info-box"><h4>Sebelum lanjut</h4><ul><li>Pastikan kalian berada di sesi yang benar.</li><li>Baca materi konsep sebelum langsung masuk ke App Inventor.</li><li>Gunakan project yang dibuat pada akun kalian sendiri.</li><li>Ikuti instruksi pengumpulan yang diberikan guru.</li></ul></div>
+<p>Kalau kartu sesi tidak muncul atau LMS belum terbuka dengan benar, jangan membuat sesi lain secara acak. Refresh terlebih dahulu, lalu minta bantuan guru jika masih bermasalah.</p></section><section class="explanation" id="explanation-5"><h3>Memahami Harga Awal</h3>
+<p><strong>Harga awal</strong> adalah harga barang sebelum diskon atau promo dikurangkan. Angka inilah yang menjadi dasar perhitungan. Kalau harga awal salah, hasil potongan dan harga akhir juga ikut salah.</p>
+<p>Contohnya, sebuah buku memiliki harga awal 10.000 dengan diskon 10%. Angka 10.000 bukan hasil diskon dan bukan jumlah yang dihemat. Angka itu adalah nilai awal yang akan dipakai oleh rumus.</p>
+<div class="example-box"><h4>Hubungkan dengan aplikasi</h4><p>Pada project kalian, harga awal diketik user di <strong>txtHargaAwal</strong>. Nilai dari TextBox tersebut kemudian dipakai oleh operator matematika di Blocks.</p></div>
+<p>Jadi, langkah pertama sebelum menghitung diskon adalah memastikan aplikasi mengambil <strong>harga awal yang benar</strong>.</p></section><section class="explanation" id="explanation-6"><h3>Mengenal Diskon</h3>
+<p>Diskon biasanya ditulis dalam bentuk persen, misalnya 10%, 20%, atau 50%. Persen menunjukkan <strong>bagian dari harga awal</strong> yang akan dipotong. Karena itu, diskon 20% tidak otomatis berarti potongan Rp20.000.</p>
+<p>Untuk mengetahui jumlah uang yang dipotong, kita perlu menghitung: <strong>harga awal × diskon ÷ 100</strong>. Misalnya harga awal 10.000 dan diskon 10%, maka potongannya 1.000.</p>
+<div class="warning-box"><h4>Kesalahan yang sering terjadi</h4><p>Mengurangi harga awal langsung dengan angka diskon, misalnya 10.000 − 10. Itu bukan perhitungan diskon 10%.</p></div>
+<p>Memahami bagian ini penting karena Blocks hanya mengikuti rumus yang kalian susun. Jika rumus salah, aplikasi tetap bisa berjalan tetapi hasilnya keliru.</p></section><section class="explanation" id="explanation-7"><h3>Rumus Utama Project</h3>
+<p>Setelah jumlah potongan diketahui, kita bisa menghitung <strong>harga akhir</strong>, yaitu jumlah uang yang masih harus dibayar setelah diskon.</p>
+<div class="info-box"><h4>Rumus yang digunakan</h4><p><strong>Harga Akhir = Harga Awal − (Harga Awal × Diskon ÷ 100)</strong></p></div>
+<p>Bagian di dalam kurung menghitung potongan terlebih dahulu. Setelah itu, potongan dikurangi dari harga awal. Jadi rumus ini memiliki dua tahap besar: <strong>hitung potongan</strong>, lalu <strong>hitung harga akhir</strong>.</p>
+<p>Coba gunakan angka 50.000 dengan diskon 20%. Potongannya 10.000 dan harga akhirnya 40.000. Jika aplikasi menghasilkan angka berbeda, kalian punya petunjuk bahwa ada operator atau urutan Blocks yang perlu diperiksa.</p></section><section class="explanation" id="explanation-8"><h3>Latihan Sebelum Blocks</h3>
+<p>Sebelum menyusun operator di MIT App Inventor, coba hitung beberapa contoh secara manual. Tujuannya supaya kalian memiliki <strong>jawaban pembanding</strong>. Saat aplikasi selesai, hasil aplikasi harus sama dengan hasil hitung manual.</p>
+<div class="example-box"><h4>Contoh test sederhana</h4><ol><li>Harga awal = 10.000.</li><li>Diskon = 10%.</li><li>Potongan = 10.000 × 10 ÷ 100 = 1.000.</li><li>Harga akhir = 10.000 − 1.000 = 9.000.</li></ol></div>
+<p>Jika simulator di kiri memberi hasil 9.000, berarti alur matematikanya benar. Kebiasaan menghitung satu contoh secara manual akan sangat membantu saat debugging karena kalian tidak menebak-nebak hasil yang seharusnya.</p></section><section class="explanation" id="explanation-9"><h3>Operator Math di App Inventor</h3>
+<p>Project ini menggunakan tiga operator utama: <strong>perkalian (×)</strong>, <strong>pembagian (÷)</strong>, dan <strong>pengurangan (−)</strong>. Ketiganya bisa ditemukan pada kategori Math di Blocks.</p>
+<div class="info-box"><h4>Fungsi masing-masing</h4><ul><li><strong>×</strong> menghubungkan harga awal dengan persen diskon.</li><li><strong>÷</strong> membagi hasil tersebut dengan 100 agar persen menjadi bagian dari harga.</li><li><strong>−</strong> mengurangi harga awal dengan jumlah potongan.</li></ul></div>
+<p>Perhatikan bahwa kita tidak membutuhkan operator secara acak. Setiap operator punya posisi tertentu dalam rumus. Saat Blocks disusun, baca dari logikanya: “hitung potongan dulu, lalu kurangi dari harga awal.”</p></section><section class="explanation" id="explanation-10"><h3>Kenapa Urutan Penting?</h3>
+<p>Rumus diskon bukan sekadar kumpulan tiga operator. <strong>Urutannya menentukan hasil.</strong> Kalian perlu mengambil harga awal dan diskon, menghitung harga × diskon, membaginya dengan 100, lalu mengurangi hasil potongan dari harga awal.</p>
+<p>Misalnya harga 10.000 dengan diskon 10%. Jika kalian langsung menghitung 10.000 − 10, hasilnya 9.990. Aplikasi mungkin tidak error, tetapi jawaban tersebut salah karena angka 10 adalah persen, bukan jumlah rupiah yang dipotong.</p>
+<div class="warning-box"><h4>Cara membaca Blocks</h4><p>Jangan hanya melihat warna atau bentuk blok. Ucapkan logikanya: <strong>harga dikali diskon, dibagi 100, hasilnya dikurangkan dari harga awal.</strong></p></div>
+<p>Kalau kalian bisa menjelaskan kalimat itu, kalian sudah punya dasar untuk menyusun Blocks dengan benar.</p></section><section class="explanation" id="explanation-11"><h3>Alur Kerja Aplikasi</h3>
+<p>Kalkulator Diskon mengikuti pola <strong>Input → Process → Output</strong>. Pola ini akan sering muncul di aplikasi lain, jadi penting untuk mengenalinya sejak sekarang.</p>
+<div class="info-box"><h4>Dalam project ini</h4><ul><li><strong>Input:</strong> harga awal dan persen diskon dari TextBox.</li><li><strong>Process:</strong> operator Math menjalankan rumus diskon.</li><li><strong>Output:</strong> harga akhir ditampilkan pada Label.</li></ul></div>
+<p>Button Hitung berfungsi sebagai pemicu proses. Sebelum tombol ditekan, aplikasi hanya memiliki data input. Setelah tombol ditekan, Blocks membaca angka, menghitung, lalu memperbarui Label.</p>
+<p>Kalau hasil tidak muncul, cek alurnya dari kiri ke kanan: apakah input terisi, apakah rumus berjalan, dan apakah output diarahkan ke Label yang benar.</p></section><section class="explanation" id="explanation-12"><h3>Merancang Tampilan</h3>
+<p>Tampilan Kalkulator Diskon tidak perlu ramai. User hanya perlu memahami dua hal: <strong>angka apa yang harus diisi</strong> dan <strong>di mana hasilnya muncul</strong>. Karena itu, gunakan judul yang jelas, dua TextBox yang mudah dibedakan, satu Button Hitung, dan satu Label hasil.</p>
+<div class="info-box"><h4>Urutan yang nyaman</h4><ol><li>Judul aplikasi.</li><li>Input harga awal.</li><li>Input diskon (%).</li><li>Tombol HITUNG.</li><li>Label harga akhir.</li></ol></div>
+<p>Kalau dua TextBox terlihat sama tanpa Hint atau Label yang jelas, user bisa tertukar antara harga dan diskon. Jadi, UI yang rapi membantu mencegah kesalahan input bahkan sebelum kita membahas Blocks.</p></section><section class="explanation" id="explanation-13"><h3>Nama Komponen</h3>
+<p>Project ini menggunakan beberapa komponen yang fungsinya mirip, terutama dua TextBox. Karena itu, lakukan <strong>renaming</strong> agar kalian tidak salah memilih komponen saat berada di Blocks.</p>
+<div class="info-box"><h4>Nama yang disarankan</h4><ul><li><strong>txtHargaAwal</strong> untuk input harga.</li><li><strong>txtDiskon</strong> untuk input persen diskon.</li><li><strong>btnHitung</strong> untuk tombol proses.</li><li><strong>lblHasil</strong> untuk output harga akhir.</li></ul></div>
+<p>Nama seperti TextBox1 dan TextBox2 memang tetap bisa digunakan, tetapi semakin banyak komponen, semakin mudah tertukar. Nama internal yang jelas membuat Blocks bisa dibaca seperti kalimat: “ambil txtHargaAwal, ambil txtDiskon, lalu tampilkan hasil ke lblHasil.”</p></section><section class="explanation" id="explanation-14"><h3>Mengatur TextBox</h3>
+<p>Dua TextBox pada project memiliki fungsi berbeda, jadi user perlu petunjuk yang jelas. Gunakan <strong>Hint</strong> seperti “Masukkan harga awal” dan “Masukkan diskon (%)”. Dengan begitu, user tahu data apa yang diminta sebelum mulai mengetik.</p>
+<p>Jika opsi input angka tersedia pada komponen yang digunakan, aktifkan agar input lebih sesuai dengan kebutuhan project. Atur juga lebar TextBox supaya nyaman digunakan saat testing di HP.</p>
+<div class="warning-box"><h4>Untuk latihan awal</h4><p>Kosongkan TextBox di awal dan masukkan angka polos seperti 10000 atau 20. Hindari simbol Rp, tanda %, dan titik ribuan di dalam input karena sesi ini fokus pada rumus.</p></div>
+<p>Format tampilan bisa dibuat lebih rapi nanti. Sekarang, prioritaskan dulu perhitungan yang benar.</p></section><section class="explanation" id="explanation-15"><h3>Dari Rumus ke Blocks</h3>
+<p>Pseudocode di kiri adalah jembatan antara rumus matematika dan blok App Inventor. Kalian tidak perlu menghafal bentuk Blocks sebelum memahami alurnya. Baca pseudocode seperti instruksi untuk aplikasi.</p>
+<div class="info-box"><h4>Alur ketika btnHitung diklik</h4><ol><li>Ambil teks dari txtHargaAwal.</li><li>Ambil teks dari txtDiskon.</li><li>Hitung potongan = harga × diskon ÷ 100.</li><li>Hitung harga akhir = harga − potongan.</li><li>Ubah lblHasil.Text agar menampilkan harga akhir.</li></ol></div>
+<p>Nanti placeholder di kiri bisa diganti dengan screenshot Blocks asli. Walaupun tampilannya berubah menjadi blok puzzle, logikanya tetap sama seperti lima langkah di atas.</p></section><section class="explanation" id="explanation-16"><h3>Membaca Data dari TextBox</h3>
+<p>Saat user mengetik angka, nilainya berada pada property <strong>Text</strong> milik TextBox. Karena itu, di Blocks kalian mengambil <strong>txtHargaAwal.Text</strong> dan <strong>txtDiskon.Text</strong>.</p>
+<p>Event utama dimulai dari <strong>when btnHitung.Click</strong>. Artinya, aplikasi baru menjalankan proses kalkulasi ketika user menekan tombol HITUNG.</p>
+<div class="warning-box"><h4>Kesalahan yang sering terjadi</h4><ul><li>Mengambil Text dari TextBox yang salah.</li><li>Event dipasang pada Button yang berbeda.</li><li>Salah memilih nama komponen karena belum melakukan renaming.</li></ul></div>
+<p>Sebelum lanjut ke operator Math, pastikan kalian bisa menunjukkan dengan jelas: “ini sumber harga awal” dan “ini sumber diskon.”</p></section><section class="explanation" id="explanation-17"><h3>Menghitung Potongan</h3>
+<p>Potongan harga dihitung dengan rumus <strong>harga awal × diskon ÷ 100</strong>. Ini adalah nilai uang yang dikurangi dari harga awal, bukan harga akhir.</p>
+<div class="example-box"><h4>Contoh</h4><p>Jika harga awal 50.000 dan diskon 20, maka 50.000 × 20 ÷ 100 = 10.000. Jadi nilai potongannya adalah 10.000.</p></div>
+<p>Di Blocks, susun operator perkalian dan pembagian agar membentuk alur tersebut. Periksa angka 100 karena bagian ini penting untuk mengubah nilai persen menjadi bagian dari harga.</p>
+<p>Jika hasil potongan terlalu besar atau terlalu kecil, cek dulu tahap ini sebelum memeriksa harga akhir. Debugging lebih mudah jika kalian memisahkan proses menjadi langkah-langkah kecil.</p></section><section class="explanation" id="explanation-18"><h3>Menghitung Harga Akhir</h3>
+<p>Setelah nilai potongan ditemukan, langkah berikutnya lebih sederhana: <strong>harga akhir = harga awal − potongan</strong>. Jangan mengurangi harga awal langsung dengan angka persen.</p>
+<div class="example-box"><h4>Contoh lanjutan</h4><p>Harga awal 50.000, diskon 20%, potongan 10.000. Maka harga akhir = 50.000 − 10.000 = <strong>40.000</strong>.</p></div>
+<p>Di Blocks, operator pengurangan harus menerima dua nilai yang tepat: harga awal di satu sisi dan hasil perhitungan potongan di sisi lainnya.</p>
+<p>Kalau kalian menggunakan rumus lengkap dalam satu rangkaian Blocks, tetap baca dari dalam: hitung bagian diskonnya terlebih dahulu, baru lakukan pengurangan.</p></section><section class="explanation" id="explanation-19"><h3>Menampilkan Output</h3>
+<p>Hasil perhitungan perlu ditampilkan dengan jelas. Jika Label hanya menampilkan angka <strong>9000</strong>, user mungkin masih bisa memahami, tetapi akan lebih baik jika ada konteks seperti “Harga akhir: Rp9000”.</p>
+<p>Gunakan <strong>set lblHasil.Text</strong> untuk mengubah teks Label. Kalian juga bisa memakai blok <strong>join</strong> untuk menggabungkan tulisan dan hasil angka.</p>
+<div class="info-box"><h4>Contoh output</h4><p><strong>Harga akhir: Rp9000</strong></p></div>
+<p>Pada sesi ini, format angka belum perlu dibuat rumit. Fokus utamanya adalah memastikan angka hasil rumus benar dan Label berubah setelah tombol ditekan.</p>
+<p>Jika perhitungan benar tetapi Label kosong, berarti masalahnya kemungkinan ada pada bagian output, bukan pada rumus.</p></section><section class="explanation" id="explanation-20"><h3>Membaca Rumus</h3>
+<p><strong>Reading Blocks</strong> atau membaca logika sebelum menjalankan aplikasi membantu kalian memahami program tanpa selalu menekan tombol. Lihat nilai input, ikuti operatornya, lalu prediksi hasil.</p>
+<p>Untuk harga 10.000 dan diskon 10%, hitung dulu 10.000 × 10 ÷ 100 = 1.000. Setelah itu, 10.000 − 1.000 = 9.000.</p>
+<div class="info-box"><h4>Kenapa latihan ini penting?</h4><p>Kalau kalian bisa memperkirakan output sebelum testing, kalian lebih cepat menyadari ketika aplikasi menghasilkan angka yang aneh.</p></div>
+<p>Developer tidak hanya bertanya “apakah aplikasinya jalan?”, tetapi juga “apakah hasilnya sesuai logika yang seharusnya?”.</p></section><section class="explanation" id="explanation-21"><h3>Mengecek dengan Trace Table</h3>
+<p><strong>Trace table</strong> membantu melihat perubahan nilai dari satu tahap ke tahap berikutnya. Kalian bisa melihat harga awal, diskon, hasil potongan, lalu harga akhir dalam satu baris.</p>
+<div class="example-box"><h4>Contoh</h4><p>Harga 20.000, diskon 25% → potongan 5.000 → harga akhir 15.000.</p></div>
+<p>Jika sebuah baris menghasilkan harga akhir yang salah, cek kolom sebelumnya. Jika nilai potongan sudah salah, masalah ada pada perkalian atau pembagian. Jika potongan benar tetapi harga akhir salah, masalah kemungkinan ada pada operator pengurangan.</p>
+<p>Teknik ini membuat debugging lebih terarah karena kalian mencari <strong>tahap pertama yang mulai salah</strong>, bukan langsung mengganti semua Blocks.</p></section><section class="explanation" id="explanation-22"><h3>Testing dengan Angka Sederhana</h3>
+<p>Test case adalah pasangan input dan output yang sudah kita ketahui jawabannya. Gunakan test case untuk memastikan aplikasi tidak hanya terlihat rapi, tetapi juga menghasilkan angka yang benar.</p>
+<div class="info-box"><h4>Test case wajib</h4><ul><li>10.000 + diskon 10% → 9.000.</li><li>50.000 + diskon 20% → 40.000.</li><li>20.000 + diskon 25% → 15.000.</li></ul></div>
+<p>Jika satu test case benar, jangan langsung menganggap project selesai. Coba beberapa nilai berbeda untuk memastikan rumus bekerja secara konsisten.</p>
+<p>Testing seperti ini adalah kebiasaan penting dalam coding: kita menyiapkan hasil yang diharapkan, menjalankan aplikasi, lalu membandingkan hasil aktual dengan hasil tersebut.</p></section><section class="explanation" id="explanation-23"><h3>Debugging Rumus</h3>
+<p>Jika hasil tidak sesuai, jangan langsung menghapus seluruh Blocks. Mulai dari <strong>gejala</strong>, lalu cek bagian yang paling mungkin menjadi penyebabnya.</p>
+<div class="warning-box"><h4>Urutan cek yang disarankan</h4><ol><li>Pastikan harga awal dan diskon sudah diisi.</li><li>Pastikan aplikasi mengambil TextBox yang benar.</li><li>Cek rumus harga × diskon ÷ 100.</li><li>Cek pengurangan harga awal − potongan.</li><li>Pastikan lblHasil.Text menerima hasil perhitungan.</li></ol></div>
+<p>Jika hasil aneh saat memakai 10.000 dengan titik, kembali gunakan 10000 selama latihan. Sesi ini belum fokus pada format angka.</p>
+<p>Debugging yang baik berarti mengubah <strong>satu bagian</strong>, lalu test lagi. Dengan begitu kalian tahu perubahan mana yang benar-benar memperbaiki masalah.</p></section><section class="explanation" id="explanation-24"><h3>Diskon dan Keputusan Belanja</h3>
+<p>Diskon bisa membantu mengurangi harga, tetapi diskon bukan alasan otomatis untuk membeli barang. Sebelum membeli, tetap lihat <strong>harga akhir</strong>, kebutuhan, dan budget yang tersedia.</p>
+<p>Misalnya sebuah barang diskon 50%, tetapi harga akhirnya tetap jauh di atas budget kalian. Secara matematika diskonnya besar, tetapi keputusan belanjanya belum tentu cocok.</p>
+<div class="info-box"><h4>Pertanyaan sebelum membeli</h4><ul><li>Apakah barang ini memang dibutuhkan?</li><li>Berapa harga akhirnya setelah diskon?</li><li>Apakah masih sesuai budget?</li><li>Apakah ada pilihan lain yang lebih sesuai?</li></ul></div>
+<p>Project Kalkulator Diskon membantu kalian melihat angka akhir dengan lebih jelas sehingga keputusan tidak hanya berdasarkan tulisan “SALE” atau persen diskon yang besar.</p></section><section class="explanation" id="explanation-25"><h3>Langkah Pembuatan</h3>
+<p>Bangun project secara bertahap agar lebih mudah diperiksa. Jangan langsung membuat seluruh Blocks sebelum komponen di Designer selesai dan namanya sudah jelas.</p>
+<div class="info-box"><h4>Urutan kerja yang disarankan</h4><ol><li>Buat project baru.</li><li>Tambahkan Label judul.</li><li>Tambahkan txtHargaAwal dan txtDiskon.</li><li>Tambahkan btnHitung dan lblHasil.</li><li>Atur Hint dan tampilan dasar.</li><li>Pindah ke Blocks.</li><li>Susun rumus diskon.</li><li>Test dengan angka sederhana.</li><li>Perbaiki jika hasil belum sesuai.</li></ol></div>
+<p>Setelah satu tahap selesai, lakukan pengecekan singkat. Cara ini membuat kalian lebih cepat tahu di tahap mana masalah muncul.</p></section><section class="explanation" id="explanation-26"><h3>Checklist Berhasil</h3>
+<p>Output minimum adalah batas project dianggap selesai. Fokus dulu pada fungsi utama sebelum menambah dekorasi atau fitur tambahan.</p>
+<div class="info-box"><h4>Project utama berhasil jika</h4><ul><li>Harga awal bisa diisi.</li><li>Persentase diskon bisa diisi.</li><li>btnHitung menjalankan proses.</li><li>lblHasil menampilkan harga akhir.</li><li>Hasil sesuai dengan test case.</li><li>Aplikasi sudah dicoba melalui AI2 Companion atau metode testing dari guru.</li></ul></div>
+<p>Kalau tampilannya sudah bagus tetapi rumus belum benar, project belum selesai. Sebaliknya, kalau rumus benar tetapi user tidak tahu harus mengisi bagian mana, UI masih perlu diperbaiki.</p>
+<p>Gunakan checklist di kiri sebagai verifikasi, bukan sekadar daftar yang langsung dicentang.</p></section><section class="explanation" id="explanation-27"><h3>Challenge Tambahan</h3>
+<p>Jika project utama sudah berhasil, tambahkan satu output lagi: <strong>jumlah uang yang dihemat</strong>. Nilai ini sebenarnya sama dengan hasil perhitungan potongan yang sudah kalian gunakan untuk mencari harga akhir.</p>
+<div class="example-box"><h4>Contoh</h4><p>Harga 50.000 dengan diskon 20% menghasilkan potongan 10.000. Selain menampilkan “Harga akhir: Rp40000”, aplikasi bisa menampilkan “Kamu hemat: Rp10000”.</p></div>
+<p>Tambahkan Label baru, misalnya <strong>lblHemat</strong>, lalu arahkan nilai potongan ke Label tersebut menggunakan join.</p>
+<p>Challenge ini melatih kalian memanfaatkan satu hasil perhitungan untuk lebih dari satu output. Jangan mulai challenge sebelum output minimum project utama benar.</p></section><section class="explanation" id="explanation-28"><h3>Live Testing</h3>
+<p>AI2 Companion membantu kalian melihat apakah project bekerja dengan baik di layar HP. Testing di perangkat penting karena ukuran TextBox, Button, dan Label bisa terasa berbeda dibanding preview di laptop.</p>
+<div class="info-box"><h4>Yang perlu diuji</h4><ul><li>Masukkan 10000 dan 10, hasil harus 9000.</li><li>Masukkan 50000 dan 20, hasil harus 40000.</li><li>Pastikan Button mudah ditekan.</li><li>Pastikan Label hasil terlihat jelas.</li><li>Coba ubah input dan hitung lagi untuk memastikan hasil ikut berubah.</li></ul></div>
+<p>Jika hasil di HP belum berubah setelah Blocks diperbaiki, cek koneksi Companion sesuai arahan guru. Bedakan masalah koneksi dengan masalah rumus agar debugging tidak salah arah.</p></section><section class="explanation" id="explanation-29"><h3>Menyimpan dan Mengumpulkan</h3>
+<p>Simpan project dengan nama yang jelas, misalnya <strong>KalkulatorDiskon_Nama</strong>. Nama yang rapi membuat project mudah ditemukan kembali saat sesi berikutnya atau ketika guru melakukan pengecekan.</p>
+<div class="warning-box"><h4>Sebelum keluar</h4><ul><li>Project muncul di My Projects.</li><li>Komponen utama tidak hilang.</li><li>Blocks rumus masih tersimpan.</li><li>Minimal dua test case sudah dicoba.</li><li>Versi yang dikumpulkan adalah versi terakhir.</li></ul></div>
+<p>Ikuti cara pengumpulan yang diberikan guru, apakah melalui link, screenshot, atau file project. Jangan menutup browser sebelum yakin project sudah tersimpan.</p>
+<p>Yang dikumpulkan sebaiknya bukan hanya tampilan yang rapi, tetapi project yang sudah diuji dan menghasilkan angka yang benar.</p></section><section class="explanation" id="explanation-30"><h3>Menguji dengan Teman</h3>
+<p>Peer test membantu melihat aplikasi dari sudut pandang user lain. Minta teman mencoba tanpa langsung menjelaskan semua langkah. Dari situ, kalian bisa melihat apakah UI sudah cukup jelas.</p>
+<div class="info-box"><h4>Minta tester mengecek</h4><ul><li>Apakah jelas di mana harga awal harus diisi?</li><li>Apakah jelas di mana diskon harus diisi?</li><li>Apakah tombol HITUNG mudah ditemukan?</li><li>Apakah hasil akhir mudah dibaca?</li><li>Apakah hasil sesuai rumus untuk angka yang dicoba?</li></ul></div>
+<p>Catat satu feedback yang spesifik. Contoh: “Hint diskon kurang jelas” atau “hasil hitung benar, tetapi Label terlalu kecil”. Feedback seperti itu lebih berguna daripada hanya mengatakan “bagus” atau “kurang bagus”.</p></section><section class="explanation" id="explanation-31"><h3>Refleksi Akhir</h3>
+<p>Refleksi dipakai untuk memastikan kalian memahami logika di balik project, bukan hanya berhasil menyusun Blocks. Coba jawab dengan kalimat kalian sendiri tanpa sekadar menyalin rumus.</p>
+<div class="info-box"><h4>Hal yang perlu bisa dijelaskan</h4><ul><li>Fungsi operator ×, ÷, dan −.</li><li>Dari mana harga awal dan diskon diambil.</li><li>Bagaimana potongan dihitung.</li><li>Bagaimana harga akhir diperoleh.</li><li>Mengapa hasil perlu diuji dengan test case.</li></ul></div>
+<p>Hubungkan juga dengan literasi belanja: mengetahui harga setelah diskon membantu kita melihat biaya sebenarnya sebelum mengambil keputusan.</p>
+<p>Jika masih sulit menjelaskan satu bagian, kembali ke slide rumus atau trace table dan ikuti alurnya pelan-pelan.</p></section><section class="explanation" id="explanation-32"><h3>Yang Sudah Dipelajari</h3>
+<p>Di Sesi 6, kalian mulai memakai MIT App Inventor untuk melakukan <strong>kalkulasi matematis</strong>. Aplikasi tidak hanya menerima klik atau menampilkan pesan, tetapi memproses angka dari user dan menghasilkan nilai baru.</p>
+<div class="example-box"><h4>Konsep utama sesi</h4><ul><li>Harga awal sebagai data input.</li><li>Diskon sebagai persen dari harga awal.</li><li>Rumus harga − (harga × diskon ÷ 100).</li><li>Operator Math di Blocks.</li><li>TextBox sebagai input dan Label sebagai output.</li><li>Testing menggunakan test case dan AI2 Companion.</li></ul></div>
+<p>Kalian juga belajar bahwa coding dan keputusan finansial bisa saling terhubung: aplikasi membantu menghitung, tetapi keputusan membeli tetap membutuhkan pertimbangan kebutuhan dan budget.</p>
+<p>Di sesi berikutnya, konsep input angka dan operator matematika akan dipakai lagi untuk kasus pembagian biaya atau patungan.</p></section></div>
+</div>
+<script>
+    const ACCESS_CODE = 'RGMDSMS26';
+    let currentSlide = 1;
+    let totalSlides = 0;
+    window.addEventListener('load', () => {
+      totalSlides = document.querySelectorAll('.slide').length;
+      document.getElementById('totalSlides').textContent = totalSlides;
+      setTimeout(() => document.querySelector('.access-popup').classList.add('show'), 50);
+      const input = document.getElementById('accessInput');
+      input.focus();
+      input.addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') checkAccessCode(); });
+      initSortDrop();
+      initDrawCanvas();
+      updateSlide();
+    });
+    function checkAccessCode(){
+      const input = document.getElementById('accessInput');
+      const error = document.getElementById('accessError');
+      if(input.value.trim().toUpperCase() === ACCESS_CODE){
+        document.getElementById('accessPopup').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'flex';
+        updateSlide();
+      } else { error.classList.add('show'); input.value=''; input.focus(); }
+    }
+    function changeSlide(direction){ const next = currentSlide + direction; if(next < 1 || next > totalSlides) return; currentSlide = next; updateSlide(); }
+    function updateSlide(){
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.explanation').forEach(e => e.classList.remove('active'));
+      const slide = document.getElementById(`slide-${currentSlide}`); if(slide) slide.classList.add('active');
+      const exp = document.getElementById(`explanation-${currentSlide}`); if(exp) exp.classList.add('active');
+      document.getElementById('currentSlide').textContent = currentSlide;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+      document.getElementById('progressFill').style.width = `${(currentSlide/totalSlides)*100}%`;
+      document.querySelector('.slide-content').scrollTop = 0;
+      document.querySelector('.explanation-panel').scrollTop = 0;
+    }
+    document.addEventListener('keydown', e => { if(document.getElementById('mainContent').style.display === 'none') return; if(e.key === 'ArrowRight') changeSlide(1); if(e.key === 'ArrowLeft') changeSlide(-1); });
+    function deviceCheck(btn){ btn.classList.toggle('correct'); }
+    function selectAny(btn){ const group=btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); }
+    function quiz(btn, ok, feedbackId){
+      const group = btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      btn.classList.add(ok ? 'correct' : 'wrong');
+      const feedback = document.getElementById(feedbackId);
+      if(feedback){ feedback.textContent = ok ? 'Betul.' : 'Belum tepat. Coba cek penjelasan di kanan.'; feedback.style.color = ok ? '#176b35' : '#a42820'; }
+    }
+    function toggleCheck(item){ const cb = item.querySelector('input'); cb.checked = !cb.checked; item.classList.toggle('done', cb.checked); }
+    function showLmsStep(step, btn){
+      document.querySelectorAll('.lms-map-wrap .hotspot, .lms-map-wrap .session-card-hotspot').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const box = document.getElementById('lmsStepInfo');
+      if(step === 1) box.innerHTML = '<h4><span class="area-number">1</span>Menu Sesi Kelas</h4><p>Klik menu Sesi Kelas untuk melihat sesi yang tersedia untuk rombelmu.</p>';
+      else box.innerHTML = '<h4><span class="area-number">2</span>Kartu Sesi</h4><p>Pilih kartu sesi sesuai arahan guru. Nama sekolah atau rombel bisa berbeda dari gambar contoh.</p>';
+    }
+    function showIPO(type){
+      const data = { input:['Input','Data yang diberikan pengguna, misalnya nominal harga atau gerakan jari di Canvas.'], process:['Process','Aplikasi menjalankan logika di Blocks, seperti menyusun kalimat, membaca suara, atau menggambar garis.'], output:['Output','Hasil yang dilihat atau didengar pengguna, misalnya suara TTS, label berubah, atau tanda tangan muncul.'] };
+      const el = document.getElementById('ipoInfo'); if(el) el.innerHTML = `<h4>${data[type][0]}</h4><p>${data[type][1]}</p>`;
+    }
+    function showDebug(id, btn){
+      document.querySelectorAll('.debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      document.querySelectorAll('.debug-scenario').forEach(s=>s.classList.remove('active'));
+      const el=document.getElementById(id); if(el) el.classList.add('active');
+    }
+    function initSortDrop(){
+      document.querySelectorAll('.sort-card').forEach(card => { card.addEventListener('dragstart', () => card.classList.add('dragging-sort')); card.addEventListener('dragend', () => card.classList.remove('dragging-sort')); });
+      document.querySelectorAll('.drop-zone, #sortBank').forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); const dragging = document.querySelector('.dragging-sort'); if(dragging) zone.appendChild(dragging); });
+      });
+    }
+    function checkSort(){
+      let correct = 0, total = 0;
+      document.querySelectorAll('.drop-zone').forEach(zone => { zone.querySelectorAll('.sort-card').forEach(card => { total++; if(card.dataset.kind === zone.dataset.accept) correct++; }); });
+      const fb = document.getElementById('sortFeedback'); if(!fb) return;
+      if(total < 1){ fb.textContent = 'Pindahkan dulu kartunya.'; fb.style.color = '#a42820'; return; }
+      fb.textContent = correct === total ? 'Sudah tepat.' : 'Masih ada kartu yang belum pas. Coba cek lagi jenis komponennya.';
+      fb.style.color = correct === total ? '#176b35' : '#a42820';
+    }
+    function initDrawCanvas(){}
+    
+
+    function markConsent(btn, ok){ btn.classList.remove('safe','risky'); btn.classList.add(ok ? 'safe' : 'risky'); }
+    const consentScenarios = [
+      {title:'Skenario 1 dari 3', text:'Aplikasi video call meminta akses kamera agar wajahmu terlihat saat panggilan berlangsung.', answer:'agree', feedback:'Setuju bisa tepat karena kamera memang diperlukan untuk tujuan yang dijelaskan. Tetap baca informasi yang muncul sebelum memberi izin.'},
+      {title:'Skenario 2 dari 3', text:'Sebuah game sederhana meminta akses ke semua kontak di ponsel, tetapi tidak menjelaskan untuk apa akses itu dipakai.', answer:'decline', feedback:'Tidak setuju adalah pilihan aman. Akses kontak tidak terlihat relevan untuk game sederhana dan tujuannya tidak jelas.'},
+      {title:'Skenario 3 dari 3', text:'Aplikasi penyimpanan foto meminta akses galeri. Kamu belum tahu apakah foto akan disimpan hanya di perangkat atau dibagikan ke internet.', answer:'ask', feedback:'Tanyakan dulu atau baca penjelasannya. Sebelum memberi akses, pahami lokasi penyimpanan dan siapa yang dapat melihat foto.'}
+    ];
+    let consentIndex = 0;
+    let selectedConsentAction = '';
+    function chooseConsentAction(btn, action){ selectAny(btn); selectedConsentAction = action; }
+    function checkConsentChoice(){
+      const feedback = document.getElementById('consentFeedback');
+      if(!feedback) return;
+      if(!selectedConsentAction){ feedback.textContent='Pilih tindakan dahulu.'; feedback.style.color='#a42820'; return; }
+      const item = consentScenarios[consentIndex];
+      const correct = selectedConsentAction === item.answer;
+      feedback.textContent = (correct ? 'Tepat. ' : 'Belum tepat. ') + item.feedback;
+      feedback.style.color = correct ? '#176b35' : '#a42820';
+    }
+    function nextConsentScenario(){
+      consentIndex = (consentIndex + 1) % consentScenarios.length;
+      selectedConsentAction = '';
+      const item = consentScenarios[consentIndex];
+      document.getElementById('consentScenarioTitle').textContent = item.title;
+      document.getElementById('consentScenarioText').textContent = item.text;
+      document.querySelectorAll('#slide-10 .choice-btn').forEach(btn => { btn.classList.remove('selected'); });
+      const feedback = document.getElementById('consentFeedback');
+      if(feedback){ feedback.textContent = 'Pilih tindakan dahulu.'; feedback.style.color='#1f4b99'; }
+    }
+    const testTypeItems = {
+      f1:{title:'HAPUS membuat Canvas kosong', prompt:'Ini termasuk pengujian apa?', answer:'function', feedback:'Ini pengujian fungsi karena kita mengecek apakah tombol benar-benar menjalankan Canvas.Clear.'},
+      f2:{title:'Instruksi mudah dibaca', prompt:'Ini termasuk pengujian apa?', answer:'ux', feedback:'Ini pengujian kenyamanan pengguna karena kita mengecek apakah user dapat memahami tampilan dengan mudah.'},
+      f3:{title:'Garis mengikuti drag', prompt:'Ini termasuk pengujian apa?', answer:'function', feedback:'Ini pengujian fungsi karena kita mengecek apakah event Dragged dan DrawLine bekerja sesuai gerakan.'}
+    };
+    let activeTestType = 'f1';
+    let selectedTestType = '';
+    function showTestType(id, btn){
+      document.querySelectorAll('#slide-19 .debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      activeTestType=id; selectedTestType='';
+      const item=testTypeItems[id];
+      document.getElementById('testTypePrompt').innerHTML='<h4>'+item.title+'</h4><p>'+item.prompt+'</p>';
+      document.querySelectorAll('#slide-19 .choice-btn').forEach(b=>b.classList.remove('selected'));
+      const feedback=document.getElementById('testTypeFeedback'); if(feedback){feedback.textContent='Pilih kategori dahulu.';feedback.style.color='#1f4b99';}
+    }
+    function chooseTestType(btn, type){ selectAny(btn); selectedTestType=type; }
+    function checkTestType(){
+      const feedback=document.getElementById('testTypeFeedback'); if(!feedback) return;
+      if(!selectedTestType){feedback.textContent='Pilih kategori dahulu.';feedback.style.color='#a42820';return;}
+      const item=testTypeItems[activeTestType]; const correct=selectedTestType===item.answer;
+      feedback.textContent=(correct?'Tepat. ':'Belum tepat. ')+item.feedback;
+      feedback.style.color=correct?'#176b35':'#a42820';
+    }
+    function initDrawCanvas(){
+      setupCanvas('signCanvas', true);
+      setupCanvas('coordCanvas', false);
+    }
+    function setupCanvas(id, drawing){
+      const canvas=document.getElementById(id); if(!canvas) return;
+      const ctx=canvas.getContext('2d'); ctx.lineWidth=3; ctx.lineCap='round'; ctx.strokeStyle='#0056b3';
+      let isDown=false, last=null;
+      function pos(e){ const r=canvas.getBoundingClientRect(); const p=e.touches?e.touches[0]:e; return {x:Math.round((p.clientX-r.left)*canvas.width/r.width), y:Math.round((p.clientY-r.top)*canvas.height/r.height)}; }
+      function show(p, previous){
+        if(id==='coordCanvas'){
+          const info=document.getElementById('coordInfo'); if(info) info.textContent = `Koordinat saat ini: X ${p.x}, Y ${p.y}`;
+          const detail=document.getElementById('dragPointInfo');
+          if(detail && previous) detail.innerHTML = `<h4>Garis kecil yang akan dibuat</h4><p>prevX, prevY: <strong>(${previous.x}, ${previous.y})</strong> &rarr; currentX, currentY: <strong>(${p.x}, ${p.y})</strong></p>`;
+        }
+        if(id==='signCanvas'){
+          const info=document.getElementById('signDragInfo');
+          if(info) info.textContent = previous ? `DrawLine: (${previous.x}, ${previous.y}) → (${p.x}, ${p.y})` : `Mulai dari titik (${p.x}, ${p.y}). Geser untuk membuat garis.`;
+        }
+      }
+      canvas.addEventListener('mousedown',e=>{isDown=true; last=pos(e); show(last);});
+      canvas.addEventListener('mousemove',e=>{const p=pos(e); show(p, last); if(drawing && isDown && last){ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p;}});
+      canvas.addEventListener('mouseup',()=>{isDown=false; last=null;});
+      canvas.addEventListener('mouseleave',()=>{isDown=false; last=null;});
+      canvas.addEventListener('touchstart',e=>{e.preventDefault(); isDown=true; last=pos(e); show(last);},{passive:false});
+      canvas.addEventListener('touchmove',e=>{e.preventDefault(); const p=pos(e); show(p, last); if(drawing && isDown && last){ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p;}},{passive:false});
+      canvas.addEventListener('touchend',()=>{isDown=false; last=null;});
+      if(id==='coordCanvas') { ctx.fillStyle='#eef7ff'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#cfe7fb'; for(let x=0;x<canvas.width;x+=52){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();} for(let y=0;y<canvas.height;y+=52){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();} ctx.strokeStyle='#0056b3'; }
+    }
+    function clearSignature(){ const c=document.getElementById('signCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); const info=document.getElementById('signDragInfo'); if(info) info.textContent='Status: Canvas sudah kosong. Siap mencoba lagi.'; }
+    function drawDemoLine(){ const c=document.getElementById('signCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.strokeStyle='#0056b3'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(70,150); ctx.bezierCurveTo(150,50,260,240,450,110); ctx.stroke(); const info=document.getElementById('signDragInfo'); if(info) info.textContent='Demo menunjukkan banyak titik dihubungkan menjadi garis lengkung.'; }
+</script>
+<script>
+function ms6Quiz(btn, ok, feedbackId){
+  const group = btn.parentElement;
+  group.querySelectorAll('.choice-btn').forEach(b => { b.disabled = true; b.classList.remove('correct','wrong'); });
+  btn.classList.add(ok ? 'correct' : 'wrong');
+  const feedback = document.getElementById(feedbackId);
+  if(feedback){ feedback.textContent = ok ? 'Betul. Lanjutkan.' : 'Belum tepat. Coba baca lagi penjelasan di kanan.'; feedback.style.color = ok ? '#176b35' : '#a42820'; }
+}
+function ms6Calc(){
+  const harga = Number(document.getElementById('simHarga').value || 0);
+  const diskon = Number(document.getElementById('simDiskon').value || 0);
+  const potongan = harga * diskon / 100;
+  const akhir = harga - potongan;
+  document.getElementById('simResult').innerHTML = `Potongan: Rp${potongan}<br>Harga akhir: Rp${akhir}`;
+}
+function ms6Operator(type, btn){
+  document.querySelectorAll('.operator-card').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const data = {
+    mul:['Perkalian','Dipakai untuk menghitung bagian diskon dari harga awal. Contoh: 10000 × 10.'],
+    div:['Pembagian','Dipakai untuk mengubah persen menjadi bagian per seratus. Contoh: hasil perkalian ÷ 100.'],
+    sub:['Pengurangan','Dipakai untuk menghitung harga akhir. Contoh: harga awal − potongan.']
+  }[type];
+  document.getElementById('operatorInfo').innerHTML = `<h4>${data[0]}</h4><p>${data[1]}</p>`;
+}
+function ms6Trace(row, text){
+  document.querySelectorAll('.trace-table tr').forEach(r=>r.classList.remove('active'));
+  row.classList.add('active');
+  document.getElementById('traceInfo').innerHTML = `<h4>Alur hitung</h4><p>${text}</p>`;
+}
+function ms6Shop(btn, wise){
+  document.querySelectorAll('#slide-21 .choice-btn').forEach(b=>b.classList.remove('correct','wrong'));
+  btn.classList.add(wise?'correct':'wrong');
+  const fb=document.getElementById('shopFeedback');
+  fb.textContent = wise ? 'Pilihan bijak. Cek kebutuhan, budget, dan harga akhir dulu.' : 'Hati-hati. Tulisan diskon saja belum cukup untuk membuat keputusan belanja.';
+  fb.style.color = wise ? '#176b35' : '#a42820';
+}
+</script>
+</body>
+</html>
