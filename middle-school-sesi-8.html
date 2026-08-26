@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UOB My Digital Space — Middle School Sesi 8</title>
+<link href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;✍️&lt;/text&gt;&lt;/svg&gt;" rel="icon"/>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --blue:#0056b3; --light-blue:#4a9eff; --uob-red:#e60012; --uob-red-soft:#ff5a6b;
+      --uob-blue-deep:#0056b3; --uob-blue-soft:#5aa7ff; --teal:#11a9b7; --bg:#f5f6f8;
+      --panel:#ffffff; --text:#2c3e50; --muted:#6c757d; --line:#e3e8ef; --green:#2e9d57;
+      --orange:#f39c12; --red:#e74c3c; --purple:#8e44ad; --yellow-soft:#fff8dc; --blue-soft:#eef7ff; --green-soft:#effaf2;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); height: 100vh; overflow: hidden; color: var(--text); }
+    button, input, select { font: inherit; }
+    a { color: var(--blue); font-weight: 800; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .progress-bar { width: 100%; height: 6px; background: linear-gradient(90deg,#f5d7da,#d9e9ff); position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: inset 0 1px 2px rgba(0,0,0,.08); }
+    .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg,var(--uob-red) 0%,var(--uob-red-soft) 28%,var(--uob-blue-deep) 72%,var(--uob-blue-soft) 100%); transition: width .3s ease; box-shadow:0 0 8px rgba(0,86,179,.18); }
+    .main-container { display:flex; height:100vh; }
+    .slides-panel { width:50%; background:#f8f9fa; border-right:2px solid var(--line); display:flex; flex-direction:column; position:relative; }
+    .explanation-panel { width:50%; background:#fff; overflow-y:auto; padding:32px; }
+    .slide-header { background:#fff; padding:17px 20px 15px; border-bottom:2px solid var(--line); box-shadow:0 2px 4px rgba(0,0,0,.04); position:relative; }
+    .slide-header::before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(var(--uob-red),var(--light-blue)); }
+    .slide-header h1 { font-size:1.28rem; color:var(--text); margin-bottom:3px; }
+    .slide-header p { font-size:.9rem; color:var(--muted); }
+    .header-badge { position:absolute; right:18px; top:17px; background:var(--blue-soft); color:var(--blue); border:1px solid #cce7ff; border-radius:999px; padding:5px 10px; font-weight:700; font-size:.76rem; }
+    .slide-content { flex:1; padding:24px 28px 94px; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; min-height:0; }
+    .slide, .explanation { display:none; opacity:0; transition:opacity .25s ease; }
+    .slide.active, .explanation.active { display:block; opacity:1; }
+    .slide { width:100%; max-width:820px; }
+    .explanation { max-width:760px; margin:0 auto; }
+    .slide h2 { font-size:2.25rem; color:var(--blue); margin-bottom:10px; line-height:1.15; }
+    .slide h3 { font-size:1.78rem; color:var(--blue); margin-bottom:16px; line-height:1.2; }
+    .slide h4, .explanation h4 { font-size:1.05rem; margin-bottom:9px; color:var(--text); }
+    .slide p, .explanation p { font-size:1rem; line-height:1.58; color:#495057; margin-bottom:14px; }
+    .explanation h3 { font-size:1.65rem; margin-bottom:16px; color:var(--text); line-height:1.25; }
+    .slide ul, .slide ol, .explanation ul, .explanation ol { margin-left:22px; margin-bottom:10px; }
+    .slide li, .explanation li { margin-bottom:7px; line-height:1.5; }
+    .eyebrow { display:inline-block; color:var(--uob-red); font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+    .lead { font-size:1.08rem !important; }
+    .mini-note { font-size:.9rem !important; color:var(--muted) !important; margin-top:10px; }
+    .visual-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:13px; margin:16px 0; }
+    .visual-card,.metric-box,.info-box,.example-box,.warning-box,.placeholder-box,.interactive-box,.code-placeholder,.quiz-card { background:#fff; border:2px solid var(--line); border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .visual-card { padding:15px; }
+    .visual-card h4 { margin-bottom:5px; }
+    .visual-card p { margin-bottom:0; font-size:.92rem; line-height:1.42; }
+    .visual-icon { font-size:1.9rem; margin-bottom:8px; }
+    .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:16px; }
+    .metric-box { padding:16px 12px; text-align:center; }
+    .metric-box strong { display:block; font-size:1.55rem; color:var(--blue); margin-bottom:7px; }
+    .metric-box span { font-size:.9rem; line-height:1.35; color:#495057; display:block; }
+    .info-box,.example-box,.warning-box,.interactive-box { padding:17px; margin:16px 0; }
+    .info-box { border-left:5px solid var(--light-blue); }
+    .example-box { border-left:5px solid var(--green); background:#f8fff8; }
+    .warning-box { border-left:5px solid var(--orange); background:#fffaf0; }
+    .interactive-box { border-left:5px solid var(--purple); background:#fcf8ff; }
+    .placeholder-box { min-height:215px; padding:24px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; background:linear-gradient(135deg,#fbfdff,#f5f9fc); }
+    .placeholder-box .placeholder-icon { font-size:2.3rem; margin-bottom:8px; }
+    .placeholder-box strong { display:block; color:var(--blue); margin-bottom:5px; }
+    .placeholder-box small { color:var(--muted); line-height:1.4; }
+    .code-placeholder { min-height:230px; padding:22px; margin:14px 0; display:grid; place-items:center; text-align:center; border-style:dashed; border-color:#9ab7d3; background:#f8fbfe; }
+    .code-placeholder strong { color:var(--blue); display:block; margin-bottom:7px; }
+    .code-placeholder code { color:var(--muted); background:#eef3f8; padding:3px 7px; border-radius:5px; }
+    .pseudo-list { list-style:none; margin-left:0 !important; counter-reset:pseudo; }
+    .pseudo-list li { counter-increment:pseudo; background:#fff; border:1px solid var(--line); border-radius:9px; padding:10px 12px 10px 44px; position:relative; margin-bottom:8px; }
+    .pseudo-list li::before { content:counter(pseudo); position:absolute; left:11px; top:9px; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; background:var(--blue); color:#fff; font-weight:800; font-size:.8rem; }
+    .navigation { position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:2px solid var(--line); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 -2px 4px rgba(0,0,0,.04); }
+    .nav-btn { background:var(--light-blue); color:#fff; border:none; border-radius:8px; padding:10px 18px; cursor:pointer; font-size:.94rem; font-weight:700; display:flex; gap:8px; align-items:center; transition:.2s ease; }
+    .nav-btn:hover { transform:translateY(-1px); background:#357abd; }
+    .nav-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    .slide-indicator { font-size:.9rem; color:var(--muted); font-weight:700; }
+    .floating-element { position:absolute; opacity:.07; pointer-events:none; font-size:2rem; animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(0);}33%{transform:translateY(-12px) rotate(4deg);}66%{transform:translateY(7px) rotate(-3deg);} }
+    .access-popup-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:9999; display:flex; justify-content:center; align-items:center; }
+    .access-popup { background:#fff; border:3px solid var(--light-blue); border-radius:15px; padding:38px; max-width:450px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.3); transform:scale(.8); opacity:0; transition:all .3s ease; }
+    .access-popup.show { transform:scale(1); opacity:1; }
+    .access-popup h2 { color:var(--text); margin-bottom:13px; font-size:1.8rem; }
+    .access-popup p { color:#666; margin-bottom:22px; line-height:1.55; }
+    .access-input { width:100%; padding:14px; font-size:1.15rem; border:2px solid #dee2e6; border-radius:8px; margin-bottom:18px; text-align:center; letter-spacing:2px; font-weight:bold; text-transform:uppercase; }
+    .access-input:focus { outline:none; border-color:var(--light-blue); box-shadow:0 0 0 3px rgba(74,158,255,.12); }
+    .access-submit { background:var(--light-blue); color:#fff; border:none; padding:13px 28px; border-radius:8px; font-size:1.05rem; font-weight:bold; cursor:pointer; }
+    .access-submit:hover { background:#357abd; }
+    .access-error { color:var(--red); margin-top:13px; font-weight:bold; opacity:0; transition:opacity .2s; }
+    .access-error.show { opacity:1; }
+    .access-hint { background:#fff3cd; border:1px solid #ffc107; border-radius:5px; padding:9px; margin-top:18px; font-size:.88rem; color:#856404; }
+    .choice-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .choice-btn { border:2px solid var(--line); background:#fff; color:var(--text); border-radius:10px; padding:11px 12px; cursor:pointer; font-weight:700; transition:.18s; text-align:left; }
+    .choice-btn:hover { border-color:var(--light-blue); transform:translateY(-1px); }
+    .choice-btn.correct { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .choice-btn.wrong { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .choice-btn.selected { border-color:var(--blue); background:var(--blue-soft); color:var(--blue); }
+    .feedback-line { min-height:28px; font-weight:700; margin-top:8px; }
+    .form-grid { display:grid; gap:10px; margin:12px 0; }
+    .form-grid label { font-weight:700; font-size:.9rem; color:var(--text); }
+    .form-grid input { width:100%; padding:10px 12px; border:2px solid var(--line); border-radius:8px; margin-top:5px; }
+    .form-grid input:focus { outline:none; border-color:var(--light-blue); }
+    .primary-btn,.secondary-btn { border:none; border-radius:8px; padding:10px 14px; font-weight:800; cursor:pointer; }
+    .primary-btn { background:var(--blue); color:#fff; }
+    .secondary-btn { background:#e9ecef; color:var(--text); }
+    .scratch-map-wrap { position:relative; width:100%; margin:12px auto; border:2px solid var(--line); border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    .scratch-map-wrap img { width:100%; display:block; }
+    .hotspot { position:absolute; width:30px; height:30px; border-radius:50%; border:3px solid #fff; background:var(--uob-red); color:#fff; font-weight:900; cursor:pointer; box-shadow:0 3px 9px rgba(0,0,0,.35); display:grid; place-items:center; transform:translate(-50%,-50%); transition:transform .16s,background .16s; }
+    .hotspot:hover,.hotspot.active { transform:translate(-50%,-50%) scale(1.16); background:var(--blue); }
+    .scratch-caption { text-align:center; font-size:.85rem; color:var(--muted); margin-top:8px; }
+    .area-live-card { min-height:120px; border:2px solid #cfe7fb; background:var(--blue-soft); border-radius:12px; padding:16px; margin-top:14px; }
+    .area-live-card .area-number { display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--uob-red); color:#fff; font-weight:900; margin-right:7px; }
+    .lms-map-wrap { position:relative; }
+    .session-card-hotspot { position:absolute; left:19.1%; top:43%; width:25.5%; height:51%; padding:0; border:3px dashed transparent; border-radius:12px; background:transparent; cursor:pointer; transition:.2s ease; }
+    .session-card-hotspot span { position:absolute; top:8px; right:8px; width:32px; height:32px; display:grid; place-items:center; border:3px solid #fff; border-radius:50%; background:var(--uob-red); color:#fff; font-size:.9rem; font-weight:900; box-shadow:0 3px 9px rgba(0,0,0,.35); }
+    .session-card-hotspot:hover,.session-card-hotspot.active { border-color:var(--uob-red); background:rgba(230,0,18,.08); }
+    .session-card-hotspot:hover span,.session-card-hotspot.active span { background:var(--blue); transform:scale(1.1); }
+    .sequence-source,.sequence-target { display:grid; gap:8px; margin-top:10px; }
+    .sequence-card { padding:10px 12px; border:2px solid var(--line); background:#fff; border-radius:9px; cursor:grab; user-select:none; font-weight:700; }
+    .sequence-card.dragging { opacity:.45; }
+    .sequence-target { min-height:170px; border:2px dashed #a9bfd2; background:#f8fbfe; border-radius:10px; padding:10px; }
+    .checklist { list-style:none; margin-left:0 !important; display:grid; gap:8px; }
+    .check-item { display:flex; gap:9px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:9px; background:#fff; cursor:pointer; }
+    .check-item input { margin-top:3px; transform:scale(1.2); }
+    .check-item.done { background:var(--green-soft); border-color:#9cd9af; text-decoration:line-through; color:#3e6b4c; }
+    .debug-scenario { display:none; }
+    .debug-scenario.active { display:block; }
+    .debug-tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .debug-tab { border:1px solid var(--line); background:#fff; border-radius:999px; padding:7px 11px; cursor:pointer; font-weight:700; }
+    .debug-tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .pill { display:inline-block; padding:4px 9px; border-radius:999px; font-size:.78rem; font-weight:800; color:#fff; margin:2px; }
+    .pill.blue{background:var(--blue);} .pill.green{background:var(--green);} .pill.orange{background:var(--orange);} .pill.purple{background:var(--purple);} .pill.red{background:var(--uob-red);}
+    .phone-preview { margin:16px auto; width:220px; min-height:355px; border:9px solid #1f2937; border-radius:28px; background:#fff; box-shadow:0 12px 22px rgba(0,0,0,.13); overflow:hidden; }
+    .phone-bar { height:34px; background:#294bd8; color:#fff; display:flex; align-items:center; padding-left:12px; font-size:.8rem; font-weight:800; }
+    .phone-body { padding:18px 14px; text-align:center; display:grid; gap:12px; }
+    .app-title { font-weight:900; color:var(--text); font-size:.95rem; }
+    .app-input { padding:9px; border:1px solid var(--line); border-radius:8px; text-align:center; background:#fff; }
+    .app-label { min-height:50px; padding:10px; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; font-size:.9rem; display:flex; align-items:center; justify-content:center; }
+    .app-button { background:var(--uob-red); color:#fff; border:none; border-radius:8px; padding:10px; font-weight:900; cursor:pointer; }
+    .app-button.blue { background:var(--blue); } .app-button.gray { background:#667085; }
+    .ui-sample-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+    .ui-card { border:2px solid var(--line); border-radius:14px; background:#fff; padding:12px; cursor:pointer; transition:.18s; }
+    .ui-card:hover,.ui-card.active { border-color:var(--blue); background:var(--blue-soft); transform:translateY(-1px); }
+    .messy-phone .phone-body { gap:4px; text-align:left; }
+    .messy-phone .app-button { width:70px; padding:5px; font-size:.7rem; }
+    .messy-phone .app-input { width:95px; font-size:.7rem; }
+    .arrangement-demo { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+    .arr-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:14px; }
+    .arr-stack { display:grid; gap:8px; }
+    .arr-row { display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .mini-component { padding:8px 10px; background:#eef7ff; border:1px solid #cfe7fb; border-radius:8px; font-weight:800; font-size:.86rem; }
+    .component-bank { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+    .component-pill { border:2px solid var(--line); border-radius:999px; background:#fff; padding:8px 11px; font-weight:800; cursor:pointer; }
+    .component-pill.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .mini-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:.92rem; }
+    .mini-table th,.mini-table td { border:1px solid var(--line); padding:9px; text-align:left; }
+    .mini-table th { background:var(--blue); color:#fff; }
+    @media (max-width:960px){ body{overflow:auto;height:auto}.main-container{flex-direction:column;height:auto;min-height:100vh}.slides-panel,.explanation-panel{width:100%;height:auto;min-height:50vh}.slides-panel{min-height:100vh}.slide-content{padding:20px 20px 92px}.explanation-panel{padding:24px}.header-badge{display:none}.ui-sample-grid,.arrangement-demo{grid-template-columns:1fr} }
+  
+    .section-label { display:inline-block; font-size:.75rem; font-weight:900; color:#fff; background:linear-gradient(90deg,var(--uob-red),var(--blue)); border-radius:999px; padding:5px 10px; margin-bottom:8px; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:12px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .term-card { border:2px solid var(--line); border-radius:12px; padding:13px; background:#fff; margin:8px 0; }
+    .term-card strong { color:var(--blue); }
+    .compact-list { margin-left:18px !important; }
+    .compact-list li { margin-bottom:4px !important; }
+    .property-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:12px 0; }
+    .property-card { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px; }
+    .property-card h4 { color:var(--blue); margin-bottom:5px; }
+    .small-phone { width:170px !important; min-height:275px !important; border-width:6px !important; border-radius:20px !important; }
+    .wide-placeholder { min-height:145px; }
+    .scenario-box { padding:14px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .sort-bank { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin:10px 0; }
+    .sort-card { border:2px solid var(--line); border-radius:10px; padding:10px; background:white; cursor:grab; font-weight:700; }
+    .drop-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0; }
+    .drop-zone { min-height:145px; border:2px dashed #a9bfd2; border-radius:12px; padding:10px; background:#f8fbfe; }
+    .drop-zone h4 { color:var(--blue); font-size:.95rem; }
+    .drop-zone .sort-card { margin:6px 0; }
+    .hint-text { font-size:.86rem; color:var(--muted); }
+    @media(max-width:960px){.drop-grid{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}}
+
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+    .flow-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:14px 0; }
+    .flow-step { background:#fff; border:2px solid var(--line); border-radius:12px; padding:12px 14px; font-weight:800; min-width:120px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+    .flow-arrow { font-weight:900; color:var(--uob-red); font-size:1.4rem; }
+    .wide-note { padding:13px; border-radius:12px; background:#f8fbfe; border:2px dashed #9ab7d3; margin:12px 0; }
+    .mini-phone-wide { display:grid; grid-template-columns:220px 1fr; gap:16px; align-items:center; margin:16px 0; }
+    .readout { min-height:54px; display:flex; align-items:center; justify-content:center; border:1px solid var(--line); background:#f8fbfe; border-radius:9px; padding:10px; font-weight:800; color:var(--blue); }
+    .component-table { width:100%; border-collapse:collapse; background:#fff; border:2px solid var(--line); border-radius:12px; overflow:hidden; margin:14px 0; font-size:.92rem; }
+    .component-table th { background:var(--blue); color:#fff; padding:10px; text-align:left; }
+    .component-table td { border-top:1px solid var(--line); padding:10px; vertical-align:top; }
+    .block-pseudo { background:#111827; color:#e5e7eb; border-radius:14px; padding:14px; margin:12px 0; font-family:Consolas,Monaco,monospace; line-height:1.5; white-space:pre-wrap; box-shadow:0 8px 16px rgba(0,0,0,.12); }
+    .keyboard-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:14px 0; }
+    .keycap { min-width:44px; height:44px; border:2px solid var(--line); border-radius:9px; background:#fff; display:grid; place-items:center; font-weight:900; box-shadow:0 3px 0 #d8dee6; }
+    .canvas-shell { background:#fff; border:2px solid var(--line); border-radius:16px; padding:14px; box-shadow:0 4px 12px rgba(0,0,0,.08); margin:14px 0; }
+    .draw-canvas { width:100%; max-width:520px; height:260px; border:2px dashed #9ab7d3; border-radius:12px; display:block; background:#fff; touch-action:none; margin:0 auto; cursor:crosshair; }
+    .canvas-tools { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0 0; }
+    .coord-box { text-align:center; font-weight:800; color:var(--blue); margin-top:8px; }
+    .consent-card { border:2px solid var(--line); border-radius:12px; background:#fff; padding:12px; cursor:pointer; font-weight:800; }
+    .consent-card.safe { border-color:var(--green); background:var(--green-soft); color:#176b35; }
+    .consent-card.risky { border-color:var(--red); background:#fff1f0; color:#a42820; }
+    .canvas-mini { height:165px; background:#fff; border:2px dashed #9ab7d3; border-radius:12px; position:relative; overflow:hidden; margin:12px 0; }
+    .canvas-line { position:absolute; height:3px; background:var(--blue); transform-origin:left center; border-radius:999px; }
+    @media(max-width:960px){.two-col,.mini-phone-wide{grid-template-columns:1fr}.flow-row{align-items:stretch}.flow-step{flex:1}.draw-canvas{height:220px}}
+
+    .formula-card{background:#fff;border:2px solid var(--line);border-radius:14px;padding:16px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .formula-main{font-size:1.15rem;font-weight:900;color:var(--blue);line-height:1.5;text-align:center;margin:10px 0;padding:12px;border-radius:12px;background:#eef7ff;border:1px solid #cfe7fb;}
+    .money-demo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+    .money-input{width:100%;border:2px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:5px;}
+    .money-result{background:#f8fbfe;border:2px solid #cfe7fb;border-radius:12px;padding:14px;font-weight:800;color:var(--blue);min-height:64px;display:flex;align-items:center;}
+    .operator-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0;}
+    .operator-card{border:2px solid var(--line);background:#fff;border-radius:12px;padding:12px;text-align:center;cursor:pointer;font-weight:800;transition:.16s;}
+    .operator-card:hover,.operator-card.active{border-color:var(--blue);background:var(--blue-soft);transform:translateY(-1px)}
+    .operator-symbol{display:block;font-size:1.75rem;color:var(--uob-red);margin-bottom:4px;}
+    .phone-mini{margin:14px auto;width:230px;min-height:380px;border:9px solid #1f2937;border-radius:28px;background:#fff;box-shadow:0 12px 22px rgba(0,0,0,.13);overflow:hidden;}
+    .phone-screen{padding:16px 14px;display:grid;gap:10px;text-align:left;}
+    .phone-field{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;color:#667085;font-size:.86rem;}
+    .phone-result{border:1px solid var(--line);border-radius:8px;padding:10px;min-height:54px;background:#f8fbfe;font-size:.86rem;font-weight:800;color:var(--blue);display:flex;align-items:center;justify-content:center;text-align:center;}
+    .calc-flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0;}
+    .calc-step{background:#fff;border:2px solid var(--line);border-radius:12px;padding:11px 13px;font-weight:800;min-width:118px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .calc-arrow{font-weight:900;color:var(--uob-red);font-size:1.35rem;}
+    .block-line{background:#111827;color:#e5e7eb;border-radius:14px;padding:14px;margin:12px 0;font-family:Consolas,Monaco,monospace;line-height:1.55;white-space:pre-wrap;box-shadow:0 8px 16px rgba(0,0,0,.12)}
+    .block-blue{border-left:7px solid #4a9eff}.block-green{border-left:7px solid #2e9d57}.block-orange{border-left:7px solid #f39c12}.block-purple{border-left:7px solid #8e44ad}.block-red{border-left:7px solid #e60012}
+    .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+    .match-card{border:2px solid var(--line);border-radius:12px;background:#fff;padding:12px;font-weight:800;cursor:pointer;transition:.16s;}
+    .match-card:hover,.match-card.selected{border-color:var(--blue);background:var(--blue-soft)}
+    .trace-table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;border:2px solid var(--line);border-radius:12px;overflow:hidden;font-size:.92rem;}
+    .trace-table th{background:var(--blue);color:#fff;padding:9px;text-align:left}.trace-table td{border-top:1px solid var(--line);padding:9px;vertical-align:top}.trace-table tr.active td{background:#fff8dc;font-weight:800;}
+    @media(max-width:960px){.money-demo,.match-grid{grid-template-columns:1fr}.calc-flow{align-items:stretch}.calc-step{flex:1}}
+</style>
+</head>
+<body>
+<div class="access-popup-overlay" id="accessPopup">
+<div class="access-popup">
+<h2>🔐 Kode Akses</h2>
+<p>Masukkan kode akses Middle School untuk membuka materi Sesi 8.</p>
+<input autocomplete="off" class="access-input" id="accessInput" maxlength="20" placeholder="MASUKKAN KODE" type="text"/>
+<button class="access-submit" onclick="checkAccessCode()">Masuk</button>
+<div class="access-error" id="accessError">Kode akses belum tepat. Coba lagi.</div>
+<div class="access-hint">Kode akses diberikan oleh guru.</div>
+</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="main-container" id="mainContent" style="display:none;">
+<div class="slides-panel">
+<div class="slide-header">
+<h1>UOB My Digital Space — Middle School</h1>
+<p>Sesi 8 · Konversi Mata Uang</p>
+<span class="header-badge">MIT App Inventor · Middle School</span>
+</div>
+<div class="slide-content">
+<div class="floating-element" style="top:12%;left:7%;">💱</div>
+<div class="floating-element" style="top:18%;right:10%;">💵</div>
+<div class="floating-element" style="bottom:25%;left:14%;">✖️</div>
+<div class="floating-element" style="bottom:15%;right:16%;">📱</div>
+<section class="slide active" id="slide-1"><span class="eyebrow">Sesi 8</span><h2>Konversi Mata Uang</h2><p class="lead">Hari ini kalian membuat aplikasi sederhana untuk mengubah nominal Rupiah menjadi perkiraan nilai USD.</p><div class="metrics"><div class="metric-box"><strong>🇮🇩</strong><span>Nominal Rupiah</span></div><div class="metric-box"><strong>💱</strong><span>Kurs simulasi</span></div><div class="metric-box"><strong>➗</strong><span>Operator pembagian</span></div><div class="metric-box"><strong>🔗</strong><span>Join output</span></div></div><div class="example-box"><h4>Target akhir</h4><p>User memasukkan nominal Rupiah, menekan <strong>KONVERSI</strong>, lalu aplikasi menampilkan hasil seperti <strong>Hasil Konversi IDR to USD: 5,53</strong>.</p></div></section><section class="slide" id="slide-2"><h3>Misi Belajar Hari Ini</h3><div class="visual-grid"><div class="visual-card"><div class="visual-icon">🌍</div><h4>Mata uang</h4><p>Memahami kenapa nominal perlu satuan, misalnya IDR atau USD.</p></div><div class="visual-card"><div class="visual-icon">💱</div><h4>Kurs</h4><p>Menggunakan kurs simulasi sebagai nilai pembanding.</p></div><div class="visual-card"><div class="visual-icon">➗</div><h4>Pembagian</h4><p>Menghitung nominal Rupiah ÷ kurs.</p></div><div class="visual-card"><div class="visual-icon">🔗</div><h4>Join</h4><p>Menggabungkan teks dan angka agar output mudah dibaca.</p></div></div><div class="interactive-box"><h4>Quick poll</h4><p>Kalau kita punya <strong>Rp100.000</strong> dan ingin tahu kira-kira berapa USD, apa yang perlu diketahui?</p><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,true,'q2')">Kurs IDR ke USD yang dipakai</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q2')">Warna uangnya saja</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q2')">Nama aplikasinya saja</button></div><div class="feedback-line" id="q2"></div></div></section><section class="slide" id="slide-3"><h3>Siapkan Workspace</h3><p class="lead">Sebelum mulai, pastikan alat kerja dan aturan data sudah aman.</p><div class="choice-grid"><button class="choice-btn" onclick="deviceCheck(this)">MIT App Inventor terbuka</button><button class="choice-btn" onclick="deviceCheck(this)">Project baru siap dibuat</button><button class="choice-btn" onclick="deviceCheck(this)">AI2 Companion siap untuk testing</button><button class="choice-btn" onclick="deviceCheck(this)">Angka latihan siap dipakai</button><button class="choice-btn" onclick="deviceCheck(this)">Tidak memakai data transaksi pribadi</button></div><div class="warning-box"><h4>Catatan aman</h4><p>Gunakan angka simulasi seperti <strong>100000</strong>, <strong>250000</strong>, atau <strong>500000</strong>. Jangan memakai saldo asli, data rekening, PIN, atau OTP.</p></div></section><section class="slide" id="slide-4"><h3>Buka Sesi 8 di LMS</h3><p class="lead">Mulai dari menu Sesi Kelas, lalu buka kartu sesi yang sesuai.</p><div class="scratch-map-wrap lms-map-wrap"><img alt="Tampilan LMS UOB My Digital Space" src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/6a973bfb-a09a-42af-a4ea-a4db56b12f56.png"/><button class="hotspot" onclick="showLmsStep(1,this)" style="left:10.5%;top:39%;">1</button><button class="session-card-hotspot" onclick="showLmsStep(2,this)"><span>2</span></button></div><p class="scratch-caption">Klik angka 1 untuk menu Sesi Kelas, lalu pilih kartu sesi yang diarahkan guru.</p><div class="area-live-card" id="lmsStepInfo"><h4>👆 Mulai dari Langkah 1</h4><p>Klik menu <strong>Sesi Kelas</strong> di sebelah kiri.</p></div></section><section class="slide" id="slide-5"><h3>Kenapa Mata Uang Perlu Dikonversi?</h3><p class="lead">Angka yang sama bisa punya nilai berbeda kalau satuan uangnya berbeda.</p><div class="two-col"><div class="formula-card"><h4>Contoh situasi</h4><p>Kamu punya uang <strong>Rp100.000</strong> dan ingin memperkirakan nilainya dalam USD.</p><p>Pertanyaannya: kira-kira menjadi berapa dolar?</p></div><div class="formula-card"><h4>Yang dibutuhkan</h4><p>Kita perlu tahu <strong>kurs</strong>, yaitu nilai pembanding antara Rupiah dan USD.</p></div></div><div class="interactive-box"><h4>Cek pemahaman</h4><p>Kalau hanya tertulis angka <strong>100000</strong>, apa yang kurang jelas?</p><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,true,'q5')">Satuan mata uangnya</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q5')">Ukuran tombolnya</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q5')">Warna background</button></div><div class="feedback-line" id="q5"></div></div></section><section class="slide" id="slide-6"><h3>Nominal, Kurs, dan Hasil</h3><div class="visual-grid"><div class="visual-card"><div class="visual-icon">🔢</div><h4>Nominal</h4><p>Jumlah uang yang dikonversi, misalnya Rp100.000.</p></div><div class="visual-card"><div class="visual-icon">💱</div><h4>Kurs</h4><p>Nilai pembanding. Di project sample, kursnya <strong>18080.55</strong>.</p></div><div class="visual-card"><div class="visual-icon">🇺🇸</div><h4>Hasil</h4><p>Perkiraan nilai dalam USD setelah dihitung.</p></div></div><div class="formula-card"><div class="formula-main">Hasil USD = Nominal Rupiah ÷ Kurs</div><p class="mini-note">Contoh: 100000 ÷ 18080.55 ≈ 5,53</p></div></section><section class="slide" id="slide-7"><h3>Mengenal Kurs Simulasi</h3><p class="lead">Kurs asli bisa berubah. Untuk latihan coding, kita pakai angka tetap agar fokus ke logika program.</p><div class="formula-card"><div class="formula-main">Kurs latihan: 1 USD = Rp18.080,55</div></div><div class="warning-box"><h4>Penting</h4><p>Angka ini mengikuti project latihan. Jangan dianggap sebagai kurs resmi hari ini. Tujuannya supaya semua siswa punya hasil uji yang sama.</p></div><div class="interactive-box"><h4>Benar atau salah?</h4><p>Kurs simulasi boleh dipakai untuk latihan coding, tapi tidak boleh dianggap kurs resmi.</p><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,true,'q7')">Benar</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q7')">Salah</button></div><div class="feedback-line" id="q7"></div></div></section><section class="slide" id="slide-8"><h3>Arah Konversi Harus Jelas</h3><p class="lead">Rumus berubah tergantung arah konversinya.</p><div class="operator-row"><button class="operator-card active" onclick="ms8Direction('tousd',this)"><span class="operator-symbol">÷</span>Rupiah ke USD</button><button class="operator-card" onclick="ms8Direction('toidr',this)"><span class="operator-symbol">×</span>USD ke Rupiah</button></div><div class="info-box" id="directionInfo"><h4>Rupiah ke USD</h4><p>Pakai pembagian: nominal Rupiah ÷ kurs. Ini arah utama project Sesi 8.</p></div><div class="warning-box"><h4>Baca nama output</h4><p>Jika output tertulis <strong>IDR to USD</strong>, berarti inputnya Rupiah dan hasilnya perkiraan USD. Jangan tertukar dengan USD ke Rupiah.</p></div></section><section class="slide" id="slide-9"><h3>Coba Hitung Manual</h3><p class="lead">Sebelum masuk ke App Inventor, coba hitung dulu seperti manusia.</p><div class="money-demo"><div class="formula-card"><label><strong>Nominal Rupiah</strong><input class="money-input" id="simNominal" type="number" value="100000"/></label><label><strong>Kurs simulasi</strong><input class="money-input" id="simKurs" type="number" value="18080.55"/></label><button class="primary-btn" onclick="ms8Calc()">Hitung</button></div><div class="formula-card"><h4>Hasil simulasi</h4><div class="money-result" id="simResult">Klik Hitung untuk melihat hasil.</div></div></div></section><section class="slide" id="slide-10"><h3>Coba UI-nya Dulu</h3><p class="lead">Bayangkan ini aplikasi yang nanti kalian buat di MIT App Inventor.</p><div class="mini-phone-wide"><div class="phone-mini"><div class="phone-bar">Screen1</div><div class="phone-screen"><div class="app-title">Konversi Mata Uang</div><input class="app-input" id="uiNominal" placeholder="Masukkan nominal Rupiah" type="number" value="100000"/><button class="app-button blue" onclick="ms8UiCalc()">KONVERSI</button><div class="phone-result" id="uiResult">Hasil akan muncul di sini</div></div></div><div><div class="info-box"><h4>Coba sebagai user</h4><ol><li>Masukkan nominal Rupiah.</li><li>Tekan tombol KONVERSI.</li><li>Lihat apakah hasil USD-nya jelas.</li></ol></div><p class="mini-note">Slide ini sengaja memberi pengalaman dulu sebelum kalian menyusun komponen dan Blocks.</p></div></div></section><section class="slide" id="slide-11"><h3>Uji UI dengan Beberapa Nominal</h3><p class="lead">Klik contoh, lalu prediksi hasilnya.</p><div class="choice-grid"><button class="choice-btn" onclick="ms8Scenario(50000,this)">Rp50.000</button><button class="choice-btn" onclick="ms8Scenario(100000,this)">Rp100.000</button><button class="choice-btn" onclick="ms8Scenario(250000,this)">Rp250.000</button><button class="choice-btn" onclick="ms8Scenario(500000,this)">Rp500.000</button></div><div class="formula-card"><h4>Hasil</h4><div class="money-result" id="scenarioResult">Pilih salah satu contoh.</div></div><div class="interactive-box"><h4>Kalau nominal Rupiah berubah, hasil USD harus...</h4><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,true,'q11')">Ikut berubah</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q11')">Selalu sama</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q11')">Menghilang</button></div><div class="feedback-line" id="q11"></div></div></section><section class="slide" id="slide-12"><h3>Kenapa Output Perlu Format?</h3><p class="lead">Angka saja sering belum cukup. User perlu tahu angka itu artinya apa.</p><div class="ui-sample-grid"><button class="ui-card" onclick="ms8Output(this,false)"><h4>Output kurang jelas</h4><p><strong>5,53</strong></p><p class="mini-note">Angka ini USD, Rupiah, atau hasil apa?</p></button><button class="ui-card" onclick="ms8Output(this,true)"><h4>Output lebih jelas</h4><p><strong>Hasil Konversi IDR to USD: 5,53</strong></p><p class="mini-note">User langsung tahu konteksnya.</p></button></div><div class="feedback-line" id="outputFeedback">Pilih salah satu tampilan output.</div></section><section class="slide" id="slide-13"><h3>Join String di App Inventor</h3><p class="lead">Join dipakai untuk menggabungkan teks penjelas dan angka hasil hitung.</p><div class="formula-card"><div class="formula-main">join "Hasil Konversi IDR to USD: " + hasil</div></div><div class="interactive-box"><h4>Coba lihat hasil join</h4><label><strong>Nominal Rupiah</strong><input class="money-input" id="joinNominal" type="number" value="100000"/></label><button class="primary-btn" onclick="ms8Join()">Tampilkan join</button><div class="money-result" id="joinResult">Klik tombol untuk mencoba.</div></div></section><section class="slide" id="slide-14"><h3>Input → Process → Output</h3><div class="visual-grid"><button class="visual-card" onclick="ms8IPO('input')"><div class="visual-icon">⌨️</div><h4>Input</h4><p>Nominal Rupiah dari TextBox.</p></button><button class="visual-card" onclick="ms8IPO('process')"><div class="visual-icon">➗</div><h4>Process</h4><p>Nominal dibagi kurs simulasi.</p></button><button class="visual-card" onclick="ms8IPO('output')"><div class="visual-icon">📱</div><h4>Output</h4><p>Hasil tampil pada Label.</p></button></div><div class="info-box" id="ipoInfo"><h4>Input</h4><p>Data yang diberikan user, misalnya nominal 100000 yang diketik pada txtNominal.</p></div></section><section class="slide" id="slide-15"><h3>Dari Simulator ke Designer</h3><div class="mini-phone-wide"><div class="phone-mini"><div class="phone-bar">Screen1</div><div class="phone-screen"><div class="app-title">Konversi Mata Uang</div><div class="phone-field">Nominal:</div><div class="phone-field">txtNominal</div><button class="app-button blue">Konversi</button><div class="phone-result">lblHasil</div></div></div><div><div class="info-box"><h4>UI yang diperlukan</h4><ol><li>Label judul.</li><li>Label “Nominal:”.</li><li>TextBox <strong>txtNominal</strong>.</li><li>Button <strong>btnKonversi</strong>.</li><li>Label <strong>lblHasil</strong>.</li></ol></div><p class="mini-note">Tampilan boleh sederhana. Yang penting user tahu harus mengisi nominal Rupiah di mana.</p></div></div></section><section class="slide" id="slide-16"><h3>Komponen Project</h3><table class="component-table"><tr><th>Komponen</th><th>Nama</th><th>Fungsi</th></tr><tr><td>Label</td><td><code>Labeljudul</code></td><td>Menampilkan judul Konversi Mata Uang.</td></tr><tr><td>Label</td><td><code>Labelonminal</code></td><td>Memberi keterangan input nominal.</td></tr><tr><td>TextBox</td><td><code>txtNominal</code></td><td>Tempat user mengetik nominal Rupiah.</td></tr><tr><td>Button</td><td><code>btnKonversi</code></td><td>Menjalankan perhitungan saat diklik.</td></tr><tr><td>Label</td><td><code>lblHasil</code></td><td>Menampilkan hasil konversi.</td></tr></table><div class="interactive-box"><h4>Nama komponen yang paling membantu saat Blocks?</h4><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,false,'q16')">TextBox1</button><button class="choice-btn" onclick="ms8Quiz(this,true,'q16')">txtNominal</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q16')">KotakAngka</button></div><div class="feedback-line" id="q16"></div></div></section><section class="slide" id="slide-17"><h3>Properties yang Perlu Diatur</h3><p class="lead">Properties membantu UI lebih jelas sebelum Blocks dibuat.</p><div class="property-grid"><div class="property-card"><h4>Hint TextBox</h4><p>Isi dengan petunjuk seperti “Masukkan nominal Rupiah”.</p></div><div class="property-card"><h4>Text Button</h4><p>Gunakan kata jelas seperti “Konversi”.</p></div><div class="property-card"><h4>Text Label Hasil</h4><p>Boleh kosong di awal atau diberi “Hasil akan muncul di sini”.</p></div><div class="property-card"><h4>Background</h4><p>Jika memakai gambar, pastikan teks tetap terbaca.</p></div></div><div class="warning-box"><h4>Catatan</h4><p>Di project sample, TextBox hanya menerima satu input nominal. Kurs dibuat langsung di Blocks sebagai angka tetap.</p></div></section><section class="slide" id="slide-18"><h3>Build Designer Step-by-Step</h3><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Buat project baru di MIT App Inventor.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Label judul “Konversi Mata Uang”.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Label keterangan “Nominal:”.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan TextBox dan rename menjadi <strong>txtNominal</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Button dan rename menjadi <strong>btnKonversi</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tambahkan Label hasil dan rename menjadi <strong>lblHasil</strong>.</li></ul></section><section class="slide" id="slide-19"><h3>Pseudocode Blocks Utama</h3><div class="code-placeholder"><div><strong>PLACEHOLDER SCREENSHOT BLOK UTAMA - btnKonversi.Click</strong><small>Taruh screenshot Blocks lengkap di sini: event tombol, set lblHasil.Text, join, get txtNominal.Text, dan pembagian dengan 18080.55.</small><ol class="pseudo-list"><li>ketika btnKonversi.Click</li><li>ambil txtNominal.Text</li><li>hitung hasil = txtNominal.Text ÷ 18080.55</li><li>gabungkan teks “Hasil Konversi IDR to USD: ” dengan hasil</li><li>set lblHasil.Text menjadi teks gabungan tersebut</li></ol></div></div><div class="warning-box"><h4>Catatan</h4><p>Project sample memakai <strong>pembagian</strong> karena arahnya IDR ke USD. Kalau arahnya USD ke IDR, rumusnya baru memakai perkalian.</p></div></section><section class="slide" id="slide-20"><h3>Blocks 1: Event Tombol</h3><p class="lead">Aplikasi mulai menghitung saat tombol KONVERSI ditekan.</p><div class="block-line block-blue">when btnKonversi.Click do
+  ...</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER GAMBAR BLOCK EVENT</strong><small>Taruh screenshot event <code>when btnKonversi.Click do</code>. Pastikan semua blok perhitungan berada di dalam event ini.</small></div></div><div class="interactive-box"><h4>Event yang tepat?</h4><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,true,'q20')">when btnKonversi.Click</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q20')">when Screen1.Initialize</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q20')">when txtNominal.GotFocus</button></div><div class="feedback-line" id="q20"></div></div></section><section class="slide" id="slide-21"><h3>Blocks 2: Ambil Input</h3><p class="lead">Nominal yang diketik user diambil dari property <strong>Text</strong>.</p><div class="block-line block-green">get txtNominal.Text</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER GAMBAR BLOCK INPUT</strong><small>Taruh screenshot blok <code>get txtNominal.Text</code> yang masuk ke operator pembagian.</small></div></div><div class="warning-box"><h4>Kesalahan umum</h4><p>Memilih komponen yang salah karena belum di-rename. Karena itu, nama <strong>txtNominal</strong> sangat membantu.</p></div></section><section class="slide" id="slide-22"><h3>Blocks 3: Operator Pembagian</h3><p class="lead">Nominal Rupiah dibagi kurs simulasi untuk mendapat perkiraan USD.</p><div class="block-line block-orange">txtNominal.Text ÷ 18080.55</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER GAMBAR BLOCK MATH</strong><small>Taruh screenshot operator Math pembagian dengan input <code>txtNominal.Text</code> di sisi kiri dan angka <code>18080.55</code> di sisi kanan.</small></div></div><div class="interactive-box"><h4>Kalau nominal Rp100.000, hasilnya kira-kira...</h4><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,false,'q22')">18080,55 USD</button><button class="choice-btn" onclick="ms8Quiz(this,true,'q22')">5,53 USD</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q22')">Rp100.000</button></div><div class="feedback-line" id="q22"></div></div></section><section class="slide" id="slide-23"><h3>Blocks 4: Join Teks dan Angka</h3><p class="lead">Setelah hasil dihitung, gabungkan dengan teks supaya user paham konteksnya.</p><div class="block-line block-purple">join "Hasil Konversi IDR to USD: " (txtNominal.Text ÷ 18080.55)</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER GAMBAR BLOCK JOIN</strong><small>Taruh screenshot blok <code>join</code> berisi teks “Hasil Konversi IDR to USD: ” dan hasil pembagian.</small></div></div><div class="interactive-box"><h4>Coba lihat hasil join</h4><label><strong>Nominal Rupiah</strong><input class="money-input" id="joinNominal" type="number" value="100000"/></label><button class="primary-btn" onclick="ms8Join()">Tampilkan join</button><div class="money-result" id="joinResult">Klik tombol untuk mencoba.</div></div></section><section class="slide" id="slide-24"><h3>Blocks 5: Tampilkan Hasil</h3><p class="lead">Label hasil baru berubah kalau kita melakukan <strong>set lblHasil.Text</strong>.</p><div class="block-line block-red">set lblHasil.Text to join "Hasil Konversi IDR to USD: " (txtNominal.Text ÷ 18080.55)</div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER GAMBAR BLOCK OUTPUT</strong><small>Taruh screenshot blok <code>set lblHasil.Text to</code>. Blok ini harus berada di dalam event <code>btnKonversi.Click</code>.</small></div></div><div class="warning-box"><h4>Kalau hasil tidak muncul</h4><p>Cek apakah blok <strong>set lblHasil.Text</strong> sudah mengarah ke Label hasil, bukan Label judul.</p></div></section><section class="slide" id="slide-25"><h3>Reading Blocks</h3><p class="lead">Coba tebak hasilnya sebelum menekan jawaban.</p><div class="formula-card"><p><strong>Nominal Rupiah:</strong> 100000</p><p><strong>Kurs:</strong> 18080.55</p><p><strong>Rumus:</strong> 100000 ÷ 18080.55</p></div><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,false,'q25')">18080,55</button><button class="choice-btn" onclick="ms8Quiz(this,true,'q25')">sekitar 5,53</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q25')">100000</button></div><div class="feedback-line" id="q25"></div></section><section class="slide" id="slide-26"><h3>Trace Table</h3><p class="lead">Klik baris untuk melihat alur konversi.</p><table class="trace-table"><tr><th>Nominal IDR</th><th>Kurs</th><th>Hasil Hitung</th><th>Output Label</th></tr><tr onclick="ms8Trace(this,'50000 ÷ 18080.55 ≈ 2,77, jadi Label menampilkan Hasil Konversi IDR to USD: 2,77')"><td>50000</td><td>18080.55</td><td>2,77</td><td>Hasil Konversi IDR to USD: 2,77</td></tr><tr onclick="ms8Trace(this,'100000 ÷ 18080.55 ≈ 5,53, jadi Label menampilkan Hasil Konversi IDR to USD: 5,53')"><td>100000</td><td>18080.55</td><td>5,53</td><td>Hasil Konversi IDR to USD: 5,53</td></tr><tr onclick="ms8Trace(this,'250000 ÷ 18080.55 ≈ 13,83, jadi Label menampilkan Hasil Konversi IDR to USD: 13,83')"><td>250000</td><td>18080.55</td><td>13,83</td><td>Hasil Konversi IDR to USD: 13,83</td></tr></table><div class="info-box" id="traceInfo"><h4>Pilih salah satu baris.</h4><p>Penjelasan hitungnya akan muncul di sini.</p></div></section><section class="slide" id="slide-27"><h3>Testing Checklist</h3><p class="lead">Gunakan test case untuk memastikan aplikasi menghitung sesuai rumus.</p><table class="component-table"><tr><th>Input</th><th>Rumus</th><th>Output yang Diharapkan</th></tr><tr><td>50000</td><td>50000 ÷ 18080.55</td><td>sekitar 2,77</td></tr><tr><td>100000</td><td>100000 ÷ 18080.55</td><td>sekitar 5,53</td></tr><tr><td>250000</td><td>250000 ÷ 18080.55</td><td>sekitar 13,83</td></tr></table><div class="interactive-box"><h4>Kenapa hasilnya bisa desimal?</h4><div class="choice-grid"><button class="choice-btn" onclick="ms8Quiz(this,true,'q27')">Karena pembagian kurs tidak selalu menghasilkan bilangan bulat</button><button class="choice-btn" onclick="ms8Quiz(this,false,'q27')">Karena tombolnya salah warna</button></div><div class="feedback-line" id="q27"></div></div></section><section class="slide" id="slide-28"><h3>Debugging Sederhana</h3><div class="debug-tabs"><button class="debug-tab active" onclick="ms8Debug('d1',this)">Hasil terlalu besar</button><button class="debug-tab" onclick="ms8Debug('d2',this)">Hasil tidak muncul</button><button class="debug-tab" onclick="ms8Debug('d3',this)">Teks output kurang jelas</button><button class="debug-tab" onclick="ms8Debug('d4',this)">Input kosong</button></div><div class="debug-scenario active" id="d1"><div class="warning-box"><h4>Gejala</h4><p>Input 100000 menghasilkan angka sangat besar, misalnya 1.808.055.000.</p></div><div class="info-box"><h4>Cek</h4><ol><li>Apakah kamu memakai perkalian padahal arah project IDR ke USD?</li><li>Rumus project sample adalah <strong>nominal ÷ 18080.55</strong>.</li><li>Pastikan angka kurs tidak tertukar posisinya.</li></ol></div></div><div class="debug-scenario" id="d2"><div class="warning-box"><h4>Gejala</h4><p>Label hasil tidak berubah setelah tombol ditekan.</p></div><div class="info-box"><h4>Cek</h4><ol><li>Event yang dipakai sudah <strong>btnKonversi.Click</strong>.</li><li>Blok <strong>set lblHasil.Text</strong> berada di dalam event.</li><li>Button yang ditekan adalah Button yang sudah di-rename.</li></ol></div></div><div class="debug-scenario" id="d3"><div class="warning-box"><h4>Gejala</h4><p>Hasil muncul, tetapi user tidak tahu angka itu USD atau IDR.</p></div><div class="info-box"><h4>Cek</h4><p>Gunakan <strong>join</strong> untuk menambahkan teks seperti “Hasil Konversi IDR to USD: ” sebelum angka hasil.</p></div></div><div class="debug-scenario" id="d4"><div class="warning-box"><h4>Gejala</h4><p>Tombol ditekan saat TextBox masih kosong.</p></div><div class="info-box"><h4>Cek</h4><p>Untuk versi dasar, isi angka dulu sebelum mengetes. Validasi input kosong bisa menjadi pengembangan di sesi berikutnya.</p></div></div></section><section class="slide" id="slide-29"><h3>Keamanan Digital: Kurs Bukan Data Pribadi</h3><p class="lead">Project ini memakai angka latihan, bukan data keuangan asli.</p><div class="choice-grid"><button class="choice-btn" onclick="ms8Data(this,true)">Nominal dummy untuk latihan</button><button class="choice-btn" onclick="ms8Data(this,true)">Kurs simulasi dari guru/project</button><button class="choice-btn" onclick="ms8Data(this,false)">PIN dompet digital</button><button class="choice-btn" onclick="ms8Data(this,false)">Saldo rekening asli</button></div><div class="feedback-line" id="dataFeedback">Pilih data yang menurutmu aman untuk dipakai latihan.</div><div class="warning-box"><h4>Ingat</h4><p>Aplikasi ini hanya menghitung konversi. Tidak ada login, pembayaran, atau transaksi.</p></div></section><section class="slide" id="slide-30"><h3>Output Minimum</h3><p>Project dianggap selesai jika semua poin berikut terpenuhi.</p><ul class="checklist"><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> User bisa mengisi nominal Rupiah pada <strong>txtNominal</strong>.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Tombol <strong>btnKonversi</strong> menjalankan proses.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Rumus memakai pembagian: nominal ÷ 18080.55.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Label <strong>lblHasil</strong> menampilkan hasil.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Output memiliki konteks “IDR to USD”.</li><li class="check-item" onclick="toggleCheck(this)"><input type="checkbox"/> Project diuji dengan minimal 2 test case.</li></ul></section><section class="slide" id="slide-31"><h3>Challenge: Pilih Mata Uang</h3><p class="lead">Kalau project utama sudah benar, coba bayangkan versi yang lebih fleksibel.</p><div class="money-demo"><div class="formula-card"><label><strong>Nominal Rupiah</strong><input class="money-input" id="chNominal" type="number" value="100000"/></label><label><strong>Pilih mata uang tujuan</strong><select class="money-input" id="chCurrency"><option value="18080.55">USD - kurs 18080.55</option><option value="12000">SGD - kurs 12000</option><option value="120">JPY - kurs 120</option></select></label><button class="primary-btn" onclick="ms8Challenge()">Coba challenge</button></div><div class="formula-card"><h4>Hasil challenge</h4><div class="money-result" id="chResult">Klik tombol untuk mencoba.</div></div></div><div class="placeholder-box"><div><div class="placeholder-icon">🧩</div><strong>PLACEHOLDER GAMBAR BLOCK CHALLENGE</strong><small>Jika guru ingin challenge ditampilkan, taruh screenshot blok pilihan mata uang atau logika kurs tambahan di sini.</small></div></div></section><section class="slide" id="slide-32"><span class="eyebrow">Penutup</span><h2>Ringkasan Sesi 8</h2><div class="visual-grid"><div class="visual-card"><div class="visual-icon">🇮🇩</div><h4>Input</h4><p>Nominal Rupiah dari TextBox.</p></div><div class="visual-card"><div class="visual-icon">💱</div><h4>Kurs</h4><p>Angka simulasi 18080.55.</p></div><div class="visual-card"><div class="visual-icon">➗</div><h4>Rumus</h4><p>Nominal ÷ kurs.</p></div><div class="visual-card"><div class="visual-icon">📱</div><h4>Output</h4><p>Label menampilkan hasil IDR to USD.</p></div></div><div class="example-box"><h4>Siap lanjut?</h4><p>Di sesi berikutnya, kalian akan makin sering mengecek input dan mencegah aplikasi menghasilkan error.</p></div></section></div>
+<div class="navigation"><button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)"><span>←</span> Previous</button><div class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">32</span></div><button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next <span>→</span></button></div>
+</div>
+<div class="explanation-panel">
+<section class="explanation active" id="explanation-1"><h3>Project yang Akan Dibuat</h3><p>Sesi 8 melanjutkan latihan aplikasi kalkulasi di MIT App Inventor. Kali ini project-nya adalah <strong>Konversi Mata Uang</strong>. Aplikasi menerima nominal Rupiah dari user, lalu menghitung perkiraan nilainya dalam USD menggunakan kurs simulasi.</p><p>Project sample memakai alur yang cukup sederhana: user mengisi <strong>txtNominal</strong>, menekan <strong>btnKonversi</strong>, aplikasi menghitung <strong>txtNominal.Text ÷ 18080.55</strong>, lalu hasilnya ditampilkan ke <strong>lblHasil</strong> dengan teks “Hasil Konversi IDR to USD:”.</p><div class="info-box"><h4>Fokus sesi</h4><ul><li>Membedakan nominal, kurs, dan hasil konversi.</li><li>Memahami arah konversi: IDR ke USD.</li><li>Memakai operator Math pembagian.</li><li>Menggunakan join untuk membuat output lebih jelas.</li><li>Menguji hasil dengan test case sederhana.</li></ul></div><p>Targetnya bukan menghafal kurs, tetapi memahami logika aplikasi: angka masuk dari TextBox, diproses dengan rumus, lalu ditampilkan lagi sebagai output yang bisa dibaca user.</p></section><section class="explanation" id="explanation-2"><h3>Alur Belajar Hari Ini</h3><p>Sesi ini dimulai dari pengalaman sebagai user terlebih dahulu. Kalian akan mencoba menghitung nominal Rupiah menjadi USD di slide, baru setelah itu menerjemahkan alurnya ke Designer dan Blocks MIT App Inventor.</p><p>Urutannya sengaja dibuat seperti cara kerja developer: pahami masalah, coba contoh kecil, rancang tampilan, susun logika, lalu test. Dengan begitu, kalian tidak hanya meniru bentuk Blocks, tetapi tahu alasan setiap blok dipasang.</p><div class="info-box"><h4>Yang perlu dipahami</h4><ol><li>Nominal adalah angka yang dimasukkan user.</li><li>Kurs adalah angka pembanding yang dipakai untuk konversi.</li><li>Karena arahnya IDR ke USD, rumusnya memakai pembagian.</li><li>Output harus diberi teks agar user tahu hasil itu untuk apa.</li></ol></div><p>Kalau di tengah sesi hasil aplikasi berbeda dari prediksi, kembali ke alur ini: input benar dulu, lalu proses rumus, baru cek output.</p></section><section class="explanation" id="explanation-3"><h3>Persiapan Teknis dan Data</h3><p>Sebelum masuk ke MIT App Inventor, pastikan kalian sudah membuka workspace yang benar dan siap membuat project baru. Project ini tidak membutuhkan koneksi ke bank, dompet digital, atau akun pembayaran apa pun.</p><p>Gunakan angka dummy untuk latihan, misalnya 100000, 250000, atau 500000. Angka dummy cukup untuk mengecek apakah rumus berjalan. Jangan memakai data keuangan asli karena project ini hanya latihan logika konversi.</p><div class="warning-box"><h4>Input aman untuk kelas</h4><ul><li>Nominal simulasi: boleh.</li><li>Kurs yang diberikan guru atau project: boleh.</li><li>PIN, OTP, saldo rekening, data kartu: tidak boleh.</li></ul></div><p>Pastikan juga AI2 Companion siap jika guru meminta testing langsung di HP. Testing di HP membantu melihat apakah TextBox, Button, dan Label nyaman dipakai.</p></section><section class="explanation" id="explanation-4"><h3>Membuka Materi yang Benar</h3><p>Buka materi dari menu <strong>Sesi Kelas</strong> di LMS, lalu pilih Sesi 8 sesuai arahan guru. Pastikan sesi yang dibuka adalah <strong>Konversi Mata Uang</strong>, bukan Kalkulator Patungan atau sesi lain.</p><p>Materi di LMS biasanya berisi konsep, instruksi project, dan langkah pengerjaan. Slide ini membantu kalian memahami alurnya, sedangkan MIT App Inventor dipakai untuk membuat aplikasi aslinya.</p><div class="info-box"><h4>Checklist sebelum lanjut</h4><ul><li>Judul sesi sudah benar.</li><li>Akun App Inventor sudah bisa diakses.</li><li>Project dibuat di akun sendiri.</li><li>Instruksi pengumpulan dari guru sudah diperhatikan.</li></ul></div><p>Jika LMS belum terbuka atau kartu sesi tidak muncul, jangan membuka sesi lain secara acak. Minta bantuan guru agar urutan belajarnya tetap sesuai.</p></section><section class="explanation" id="explanation-5"><h3>Mengapa Konversi Dibutuhkan?</h3><p>Mata uang punya satuan yang berbeda. Angka 100000 belum cukup jelas kalau kita tidak tahu satuannya. Di Indonesia, 100000 biasanya berarti Rupiah. Di negara lain, satuannya bisa berbeda dan nilainya tidak bisa langsung dibandingkan.</p><p>Konversi mata uang membantu kita memperkirakan nilai uang dalam satuan lain. Contohnya, jika kita ingin tahu kira-kira Rp100.000 setara berapa USD, kita perlu menggunakan kurs sebagai pembanding.</p><div class="example-box"><h4>Contoh berpikir</h4><p>Kalau 1 USD kira-kira bernilai Rp18.080,55, maka jumlah USD dari Rp100.000 pasti lebih kecil dari 100.000. Karena kita sedang mengubah Rupiah ke USD, hasilnya berupa angka USD yang lebih kecil.</p></div><p>Logika seperti ini membantu saat debugging. Jika input Rp100.000 menghasilkan jutaan USD, ada kemungkinan rumus yang dipakai terbalik.</p></section><section class="explanation" id="explanation-6"><h3>Nominal, Kurs, dan Hasil</h3><p>Ada tiga bagian penting dalam project ini. <strong>Nominal</strong> adalah angka Rupiah yang diketik user. <strong>Kurs</strong> adalah nilai pembanding yang dipakai aplikasi. <strong>Hasil</strong> adalah perkiraan nilai dalam USD setelah nominal dibagi kurs.</p><p>Project sample menggunakan angka kurs <strong>18080.55</strong>. Dalam Blocks, angka ini ditulis sebagai angka tetap. Jadi user hanya perlu mengisi nominal Rupiah, tidak perlu mengisi kurs.</p><div class="info-box"><h4>Rumus utama</h4><p><strong>Hasil USD = Nominal Rupiah ÷ 18080.55</strong></p></div><p>Gunakan rumus ini sebagai pegangan saat membaca Blocks. Kalau kalian melihat operator perkalian di project dasar ini, cek lagi arah konversinya karena kemungkinan rumusnya tertukar.</p></section><section class="explanation" id="explanation-7"><h3>Kurs Simulasi</h3><p>Kurs asli dapat berubah dari waktu ke waktu. Karena kita sedang belajar coding, kita memakai kurs simulasi yang tetap. Keuntungannya, semua siswa bisa memakai test case yang sama dan guru lebih mudah mengecek hasilnya.</p><p>Angka <strong>18080.55</strong> di project bukan klaim kurs resmi hari ini. Angka itu dipakai agar kalian bisa fokus pada tiga hal: mengambil input, membagi dengan kurs, dan menampilkan hasil.</p><div class="warning-box"><h4>Jangan salah pakai</h4><p>Aplikasi latihan ini tidak cocok dipakai untuk keputusan transaksi sungguhan. Untuk transaksi nyata, kurs harus dicek dari sumber resmi atau layanan yang memang sedang digunakan.</p></div><p>Di kelas, yang dinilai adalah pemahaman logika dan Blocks, bukan ketepatan kurs terhadap kondisi pasar hari ini.</p></section><section class="explanation" id="explanation-8"><h3>Arah Konversi</h3><p>Arah konversi menentukan operator yang dipakai. Untuk <strong>Rupiah ke USD</strong>, kita membagi nominal Rupiah dengan kurs. Untuk <strong>USD ke Rupiah</strong>, kita mengalikan nominal USD dengan kurs.</p><p>Project Sesi 8 menggunakan arah <strong>IDR to USD</strong>. Karena itu, rumus yang dipakai adalah pembagian: <strong>txtNominal.Text ÷ 18080.55</strong>.</p><div class="example-box"><h4>Bandingkan</h4><ul><li>Rp100.000 ke USD → 100000 ÷ 18080.55 ≈ 5,53.</li><li>5 USD ke Rupiah → 5 × 18080.55 ≈ Rp90.402,75.</li></ul></div><p>Kalau hasil aplikasi terasa terlalu besar, biasanya penyebabnya adalah operator yang dipakai tidak sesuai arah konversi.</p></section><section class="explanation" id="explanation-9"><h3>Hitung Manual Sebelum Coding</h3><p>Sebelum membuat Blocks, coba hitung manual menggunakan simulator di kiri. Ini membuat kalian punya <strong>expected output</strong>, yaitu hasil yang seharusnya muncul saat aplikasi dites.</p><p>Contoh: 100000 ÷ 18080.55 menghasilkan kira-kira 5,53. Artinya, jika user memasukkan 100000, Label seharusnya menampilkan hasil sekitar 5,53, bukan 100000 dan bukan angka rupiah yang lebih besar.</p><div class="info-box"><h4>Cara memakai simulator</h4><ol><li>Masukkan nominal Rupiah.</li><li>Biarkan kurs 18080.55 seperti project sample.</li><li>Klik Hitung.</li><li>Catat hasilnya sebagai pembanding saat testing di App Inventor.</li></ol></div><p>Developer yang baik tidak menunggu aplikasi selesai untuk mulai berpikir. Dari awal, kita sudah menyiapkan contoh hasil yang benar.</p></section><section class="explanation" id="explanation-10"><h3>Merasakan UI Sebagai User</h3><p>Slide kiri memberi simulasi tampilan aplikasi. Coba isi nominal, tekan tombol, dan lihat hasilnya. Setelah mencoba sebagai user, kalian akan lebih mudah memahami komponen apa saja yang harus dibuat di Designer.</p><p>Perhatikan bahwa user hanya diberi satu TextBox untuk nominal Rupiah. Kurs tidak ditampilkan sebagai input karena dalam project sample kurs langsung ditulis di Blocks sebagai angka tetap.</p><div class="info-box"><h4>Yang perlu diamati</h4><ul><li>Apakah user tahu harus mengetik nominal Rupiah?</li><li>Apakah tombol Konversi mudah ditemukan?</li><li>Apakah hasil output menjelaskan arah konversi?</li><li>Apakah hasil berubah saat nominal diubah?</li></ul></div><p>UI yang baik bukan hanya terlihat rapi, tetapi membuat user tidak bingung saat memakai aplikasi.</p></section><section class="explanation" id="explanation-11"><h3>Uji Beberapa Nominal</h3><p>Menggunakan satu test case saja belum cukup. Coba beberapa nominal agar kalian yakin rumus bekerja untuk input berbeda. Jika setiap nominal menghasilkan output yang masuk akal, berarti rumus kemungkinan sudah tersusun benar.</p><p>Karena rumusnya pembagian, makin besar nominal Rupiah, makin besar juga hasil USD. Namun hasil USD tetap jauh lebih kecil dari nominal Rupiah karena kursnya sekitar delapan belas ribu Rupiah per satu USD.</p><div class="example-box"><h4>Contoh pola hasil</h4><ul><li>Rp50.000 ≈ 2,77 USD.</li><li>Rp100.000 ≈ 5,53 USD.</li><li>Rp250.000 ≈ 13,83 USD.</li></ul></div><p>Jika nominal yang lebih besar malah menghasilkan output yang sama, cek apakah input TextBox benar-benar dipakai dalam rumus.</p></section><section class="explanation" id="explanation-12"><h3>Output yang Jelas</h3><p>Output berupa angka saja sering membuat user bingung. Angka <strong>5,53</strong> bisa berarti apa saja jika tidak diberi konteks. Karena project ini membahas mata uang, konteks sangat penting.</p><p>Project sample memakai teks <strong>“Hasil Konversi IDR to USD: ”</strong> sebelum angka hasil. Dengan begitu, user tahu bahwa inputnya Rupiah dan outputnya USD.</p><div class="info-box"><h4>Output yang lebih ramah</h4><p>Daripada hanya menampilkan <strong>5,53</strong>, tampilkan <strong>Hasil Konversi IDR to USD: 5,53</strong>. Ini membuat aplikasi lebih mudah dipahami tanpa perlu penjelasan tambahan.</p></div><p>Di App Inventor, cara membuat output seperti ini adalah menggunakan blok <strong>join</strong>.</p></section><section class="explanation" id="explanation-13"><h3>Fungsi Join</h3><p><strong>Join</strong> adalah blok Text yang digunakan untuk menggabungkan beberapa bagian menjadi satu kalimat. Pada project ini, join menggabungkan teks penjelas dan hasil perhitungan.</p><p>Bagian pertama adalah teks: “Hasil Konversi IDR to USD: ”. Bagian kedua adalah hasil rumus: <strong>txtNominal.Text ÷ 18080.55</strong>. Setelah digabung, keduanya menjadi kalimat output yang lebih jelas.</p><div class="example-box"><h4>Contoh</h4><p>Jika txtNominal.Text berisi 100000, hasil pembagiannya sekitar 5,53. Setelah join, Label menampilkan “Hasil Konversi IDR to USD: 5,53”.</p></div><p>Join tidak mengubah rumus. Join hanya membantu hasilnya dibaca manusia.</p></section><section class="explanation" id="explanation-14"><h3>Input, Process, Output</h3><p>Aplikasi konversi mengikuti pola <strong>Input → Process → Output</strong>. Pola ini sering dipakai dalam aplikasi sederhana maupun aplikasi yang lebih kompleks.</p><div class="info-box"><h4>Dalam project Sesi 8</h4><ul><li><strong>Input:</strong> nominal Rupiah dari <strong>txtNominal.Text</strong>.</li><li><strong>Process:</strong> nominal dibagi kurs 18080.55.</li><li><strong>Output:</strong> hasil ditampilkan ke <strong>lblHasil.Text</strong> menggunakan join.</li></ul></div><p>Kalau ada bug, gunakan pola ini untuk mengecek. Pertama pastikan input masuk. Kedua pastikan proses menghitung benar. Ketiga pastikan output diarahkan ke Label yang benar.</p></section><section class="explanation" id="explanation-15"><h3>Merancang Tampilan</h3><p>Designer dipakai untuk menyiapkan komponen yang akan digunakan di Blocks. Untuk project ini, tampilan boleh sederhana karena fokus utamanya adalah input nominal, tombol konversi, dan output hasil.</p><p>Pastikan user paham bahwa TextBox digunakan untuk nominal Rupiah. Jika Hint masih tertulis “Hint for TextBox1”, user mungkin kurang terbantu. Kamu boleh menggantinya menjadi petunjuk yang lebih jelas, misalnya “Masukkan nominal Rupiah”.</p><div class="info-box"><h4>Komponen utama</h4><ol><li>Label judul.</li><li>Label keterangan nominal.</li><li>TextBox txtNominal.</li><li>Button btnKonversi.</li><li>Label lblHasil.</li></ol></div><p>Setelah semua komponen ada dan namanya jelas, barulah pindah ke Blocks.</p></section><section class="explanation" id="explanation-16"><h3>Nama Komponen</h3><p>Nama komponen sangat penting saat masuk ke Blocks. Jika komponen masih bernama TextBox1 atau Button1, kalian lebih mudah salah memilih blok, terutama saat project mulai punya lebih banyak komponen.</p><p>Project sample memakai nama <strong>txtNominal</strong>, <strong>btnKonversi</strong>, dan <strong>lblHasil</strong>. Nama-nama ini membuat Blocks lebih mudah dibaca: ambil nominal, ketika tombol konversi diklik, tampilkan ke label hasil.</p><div class="warning-box"><h4>Catatan kecil</h4><p>Di project sample ada label keterangan dengan nama <strong>Labelonminal</strong>. Fungsi label ini hanya sebagai teks “Nominal:”. Fokus Blocks tetap ada pada txtNominal, btnKonversi, dan lblHasil.</p></div><p>Biasakan rename komponen sebelum menulis Blocks. Ini menghemat banyak waktu saat debugging.</p></section><section class="explanation" id="explanation-17"><h3>Mengatur Properties</h3><p>Properties menentukan bagaimana komponen terlihat dan membantu user memahami cara memakai aplikasi. Walaupun project sederhana, properties tetap penting.</p><p>Untuk <strong>txtNominal</strong>, atur Hint agar user tahu harus memasukkan nominal Rupiah. Untuk <strong>btnKonversi</strong>, gunakan teks tombol yang jelas. Untuk <strong>lblHasil</strong>, siapkan tempat output agar hasil konversi tidak tercampur dengan judul.</p><div class="info-box"><h4>Saran properties</h4><ul><li>TextBox Hint: “Masukkan nominal Rupiah”.</li><li>Button Text: “Konversi”.</li><li>Label Hasil: kosong atau “Hasil akan muncul di sini”.</li><li>Font dan background: pastikan tetap mudah dibaca.</li></ul></div><p>Jangan terlalu lama menghias tampilan sebelum fungsi utama bekerja. Buat rapi secukupnya, lalu fokus ke Blocks.</p></section><section class="explanation" id="explanation-18"><h3>Langkah Designer</h3><p>Bangun Designer secara bertahap. Setelah menambahkan satu komponen, langsung rename jika komponen itu akan dipakai di Blocks. Cara ini mencegah kebingungan saat memilih blok.</p><div class="info-box"><h4>Urutan kerja yang disarankan</h4><ol><li>Buat project baru.</li><li>Tambahkan Label judul.</li><li>Tambahkan Label “Nominal:”.</li><li>Tambahkan TextBox dan rename menjadi txtNominal.</li><li>Tambahkan Button dan rename menjadi btnKonversi.</li><li>Tambahkan Label hasil dan rename menjadi lblHasil.</li><li>Atur tampilan dasar agar mudah dibaca.</li></ol></div><p>Setelah Designer selesai, jangan langsung mengumpulkan. Project baru akan berfungsi setelah Blocks dibuat.</p></section><section class="explanation" id="explanation-19"><h3>Dari Ide ke Blocks</h3><p>Pseudocode di kiri menunjukkan logika sebelum kita melihat bentuk blok puzzle. Ini penting karena App Inventor hanya menjalankan instruksi yang kita susun. Jika alurnya salah, aplikasi tetap bisa berjalan tetapi outputnya tidak sesuai.</p><div class="info-box"><h4>Alur utama</h4><ol><li>Event <strong>btnKonversi.Click</strong> dijalankan.</li><li>Aplikasi mengambil <strong>txtNominal.Text</strong>.</li><li>Nilai tersebut dibagi dengan <strong>18080.55</strong>.</li><li>Hasil pembagian digabung dengan teks “Hasil Konversi IDR to USD:”.</li><li>Gabungan teks itu masuk ke <strong>lblHasil.Text</strong>.</li></ol></div><p>Placeholder di kiri sengaja disiapkan supaya guru bisa memasukkan screenshot Blocks asli. Saat membaca screenshot nanti, cocokkan setiap blok dengan langkah pseudocode ini.</p></section><section class="explanation" id="explanation-20"><h3>Event Tombol</h3><p>Event <strong>when btnKonversi.Click</strong> adalah titik mulai program. Artinya, aplikasi menunggu user menekan tombol Konversi. Setelah tombol ditekan, barulah blok di dalam event dijalankan.</p><p>Letakkan seluruh proses di dalam event ini: set Label, join, pembagian, dan get TextBox. Jika ada blok perhitungan di luar event, tombol bisa terlihat bisa ditekan, tetapi tidak menghasilkan perubahan yang diharapkan.</p><div class="warning-box"><h4>Debug awal</h4><p>Jika tombol tidak membuat Label berubah, cek dulu apakah event yang dipakai sudah <strong>btnKonversi.Click</strong>, bukan event Screen atau TextBox.</p></div><p>Screenshot Blocks yang nanti ditempel di placeholder kiri sebaiknya memperlihatkan event sebagai blok paling luar.</p></section><section class="explanation" id="explanation-21"><h3>Membaca Input TextBox</h3><p>Nilai yang diketik user berada pada property <strong>Text</strong> milik TextBox. Karena itu, Blocks harus mengambil <strong>txtNominal.Text</strong>.</p><p>Dalam project ini, txtNominal.Text menjadi angka Rupiah yang akan dibagi dengan kurs. Jika user mengetik 100000, blok get txtNominal.Text mengambil nilai 100000 untuk dimasukkan ke operator pembagian.</p><div class="info-box"><h4>Yang harus dicek</h4><ul><li>Blok yang diambil adalah <strong>get txtNominal.Text</strong>.</li><li>Komponen yang dipilih bukan Label dan bukan Button.</li><li>Input diisi angka polos, tanpa simbol Rp atau titik ribuan saat testing awal.</li></ul></div><p>Jika hasil tidak berubah saat input diubah, kemungkinan rumus tidak benar-benar mengambil nilai dari TextBox.</p></section><section class="explanation" id="explanation-22"><h3>Pembagian dengan Kurs</h3><p>Bagian inti project adalah operator Math pembagian. Karena arah project adalah <strong>IDR to USD</strong>, nominal Rupiah dibagi dengan kurs. Di project sample, kurs ditulis sebagai angka <strong>18080.55</strong>.</p><div class="example-box"><h4>Contoh</h4><p>txtNominal.Text = 100000. Rumusnya 100000 ÷ 18080.55, hasilnya kira-kira 5,53. Artinya Rp100.000 setara sekitar 5,53 USD dalam kurs simulasi ini.</p></div><p>Jika kalian memakai perkalian, hasilnya akan menjadi sangat besar dan tidak masuk akal untuk output USD. Ini salah satu bug paling mudah dikenali pada sesi ini.</p><p>Pastikan screenshot yang ditempel di placeholder kiri menunjukkan operator pembagian, bukan perkalian.</p></section><section class="explanation" id="explanation-23"><h3>Join Output</h3><p>Setelah rumus menghasilkan angka, gunakan <strong>join</strong> agar hasilnya tidak berdiri sendiri. Join menggabungkan teks penjelas dan hasil perhitungan menjadi satu output yang lebih mudah dipahami user.</p><p>Project sample memakai teks: <strong>“Hasil Konversi IDR to USD: ”</strong>. Perhatikan ada spasi setelah titik dua supaya angka hasil tidak menempel dengan teks.</p><div class="info-box"><h4>Struktur join</h4><ol><li>Bagian pertama: teks penjelas.</li><li>Bagian kedua: hasil pembagian txtNominal.Text ÷ 18080.55.</li></ol></div><p>Join tidak menghitung. Yang menghitung adalah operator Math. Join hanya mengemas hasil hitung supaya terbaca sebagai kalimat.</p></section><section class="explanation" id="explanation-24"><h3>Set Label Hasil</h3><p>Langkah terakhir adalah mengirim output ke <strong>lblHasil.Text</strong>. Tanpa blok ini, hasil perhitungan mungkin sudah ada di dalam logika, tetapi user tidak akan melihatnya di layar.</p><p>Blok yang dibutuhkan adalah <strong>set lblHasil.Text to</strong>, lalu isinya adalah join teks dan hasil pembagian. Pastikan Label yang diubah adalah label hasil, bukan Label judul.</p><div class="warning-box"><h4>Urutan cek</h4><p>Event benar → input benar → operator pembagian benar → join benar → set lblHasil.Text benar.</p></div><p>Jika screenshot Blocks ditempel di placeholder kiri, bagian ini sebaiknya terlihat sebagai blok utama di dalam event btnKonversi.Click.</p></section><section class="explanation" id="explanation-25"><h3>Membaca Blocks Tanpa Menjalankan</h3><p>Reading Blocks berarti membaca alur program dan memprediksi output sebelum aplikasi dites. Ini latihan penting agar kalian tidak hanya bergantung pada tombol Run.</p><p>Untuk input 100000, rumusnya adalah 100000 ÷ 18080.55. Hasilnya sekitar 5,53. Setelah join, Label seharusnya menampilkan teks yang kira-kira berbunyi “Hasil Konversi IDR to USD: 5,53”.</p><div class="info-box"><h4>Kenapa penting?</h4><p>Jika prediksi kalian berbeda jauh dari output aplikasi, berarti ada bagian Blocks yang perlu diperiksa. Reading Blocks membuat debugging lebih cepat dan tidak asal tebak.</p></div><p>Biasakan membaca dari luar ke dalam: event tombol, set Label, join, lalu rumus pembagian.</p></section><section class="explanation" id="explanation-26"><h3>Trace Table</h3><p>Trace table membantu melihat nilai di setiap tahap. Kita bisa memeriksa nominal Rupiah, kurs, hasil hitung, dan output Label dalam satu baris.</p><p>Jika output salah, cari kolom pertama yang mulai tidak sesuai. Kalau nominal dan kurs benar tetapi hasil hitung salah, cek operator pembagian. Kalau hasil hitung benar tetapi teks output kurang jelas, cek join dan Label.</p><div class="example-box"><h4>Contoh membaca baris</h4><p>Rp100.000 ÷ 18080.55 ≈ 5,53. Jadi output Label harus menyebutkan bahwa hasilnya adalah konversi IDR ke USD.</p></div><p>Trace table membuat debugging lebih terarah karena kalian mengecek tahap demi tahap.</p></section><section class="explanation" id="explanation-27"><h3>Testing dengan Expected Output</h3><p>Testing berarti membandingkan hasil aplikasi dengan jawaban yang sudah kita ketahui. Pada sesi ini, hasil bisa berupa desimal karena pembagian kurs tidak selalu menghasilkan bilangan bulat.</p><div class="info-box"><h4>Test case utama</h4><ul><li>50000 → sekitar 2,77.</li><li>100000 → sekitar 5,53.</li><li>250000 → sekitar 13,83.</li></ul></div><p>Jika hasil App Inventor menampilkan lebih banyak angka desimal, itu masih wajar untuk versi dasar. Yang penting nilainya mendekati expected output. Format pembulatan bisa menjadi pengembangan lanjutan.</p><p>Gunakan minimal dua test case sebelum menyimpan project sebagai versi final.</p></section><section class="explanation" id="explanation-28"><h3>Debugging Sederhana</h3><p>Debugging dimulai dari gejala. Pada project ini, gejala yang sering muncul adalah hasil terlalu besar, hasil tidak muncul, output kurang jelas, atau TextBox kosong saat tombol ditekan.</p><div class="warning-box"><h4>Cara cek yang aman</h4><ol><li>Jangan langsung menghapus semua Blocks.</li><li>Cek event tombol terlebih dahulu.</li><li>Cek apakah input yang diambil adalah txtNominal.Text.</li><li>Cek apakah operatornya pembagian dengan 18080.55.</li><li>Cek apakah output masuk ke lblHasil.Text.</li></ol></div><p>Ubah satu bagian, lalu test ulang dengan angka yang sama. Dengan begitu, kalian tahu perubahan mana yang benar-benar memperbaiki masalah.</p></section><section class="explanation" id="explanation-29"><h3>Keamanan Digital dalam Project Finansial</h3><p>Karena project membahas mata uang, kita perlu membedakan angka latihan dengan data pribadi. Nominal dummy dan kurs simulasi aman digunakan. Data rekening, saldo asli, PIN, OTP, dan informasi pembayaran tidak diperlukan.</p><p>Aplikasi ini hanya menghitung. Tidak ada transaksi, tidak ada login bank, dan tidak ada pembayaran. Jadi, jangan memasukkan informasi sensitif ke dalam project atau screenshot pengumpulan.</p><div class="info-box"><h4>Kebiasaan baik</h4><ul><li>Gunakan data dummy saat belajar.</li><li>Jangan tampilkan data pribadi di layar kelas.</li><li>Jika butuh contoh, buat angka simulasi sendiri.</li><li>Simpan project di akun sendiri.</li></ul></div><p>Ini adalah kebiasaan penting saat membuat aplikasi bertema finansial.</p></section><section class="explanation" id="explanation-30"><h3>Checklist Berhasil</h3><p>Output minimum adalah batas project dianggap selesai. Jangan menilai project selesai hanya karena tampilannya sudah rapi. Fungsi utama tetap harus berjalan dan sesuai rumus.</p><div class="info-box"><h4>Project berhasil jika</h4><ul><li>User dapat memasukkan nominal Rupiah.</li><li>Tombol Konversi menjalankan event btnKonversi.Click.</li><li>Rumus memakai pembagian dengan 18080.55.</li><li>lblHasil menampilkan output setelah tombol ditekan.</li><li>Output menyebutkan konteks IDR to USD.</li><li>Project diuji dengan beberapa nominal.</li></ul></div><p>Jika salah satu poin belum terpenuhi, perbaiki dulu sebelum menambah challenge atau dekorasi.</p></section><section class="explanation" id="explanation-31"><h3>Challenge Tambahan</h3><p>Challenge di kiri mengajak kalian membayangkan aplikasi yang bisa memilih mata uang tujuan. User tetap memasukkan nominal Rupiah, tetapi kurs yang dipakai berubah sesuai pilihan.</p><p>Fitur seperti ini biasanya membutuhkan komponen tambahan, misalnya ListPicker, Spinner, atau pilihan tombol. Blocks juga menjadi lebih panjang karena aplikasi harus menentukan kurs mana yang digunakan.</p><div class="warning-box"><h4>Urutan yang benar</h4><p>Selesaikan versi dasar dulu: txtNominal ÷ 18080.55 dan output ke lblHasil. Setelah itu, baru coba challenge pilihan mata uang.</p></div><p>Placeholder di kiri bisa dipakai guru untuk menempel screenshot Blocks challenge jika fitur ini ingin ditunjukkan di kelas.</p></section><section class="explanation" id="explanation-32"><h3>Yang Sudah Dipelajari</h3><p>Di Sesi 8, kalian membuat aplikasi konversi mata uang sederhana dengan MIT App Inventor. Aplikasi menerima input angka dari TextBox, memprosesnya dengan operator pembagian, lalu menampilkan hasil dengan join pada Label.</p><div class="example-box"><h4>Konsep utama sesi</h4><ul><li>Nominal Rupiah sebagai input.</li><li>Kurs simulasi sebagai angka pembanding.</li><li>Arah konversi IDR ke USD.</li><li>Rumus nominal ÷ 18080.55.</li><li>Event btnKonversi.Click.</li><li>txtNominal.Text sebagai sumber data.</li><li>lblHasil.Text sebagai output.</li><li>Testing dengan expected output.</li></ul></div><p>Materi ini memperkuat kebiasaan penting: sebelum membuat Blocks, pahami dulu logikanya. Setelah Blocks jadi, jangan lupa test dengan beberapa angka agar hasilnya benar.</p></section>
+</div>
+</div>
+<script>
+    const ACCESS_CODE = 'RGMDSMS26';
+    let currentSlide = 1;
+    let totalSlides = 0;
+    window.addEventListener('load', () => {
+      totalSlides = document.querySelectorAll('.slide').length;
+      document.getElementById('totalSlides').textContent = totalSlides;
+      setTimeout(() => document.querySelector('.access-popup').classList.add('show'), 50);
+      const input = document.getElementById('accessInput');
+      input.focus();
+      input.addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') checkAccessCode(); });
+      initSortDrop();
+      initDrawCanvas();
+      updateSlide();
+    });
+    function checkAccessCode(){
+      const input = document.getElementById('accessInput');
+      const error = document.getElementById('accessError');
+      if(input.value.trim().toUpperCase() === ACCESS_CODE){
+        document.getElementById('accessPopup').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'flex';
+        updateSlide();
+      } else { error.classList.add('show'); input.value=''; input.focus(); }
+    }
+    function changeSlide(direction){ const next = currentSlide + direction; if(next < 1 || next > totalSlides) return; currentSlide = next; updateSlide(); }
+    function updateSlide(){
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.explanation').forEach(e => e.classList.remove('active'));
+      const slide = document.getElementById(`slide-${currentSlide}`); if(slide) slide.classList.add('active');
+      const exp = document.getElementById(`explanation-${currentSlide}`); if(exp) exp.classList.add('active');
+      document.getElementById('currentSlide').textContent = currentSlide;
+      document.getElementById('prevBtn').disabled = currentSlide === 1;
+      document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+      document.getElementById('progressFill').style.width = `${(currentSlide/totalSlides)*100}%`;
+      document.querySelector('.slide-content').scrollTop = 0;
+      document.querySelector('.explanation-panel').scrollTop = 0;
+    }
+    document.addEventListener('keydown', e => { if(document.getElementById('mainContent').style.display === 'none') return; if(e.key === 'ArrowRight') changeSlide(1); if(e.key === 'ArrowLeft') changeSlide(-1); });
+    function deviceCheck(btn){ btn.classList.toggle('correct'); }
+    function selectAny(btn){ const group=btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); }
+    function quiz(btn, ok, feedbackId){
+      const group = btn.parentElement; group.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      btn.classList.add(ok ? 'correct' : 'wrong');
+      const feedback = document.getElementById(feedbackId);
+      if(feedback){ feedback.textContent = ok ? 'Betul.' : 'Belum tepat. Coba cek penjelasan di kanan.'; feedback.style.color = ok ? '#176b35' : '#a42820'; }
+    }
+    function toggleCheck(item){ const cb = item.querySelector('input'); cb.checked = !cb.checked; item.classList.toggle('done', cb.checked); }
+    function showLmsStep(step, btn){
+      document.querySelectorAll('.lms-map-wrap .hotspot, .lms-map-wrap .session-card-hotspot').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const box = document.getElementById('lmsStepInfo');
+      if(step === 1) box.innerHTML = '<h4><span class="area-number">1</span>Menu Sesi Kelas</h4><p>Klik menu Sesi Kelas untuk melihat sesi yang tersedia untuk rombelmu.</p>';
+      else box.innerHTML = '<h4><span class="area-number">2</span>Kartu Sesi</h4><p>Pilih kartu sesi sesuai arahan guru. Nama sekolah atau rombel bisa berbeda dari gambar contoh.</p>';
+    }
+    function showIPO(type){
+      const data = { input:['Input','Data yang diberikan pengguna, misalnya nominal harga atau gerakan jari di Canvas.'], process:['Process','Aplikasi menjalankan logika di Blocks, seperti menyusun kalimat, membaca suara, atau menggambar garis.'], output:['Output','Hasil yang dilihat atau didengar pengguna, misalnya suara TTS, label berubah, atau tanda tangan muncul.'] };
+      const el = document.getElementById('ipoInfo'); if(el) el.innerHTML = `<h4>${data[type][0]}</h4><p>${data[type][1]}</p>`;
+    }
+    function showDebug(id, btn){
+      document.querySelectorAll('.debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      document.querySelectorAll('.debug-scenario').forEach(s=>s.classList.remove('active'));
+      const el=document.getElementById(id); if(el) el.classList.add('active');
+    }
+    function initSortDrop(){
+      document.querySelectorAll('.sort-card').forEach(card => { card.addEventListener('dragstart', () => card.classList.add('dragging-sort')); card.addEventListener('dragend', () => card.classList.remove('dragging-sort')); });
+      document.querySelectorAll('.drop-zone, #sortBank').forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); const dragging = document.querySelector('.dragging-sort'); if(dragging) zone.appendChild(dragging); });
+      });
+    }
+    function checkSort(){
+      let correct = 0, total = 0;
+      document.querySelectorAll('.drop-zone').forEach(zone => { zone.querySelectorAll('.sort-card').forEach(card => { total++; if(card.dataset.kind === zone.dataset.accept) correct++; }); });
+      const fb = document.getElementById('sortFeedback'); if(!fb) return;
+      if(total < 1){ fb.textContent = 'Pindahkan dulu kartunya.'; fb.style.color = '#a42820'; return; }
+      fb.textContent = correct === total ? 'Sudah tepat.' : 'Masih ada kartu yang belum pas. Coba cek lagi jenis komponennya.';
+      fb.style.color = correct === total ? '#176b35' : '#a42820';
+    }
+    function initDrawCanvas(){}
+    
+
+    function markConsent(btn, ok){ btn.classList.remove('safe','risky'); btn.classList.add(ok ? 'safe' : 'risky'); }
+    const consentScenarios = [
+      {title:'Skenario 1 dari 3', text:'Aplikasi video call meminta akses kamera agar wajahmu terlihat saat panggilan berlangsung.', answer:'agree', feedback:'Setuju bisa tepat karena kamera memang diperlukan untuk tujuan yang dijelaskan. Tetap baca informasi yang muncul sebelum memberi izin.'},
+      {title:'Skenario 2 dari 3', text:'Sebuah game sederhana meminta akses ke semua kontak di ponsel, tetapi tidak menjelaskan untuk apa akses itu dipakai.', answer:'decline', feedback:'Tidak setuju adalah pilihan aman. Akses kontak tidak terlihat relevan untuk game sederhana dan tujuannya tidak jelas.'},
+      {title:'Skenario 3 dari 3', text:'Aplikasi penyimpanan foto meminta akses galeri. Kamu belum tahu apakah foto akan disimpan hanya di perangkat atau dibagikan ke internet.', answer:'ask', feedback:'Tanyakan dulu atau baca penjelasannya. Sebelum memberi akses, pahami lokasi penyimpanan dan siapa yang dapat melihat foto.'}
+    ];
+    let consentIndex = 0;
+    let selectedConsentAction = '';
+    function chooseConsentAction(btn, action){ selectAny(btn); selectedConsentAction = action; }
+    function checkConsentChoice(){
+      const feedback = document.getElementById('consentFeedback');
+      if(!feedback) return;
+      if(!selectedConsentAction){ feedback.textContent='Pilih tindakan dahulu.'; feedback.style.color='#a42820'; return; }
+      const item = consentScenarios[consentIndex];
+      const correct = selectedConsentAction === item.answer;
+      feedback.textContent = (correct ? 'Tepat. ' : 'Belum tepat. ') + item.feedback;
+      feedback.style.color = correct ? '#176b35' : '#a42820';
+    }
+    function nextConsentScenario(){
+      consentIndex = (consentIndex + 1) % consentScenarios.length;
+      selectedConsentAction = '';
+      const item = consentScenarios[consentIndex];
+      document.getElementById('consentScenarioTitle').textContent = item.title;
+      document.getElementById('consentScenarioText').textContent = item.text;
+      document.querySelectorAll('#slide-10 .choice-btn').forEach(btn => { btn.classList.remove('selected'); });
+      const feedback = document.getElementById('consentFeedback');
+      if(feedback){ feedback.textContent = 'Pilih tindakan dahulu.'; feedback.style.color='#1f4b99'; }
+    }
+    const testTypeItems = {
+      f1:{title:'HAPUS membuat Canvas kosong', prompt:'Ini termasuk pengujian apa?', answer:'function', feedback:'Ini pengujian fungsi karena kita mengecek apakah tombol benar-benar menjalankan Canvas.Clear.'},
+      f2:{title:'Instruksi mudah dibaca', prompt:'Ini termasuk pengujian apa?', answer:'ux', feedback:'Ini pengujian kenyamanan pengguna karena kita mengecek apakah user dapat memahami tampilan dengan mudah.'},
+      f3:{title:'Garis mengikuti drag', prompt:'Ini termasuk pengujian apa?', answer:'function', feedback:'Ini pengujian fungsi karena kita mengecek apakah event Dragged dan DrawLine bekerja sesuai gerakan.'}
+    };
+    let activeTestType = 'f1';
+    let selectedTestType = '';
+    function showTestType(id, btn){
+      document.querySelectorAll('#slide-19 .debug-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+      activeTestType=id; selectedTestType='';
+      const item=testTypeItems[id];
+      document.getElementById('testTypePrompt').innerHTML='<h4>'+item.title+'</h4><p>'+item.prompt+'</p>';
+      document.querySelectorAll('#slide-19 .choice-btn').forEach(b=>b.classList.remove('selected'));
+      const feedback=document.getElementById('testTypeFeedback'); if(feedback){feedback.textContent='Pilih kategori dahulu.';feedback.style.color='#1f4b99';}
+    }
+    function chooseTestType(btn, type){ selectAny(btn); selectedTestType=type; }
+    function checkTestType(){
+      const feedback=document.getElementById('testTypeFeedback'); if(!feedback) return;
+      if(!selectedTestType){feedback.textContent='Pilih kategori dahulu.';feedback.style.color='#a42820';return;}
+      const item=testTypeItems[activeTestType]; const correct=selectedTestType===item.answer;
+      feedback.textContent=(correct?'Tepat. ':'Belum tepat. ')+item.feedback;
+      feedback.style.color=correct?'#176b35':'#a42820';
+    }
+    function initDrawCanvas(){
+      setupCanvas('signCanvas', true);
+      setupCanvas('coordCanvas', false);
+    }
+    function setupCanvas(id, drawing){
+      const canvas=document.getElementById(id); if(!canvas) return;
+      const ctx=canvas.getContext('2d'); ctx.lineWidth=3; ctx.lineCap='round'; ctx.strokeStyle='#0056b3';
+      let isDown=false, last=null;
+      function pos(e){ const r=canvas.getBoundingClientRect(); const p=e.touches?e.touches[0]:e; return {x:Math.round((p.clientX-r.left)*canvas.width/r.width), y:Math.round((p.clientY-r.top)*canvas.height/r.height)}; }
+      function show(p, previous){
+        if(id==='coordCanvas'){
+          const info=document.getElementById('coordInfo'); if(info) info.textContent = `Koordinat saat ini: X ${p.x}, Y ${p.y}`;
+          const detail=document.getElementById('dragPointInfo');
+          if(detail && previous) detail.innerHTML = `<h4>Garis kecil yang akan dibuat</h4><p>prevX, prevY: <strong>(${previous.x}, ${previous.y})</strong> &rarr; currentX, currentY: <strong>(${p.x}, ${p.y})</strong></p>`;
+        }
+        if(id==='signCanvas'){
+          const info=document.getElementById('signDragInfo');
+          if(info) info.textContent = previous ? `DrawLine: (${previous.x}, ${previous.y}) → (${p.x}, ${p.y})` : `Mulai dari titik (${p.x}, ${p.y}). Geser untuk membuat garis.`;
+        }
+      }
+      canvas.addEventListener('mousedown',e=>{isDown=true; last=pos(e); show(last);});
+      canvas.addEventListener('mousemove',e=>{const p=pos(e); show(p, last); if(drawing && isDown && last){ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p;}});
+      canvas.addEventListener('mouseup',()=>{isDown=false; last=null;});
+      canvas.addEventListener('mouseleave',()=>{isDown=false; last=null;});
+      canvas.addEventListener('touchstart',e=>{e.preventDefault(); isDown=true; last=pos(e); show(last);},{passive:false});
+      canvas.addEventListener('touchmove',e=>{e.preventDefault(); const p=pos(e); show(p, last); if(drawing && isDown && last){ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p;}},{passive:false});
+      canvas.addEventListener('touchend',()=>{isDown=false; last=null;});
+      if(id==='coordCanvas') { ctx.fillStyle='#eef7ff'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#cfe7fb'; for(let x=0;x<canvas.width;x+=52){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();} for(let y=0;y<canvas.height;y+=52){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();} ctx.strokeStyle='#0056b3'; }
+    }
+    function clearSignature(){ const c=document.getElementById('signCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); const info=document.getElementById('signDragInfo'); if(info) info.textContent='Status: Canvas sudah kosong. Siap mencoba lagi.'; }
+    function drawDemoLine(){ const c=document.getElementById('signCanvas'); if(!c)return; const ctx=c.getContext('2d'); ctx.strokeStyle='#0056b3'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(70,150); ctx.bezierCurveTo(150,50,260,240,450,110); ctx.stroke(); const info=document.getElementById('signDragInfo'); if(info) info.textContent='Demo menunjukkan banyak titik dihubungkan menjadi garis lengkung.'; }
+</script>
+<script>
+function ms7Quiz(btn, ok, feedbackId){
+  const group=btn.parentElement;
+  group.querySelectorAll('.choice-btn').forEach(b=>{b.disabled=true;b.classList.remove('correct','wrong');});
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById(feedbackId);
+  if(fb){fb.textContent=ok?'Betul. Lanjutkan.':'Belum tepat. Coba cek lagi penjelasan di kanan.';fb.style.color=ok?'#176b35':'#a42820';}
+}
+function ms7Format(n){
+  if(!Number.isFinite(n)) return '-';
+  return new Intl.NumberFormat('id-ID',{maximumFractionDigits:2}).format(n);
+}
+function ms7Calc(){
+  const total=Number(document.getElementById('simTotal').value);
+  const orang=Number(document.getElementById('simOrang').value);
+  const out=document.getElementById('simResult');
+  if(!Number.isFinite(total)||!Number.isFinite(orang)){out.textContent='Isi kedua angka terlebih dahulu.';return;}
+  if(orang<=0){out.innerHTML='<strong>Belum bisa dihitung.</strong><br>Jumlah orang harus lebih dari 0.';return;}
+  const hasil=total/orang;
+  out.innerHTML=`${ms7Format(total)} ÷ ${ms7Format(orang)} = <strong>Rp${ms7Format(hasil)}/orang</strong>`;
+}
+function ms7UiCalc(){
+  const total=Number(document.getElementById('uiTotal').value);
+  const orang=Number(document.getElementById('uiOrang').value);
+  const out=document.getElementById('uiResult');
+  if(!Number.isFinite(total)||!Number.isFinite(orang)||orang<=0){out.textContent='Isi total dan jumlah orang > 0.';return;}
+  out.textContent=`Setiap orang membayar: Rp ${ms7Format(total/orang)}`;
+}
+function ms7Scenario(total,orang,btn){
+  document.querySelectorAll('#slide-10 .choice-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('scenarioResult').innerHTML=`${ms7Format(total)} ÷ ${orang} = <strong>Rp${ms7Format(total/orang)}/orang</strong>`;
+}
+function ms7Fair(btn,choice){
+  document.querySelectorAll('#slide-11 .choice-btn').forEach(b=>b.classList.remove('correct','selected'));
+  btn.classList.add(choice==='depends'?'correct':'selected');
+  const fb=document.getElementById('fairFeedback');
+  if(choice==='depends'){
+    fb.textContent='Masuk akal. Bagi rata cocok kalau memang disepakati, tetapi belum tentu paling adil jika pesanan tiap orang berbeda.';
+    fb.style.color='#176b35';
+  }else{
+    fb.textContent='Bagi rata bisa dipakai jika semua setuju, tetapi situasi ini menunjukkan bahwa kelompok mungkin perlu membahas cara pembagian lain.';
+    fb.style.color='#1f4b99';
+  }
+}
+function ms7IPO(type){
+  const data={
+    input:['Input','txtTotal.Text dan txtOrang.Text: dua angka yang diberikan user.'],
+    process:['Process','Operator Math membagi total tagihan dengan jumlah orang.'],
+    output:['Output','lblHasil.Text menampilkan kalimat dan biaya yang perlu dibayar setiap orang.']
+  }[type];
+  const el=document.getElementById('ipoInfo');
+  if(el) el.innerHTML=`<h4>${data[0]}</h4><p>${data[1]}</p>`;
+}
+function ms7Trace(row,text){
+  document.querySelectorAll('#slide-25 .trace-table tr').forEach(r=>r.classList.remove('active'));
+  row.classList.add('active');
+  document.getElementById('traceInfo').innerHTML=`<h4>Alur pembagian</h4><p>${text}</p>`;
+}
+function ms7Zero(btn,correct){
+  document.querySelectorAll('#slide-28 .choice-btn').forEach(b=>{b.disabled=true;b.classList.remove('correct','wrong');});
+  btn.classList.add(correct?'correct':'wrong');
+  const fb=document.getElementById('zeroFeedback');
+  fb.textContent=correct?'Betul. Pembagian dengan 0 tidak boleh dilakukan.':'Belum tepat. Angka tidak bisa dibagi dengan 0.';
+  fb.style.color=correct?'#176b35':'#a42820';
+}
+</script>
+<script>
+const MS8_KURS = 18080.55;
+function ms8Quiz(btn, ok, feedbackId){
+  const group=btn.parentElement;
+  group.querySelectorAll('.choice-btn').forEach(b=>{b.disabled=true;b.classList.remove('correct','wrong');});
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById(feedbackId);
+  if(fb){fb.textContent=ok?'Betul. Lanjutkan.':'Belum tepat. Coba baca lagi penjelasan di kanan.';fb.style.color=ok?'#176b35':'#a42820';}
+}
+function ms8Format(n, max=2){
+  if(!Number.isFinite(n)) return '-';
+  return new Intl.NumberFormat('id-ID',{maximumFractionDigits:max}).format(n);
+}
+function ms8Calc(){
+  const nominal=Number(document.getElementById('simNominal').value);
+  const kurs=Number(document.getElementById('simKurs').value);
+  const out=document.getElementById('simResult');
+  if(!Number.isFinite(nominal)||!Number.isFinite(kurs)||kurs<=0){out.textContent='Isi nominal dan kurs lebih dari 0.';return;}
+  const hasil=nominal/kurs;
+  out.innerHTML=`${ms8Format(nominal)} ÷ ${ms8Format(kurs,2)} = <strong>${ms8Format(hasil,2)} USD</strong>`;
+}
+function ms8UiCalc(){
+  const nominal=Number(document.getElementById('uiNominal').value);
+  const out=document.getElementById('uiResult');
+  if(!Number.isFinite(nominal)){out.textContent='Isi nominal angka terlebih dahulu.';return;}
+  out.textContent=`Hasil Konversi IDR to USD: ${ms8Format(nominal/MS8_KURS,2)}`;
+}
+function ms8Direction(type, btn){
+  document.querySelectorAll('.operator-card').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const data={
+    tousd:['Rupiah ke USD','Pakai pembagian: nominal Rupiah ÷ kurs. Ini arah utama project Sesi 8. Contoh: 100000 ÷ 18080.55 ≈ 5,53 USD.'],
+    toidr:['USD ke Rupiah','Pakai perkalian: nominal USD × kurs. Contoh: 5 × 18080.55 ≈ Rp90.402,75. Ini arah berbeda dari project utama.']
+  }[type];
+  document.getElementById('directionInfo').innerHTML=`<h4>${data[0]}</h4><p>${data[1]}</p>`;
+}
+function ms8Scenario(nominal, btn){
+  document.querySelectorAll('#slide-11 .choice-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('scenarioResult').innerHTML=`${ms8Format(nominal)} ÷ 18.080,55 = <strong>${ms8Format(nominal/MS8_KURS,2)} USD</strong>`;
+}
+function ms8Output(btn, clear){
+  document.querySelectorAll('#slide-12 .ui-card').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const fb=document.getElementById('outputFeedback');
+  fb.textContent=clear?'Lebih jelas. User tahu angka itu hasil konversi dari IDR ke USD.':'Masih kurang jelas. Angka tanpa konteks bisa membingungkan user.';
+  fb.style.color=clear?'#176b35':'#a42820';
+}
+function ms8IPO(type){
+  const data={
+    input:['Input','Data yang diberikan user, misalnya nominal 100000 yang diketik pada txtNominal.'],
+    process:['Process','Aplikasi menjalankan rumus di Blocks: txtNominal.Text ÷ 18080.55.'],
+    output:['Output','Hasil ditampilkan ke lblHasil dengan teks seperti Hasil Konversi IDR to USD: 5,53.']
+  }[type];
+  document.getElementById('ipoInfo').innerHTML=`<h4>${data[0]}</h4><p>${data[1]}</p>`;
+}
+function ms8Join(){
+  const nominal=Number(document.getElementById('joinNominal').value);
+  const out=document.getElementById('joinResult');
+  if(!Number.isFinite(nominal)){out.textContent='Isi nominal angka dulu.';return;}
+  out.textContent=`Hasil Konversi IDR to USD: ${ms8Format(nominal/MS8_KURS,2)}`;
+}
+function ms8Trace(row, text){
+  document.querySelectorAll('.trace-table tr').forEach(r=>r.classList.remove('active'));
+  row.classList.add('active');
+  document.getElementById('traceInfo').innerHTML=`<h4>Alur hitung</h4><p>${text}</p>`;
+}
+function ms8Debug(id, btn){
+  document.querySelectorAll('#slide-28 .debug-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#slide-28 .debug-scenario').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id); if(el) el.classList.add('active');
+}
+function ms8Data(btn, safe){
+  document.querySelectorAll('#slide-29 .choice-btn').forEach(b=>b.classList.remove('correct','wrong'));
+  btn.classList.add(safe?'correct':'wrong');
+  const fb=document.getElementById('dataFeedback');
+  fb.textContent=safe?'Aman untuk latihan. Ini hanya angka simulasi.':'Jangan dipakai. Project ini tidak membutuhkan data pribadi atau data pembayaran.';
+  fb.style.color=safe?'#176b35':'#a42820';
+}
+function ms8Challenge(){
+  const nominal=Number(document.getElementById('chNominal').value);
+  const kurs=Number(document.getElementById('chCurrency').value);
+  const mata=document.getElementById('chCurrency').selectedOptions[0].text.split(' - ')[0];
+  const out=document.getElementById('chResult');
+  if(!Number.isFinite(nominal)){out.textContent='Isi nominal angka dulu.';return;}
+  out.innerHTML=`${ms8Format(nominal)} ÷ ${ms8Format(kurs,2)} = <strong>${ms8Format(nominal/kurs,2)} ${mata}</strong>`;
+}
+</script>
+</body>
+</html>
